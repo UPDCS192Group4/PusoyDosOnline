@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ws_msgr.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.552941, 0.533333, 0.533333, 1 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 1025.0
+margin_bottom = 603.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextEdit" type="TextEdit" parent="Panel"]
+margin_left = 242.0
+margin_top = 414.0
+margin_right = 807.0
+margin_bottom = 505.0
+text = "Enter mesage here"
+
+[node name="Button" type="Button" parent="Panel"]
+margin_left = 412.0
+margin_top = 524.0
+margin_right = 602.0
+margin_bottom = 574.0
+text = "Enter"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel"]
+margin_left = 31.0
+margin_top = 20.0
+margin_right = 998.0
+margin_bottom = 403.0
+custom_colors/default_color = Color( 0, 0, 0, 1 )
+custom_colors/selection_color = Color( 1, 1, 1, 1 )
+custom_styles/normal = SubResource( 1 )
+text = "Message log"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]
