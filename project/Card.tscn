@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Card.gd" type="Script" id=1]
+[ext_resource path="res://CardButton.gd" type="Script" id=2]
+[ext_resource path="res://assets/cards/card_on_hover.png" type="Texture" id=3]
+[ext_resource path="res://assets/cards/card_on_pressed.png" type="Texture" id=4]
+
+[node name="Card" type="MarginContainer"]
+margin_right = 140.0
+margin_bottom = 190.0
+rect_pivot_offset = Vector2( 70, 95 )
+mouse_filter = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Container" type="Node2D" parent="."]
+
+[node name="CardTexture" type="Sprite" parent="Container"]
+centered = false
+
+[node name="CardButton" type="TextureButton" parent="Container"]
+margin_right = 140.0
+margin_bottom = 190.0
+texture_pressed = ExtResource( 4 )
+texture_hover = ExtResource( 3 )
+texture_disabled = ExtResource( 4 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="mouse_entered" from="Container/CardButton" to="." method="_on_CardButton_mouse_entered"]
