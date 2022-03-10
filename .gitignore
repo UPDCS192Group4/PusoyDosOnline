@@ -1,0 +1,5 @@
+# Development server starting scripts
+server/start.bat
+
+# Environment variables
+server/.env
