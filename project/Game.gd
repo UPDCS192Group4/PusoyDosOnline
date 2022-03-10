@@ -25,3 +25,5 @@ func shuffleDeck():
 	
 func _on_PlayButton_pressed():
 	get_node('Hand').updateHand()
+	
+
