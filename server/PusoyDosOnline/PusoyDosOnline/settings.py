@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5r9a(zi(1)*!sde#x@m4v3m5h*)9&m6%*=zj!o^8nrhzyzg%x7'
+SECRET_KEY = os.getenv("DJANGO_SECRETKEY", default='django-insecure-5r9a(zi(1)*!sde#x@m4v3m5h*)9&m6%*=zj!o^8nrhzyzg%x7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -77,14 +78,13 @@ WSGI_APPLICATION = 'PusoyDosOnline.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'mydb',
-        'USER': 'myuser',
-        'PASSWORD': 'mypass',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': os.getenv("DB_NAME", default="PusoyDosOnline"),
+        'USER': os.getenv("DB_USER", default="web"),
+        'PASSWORD': os.getenv("DB_PASS", default="thisisarandompassword"),
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

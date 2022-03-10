@@ -2,4 +2,5 @@
 server/start.bat
 
 # Environment variables
+server/PusoyDosOnline/.env
 server/.env
