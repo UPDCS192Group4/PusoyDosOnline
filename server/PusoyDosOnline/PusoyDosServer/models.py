@@ -19,13 +19,19 @@ class User(AbstractUser):
     """
     User information
     """
+    first_name = None # We don't need these so we'll just set these to NULL
+    last_name = None # We don't need these so we'll just set these to NULL
+    
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     rating = models.IntegerField("Elo Rating")
-    current_lobby = models.ForeignKey(Lobby)
-    country_code = models.CharField(max_length=3, defualt="")
-    highest_rating = models.IntegerField()
-    
+    current_lobby = models.ForeignKey(Lobby, on_delete=models.SET_NULL, null=True)
+    country_code = models.CharField(max_length=3, default="")
+    highest_rating = models.IntegerField("Max Rating")
     
     def __str__(self):
+        return self.username
+    
+    def get_short_name(self):
+        # Override the AbstractUser function for this just in case it's used elsewhere
         return self.username
     

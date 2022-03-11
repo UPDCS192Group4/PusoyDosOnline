@@ -14,8 +14,12 @@ services:
       - postgres_data:/var/lib/postgresql/data/
   web:
     restart: on-failure
+    image: server_web
     build: .
-    command: python /web/PusoyDosOnline/manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python /web/PusoyDosOnline/manage.py makemigrations PusoyDosServer &&
+             python /web/PusoyDosOnline/manage.py migrate &&
+             python /web/PusoyDosOnline/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/web
     ports:
