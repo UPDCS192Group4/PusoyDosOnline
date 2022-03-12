@@ -33,7 +33,6 @@ func updateHand():
 	var ranks = Array()
 	var suits = Array()
 	var cards_string = PoolStringArray() # combined ranks and suits but in string
-	print(cards)
 	for card in cards:
 		if card._is_pressed:
 			pressedArray.append(card)
@@ -79,5 +78,3 @@ func changeZ(top):
 	for i in range(index+1, NUM_CARDS):
 		cards[i].get_node('Container').z_index = NUM_CARDS - i - 1
 		#cards[i].Container.z_index
-	for i in range(NUM_CARDS):
-		print(cards[i].get_node('Container').z_index)
