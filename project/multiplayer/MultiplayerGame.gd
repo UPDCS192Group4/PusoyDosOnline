@@ -48,6 +48,7 @@ func shuffleDeck():
 	deck.shuffle()
 
 func _on_data_received():
+	print("receiving data...")
 	var data = ws.get_peer(1).get_packet().get_string_from_utf8()
 	var msg = data.split(" ")
 	print(msg)
@@ -63,6 +64,18 @@ func _on_data_received():
 				newCard.init(suit, value)
 				hand.append(newCard)
 			self.loadGame()
+		"play":
+			var newPile=msg[2].split(",")
+			var suits = Array()
+			var ranks = Array()
+			var tempString
+			for i in newPile:
+				tempString = i.split("-")
+				suits.append(int(tempString[0]))
+				ranks.append(int(tempString[1]))
+			print(ranks,suits)
+			print(msg[2])
+			get_node("Pile").updatePile(ranks,suits)
 	
 func _on_PlayButton_pressed():
 	get_node('MultiplayerHand').updateHand()
