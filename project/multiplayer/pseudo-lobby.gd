@@ -13,6 +13,7 @@ func _process(_delta):
 
 func _connection_success(_proto = ""):
 	$ConnectingLabel.visible = false
+	print("CONNECTED: ", ws.get_connected_host(), ":", ws.get_connected_port())
 	$Label.text = "Connection success!"
 	$Label.visible = true
 	get_tree().change_scene("res://multiplayer/MultiplayerGame.tscn")
@@ -29,7 +30,8 @@ func _on_Button_pressed():
 	var err = ws.connect_to_url(url)
 	ws.poll()
 	if err != OK:
-		print(err)
+		print("ERR: ", err)
+		_connection_failed()
 
 func _on_Timer_timeout():
 	$Label.visible = false
