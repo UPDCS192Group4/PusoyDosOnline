@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
+from django_countries.fields import CountryField
 
 # Create your models here.
 class Lobby(models.Model):
@@ -15,6 +16,8 @@ class Lobby(models.Model):
     creation_date = models.DateTimeField(default=timezone.now)
     last_activity = models.DateTimeField(default=timezone.now)
     status = models.IntegerField(default=True) # status is if it's waiting or about to start a game
+    class Meta:
+        verbose_name_plural = "lobbies"
 
 class User(AbstractUser):
     """
@@ -25,9 +28,13 @@ class User(AbstractUser):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     rating = models.IntegerField("Elo Rating", default=1000)
-    current_lobby = models.ForeignKey(Lobby, on_delete=models.SET_NULL, null=True)
-    country_code = models.CharField(max_length=3, default="")
+    current_lobby = models.ForeignKey(Lobby, on_delete=models.SET_NULL, null=True, blank=True)
+    country_code = CountryField()
     highest_rating = models.IntegerField("Max Rating", default=1000)
+    played_games = models.IntegerField(default=0)
+    won_games = models.IntegerField(default=0)
+    lost_games = models.IntegerField(default=0)
+    winstreak = models.IntegerField(default=0)
     
     def __str__(self):
         return self.username
