@@ -133,7 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Custom user model
 AUTH_USER_MODEL = 'PusoyDosServer.User'
 LOGIN_URL = '/api/login/'
-LOGIN_REDIRECT_URL = '/api/profile/'
+LOGIN_REDIRECT_URL = '/api/users/profile/'
 
 # REST Framework settings
 REST_FRAMEWORK = {

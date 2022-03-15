@@ -63,6 +63,7 @@ def api_leaderboard(request):
 
 # REST Framework views
 class UserViewSet(mixins.RetrieveModelMixin,
+                  mixins.ListModelMixin,
                   viewsets.GenericViewSet):
     """
     API endpoint for viewing a specific user
@@ -118,7 +119,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
         pass
 
 class RegisterViewSet(mixins.CreateModelMixin,
-                   viewsets.GenericViewSet):
+                      viewsets.GenericViewSet):
     """
     API endpoint for registering a new account
     """
