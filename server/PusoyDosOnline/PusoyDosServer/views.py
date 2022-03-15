@@ -108,3 +108,21 @@ class UserViewSet(mixins.RetrieveModelMixin,
             return self.get_paginated_response(serializer.data)
         serializer = self.get_serializer(highest_rated, many=True)
         return Response(serializer.data)
+    
+    @action(detail=True)
+    def set_new_password(self, request):
+        pass
+    
+    @action(detail=True)
+    def set_country(self, request):
+        pass
+
+class RegisterViewSet(mixins.CreateModelMixin,
+                   viewsets.GenericViewSet):
+    """
+    API endpoint for registering a new account
+    """
+    UserModel = get_user_model()
+    queryset = UserModel.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = RegisterSerializer
