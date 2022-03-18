@@ -5,61 +5,19 @@ from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, permissions, status, mixins
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 
 from .models import *
 from .serializers import *
 
-# Create your views here.
-def api_login(request):
-    if request.method != "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(username, password)
-        if user is not None:
-            login(request, user)
-            return redirect("/api/profile")
-        else:
-            pass
-    else:
-        return JsonResponse({"error": "Incorrect protocol"})
-    
-def api_logout(request):
-    pass
-
-def api_register(request):
-    if request.method == "POST":
-        email    = request.POST["email"]
-        username = request.POST["username"]
-        password = request.POST["password"]
-        
-        # Create the new user
-        UserModel = get_user_model()
-        newuser = UserModel.objects.create_user(username, email, password)
-        newuser.save()
-        
-        # Authenticate the user automatically
-        user = authenticate(username, password)
-        
-        # Connect the newly-created user to the current session
-        login(request, user)
-        
-        return redirect("/api/profile/")
-    else:
-        return JsonResponse({"error": "Incorrect protocol"})
-
-@login_required(login_url="/api/login")
-def api_profile(request, username=""):
-    if username == "":
-        # No username was passed via the link, pull up basic info on user
-        pass
-    else:
-        # Username passed via link, pull up info on the username
-        pass
-
-def api_leaderboard(request):
-    pass
+# Permissions class for UserViewSet
+class UserPermissions(permissions.AllowAny):
+    def has_permission(self, request, view):
+        for perm, actions in getattr(view, "perms", {}).items():
+            if view.action in actions:
+                return perm().has_permission(request, view)
+        return False
 
 # REST Framework views
 class UserViewSet(mixins.RetrieveModelMixin,
@@ -71,7 +29,11 @@ class UserViewSet(mixins.RetrieveModelMixin,
     UserModel = get_user_model()
     queryset = UserModel.objects.all().order_by("-date_joined") # latest accounts first
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser, permissions.IsAuthenticated]
+    permission_classes = [UserPermissions]
+    perms = {
+        permissions.IsAuthenticated: ["profile", "self_profile", "leaderboard"],
+        permissions.IsAdminUser: ["list", "retrieve"],
+    }
     
     @action(detail=False, url_path="profile/(?P<username>[\w.@+-]+)")
     def profile(self, request, username=""):
@@ -127,3 +89,4 @@ class RegisterViewSet(mixins.CreateModelMixin,
     queryset = UserModel.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
+    throttle_scope = "register"

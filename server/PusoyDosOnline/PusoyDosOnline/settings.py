@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import os
 
@@ -144,4 +145,13 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_THROTTLE_RATES': {
+        'register': '12/hour', # throttle registrations to at least once every 5 minutes (per hour)
+    }
+}
+
+# Simple JWT settings
+# Documentation: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30), # 30 minute lifespan for access tokens
 }

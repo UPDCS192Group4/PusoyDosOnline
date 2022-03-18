@@ -9,7 +9,20 @@ class UserSerializer(serializers.ModelSerializer):
     country_code = CountryField()
     class Meta:
         model = get_user_model()
-        fields = ['username', 'rating', 'country_code', 'played_games', 'won_games', 'lost_games', 'winstreak']
+        fields = ['id', 'username', 'rating', 'country_code', 'played_games', 'won_games', 'lost_games', 'winstreak']
+        
+    def to_representation(self, instance):
+        """
+        Override the representation for "public" views like leaderboards
+        We do not want to show the IDs of other users as much as possible
+        """
+        ret = super().to_representation(instance)
+        
+        # Remove the ID if we're listing users or looking through the leaderboards
+        if self.context["view"].action in ["list", "leaderboard"]:
+            ret.pop("id")
+        
+        return ret
         
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=get_user_model().objects.all())])
