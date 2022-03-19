@@ -30,9 +30,10 @@ In order to create a new superuser (for testing purposes, and for using `/admin/
 
 ## To-Do List
 
-~~1. `id`s should not be visible outside of self-profile view~~ **Done!**
+1. ~~`id`s should not be visible outside of self-profile view~~ **Done!**
 2. `RegisterViewSet` should throttle registrations to at least once every 5 minutes (currently needs testing)
 3. `django-channels` integration to create websockets to the game
 4. Integrate website to the main game logic (wins, losses, game logs)
 5. Integrate Godot client to site root
 6. Automate Godot client deployment
+7. Setup Redis for caching game states

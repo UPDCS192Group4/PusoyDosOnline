@@ -17,6 +17,9 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ASGI Application Setting
+ASGI_APPLICATION = "PusoyDosOnline.asgi.application"
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -25,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRETKEY", default='django-insecure-5r9a(zi(1)*!sde#x@m4v3m5h*)9&m6%*=zj!o^8nrhzyzg%x7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG", default="False") == "True"
 
 ALLOWED_HOSTS = []
 
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_countries',
     'rest_framework_simplejwt',
+    'channels',
 ]
 
 MIDDLEWARE = [
