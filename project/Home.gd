@@ -18,5 +18,3 @@ func startNewGame():
 
 func showLeaderboards():
 	get_tree().change_scene("res://Leaderboards.tscn")
-
-
