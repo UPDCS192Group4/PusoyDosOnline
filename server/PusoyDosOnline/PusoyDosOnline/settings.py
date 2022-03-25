@@ -157,5 +157,15 @@ REST_FRAMEWORK = {
 # Simple JWT settings
 # Documentation: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30), # 30 minute lifespan for access tokens
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60), # 60 minute lifespan for access tokens
+}
+
+# Redis Access for Channels
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)]
+        }
+    }
 }

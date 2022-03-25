@@ -1,6 +1,11 @@
 version: '3'
 
 services:
+  redis:
+    image: "redis"
+    restart: on-failure
+    volumes:
+      - redis_data:/data
   db:
     image: "postgres:12"
     restart: on-failure
@@ -26,8 +31,10 @@ services:
       - 8000:8000
     depends_on:
       - db
+      - redis
     env_file:
       - .env
 
 volumes:
   postgres_data:
+  redis_data:
