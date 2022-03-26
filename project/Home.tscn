@@ -1,8 +1,12 @@
-[gd_scene format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/fonts/home_dynamicfont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Home.gd" type="Script" id=2]
 
 [node name="Home" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -11,3 +15,118 @@ __meta__ = {
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0.0156863, 0.32549, 0.180392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ContainerBox" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DummyBox" type="HBoxContainer" parent="ContainerBox"]
+margin_right = 1024.0
+margin_bottom = 158.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ContainerBox" type="HBoxContainer" parent="ContainerBox"]
+margin_top = 162.0
+margin_right = 1024.0
+margin_bottom = 861.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.42
+
+[node name="DummyBox" type="VBoxContainer" parent="ContainerBox/ContainerBox"]
+margin_right = 63.0
+margin_bottom = 699.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="ContainerBox" type="VBoxContainer" parent="ContainerBox/ContainerBox"]
+margin_left = 67.0
+margin_right = 385.0
+margin_bottom = 699.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Play" type="VBoxContainer" parent="ContainerBox/ContainerBox/ContainerBox"]
+margin_right = 318.0
+margin_bottom = 171.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PlayButton" type="Button" parent="ContainerBox/ContainerBox/ContainerBox/Play"]
+margin_right = 318.0
+margin_bottom = 171.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "PLAY"
+
+[node name="LeaderBoards" type="VBoxContainer" parent="ContainerBox/ContainerBox/ContainerBox"]
+margin_top = 175.0
+margin_right = 318.0
+margin_bottom = 347.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ContainerBox/ContainerBox/ContainerBox/LeaderBoards"]
+margin_right = 318.0
+margin_bottom = 172.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "LEADERBOARDS"
+
+[node name="Rules" type="VBoxContainer" parent="ContainerBox/ContainerBox/ContainerBox"]
+margin_top = 351.0
+margin_right = 318.0
+margin_bottom = 523.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ContainerBox/ContainerBox/ContainerBox/Rules"]
+margin_right = 318.0
+margin_bottom = 172.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "Rules"
+
+[node name="Donate" type="VBoxContainer" parent="ContainerBox/ContainerBox/ContainerBox"]
+margin_top = 527.0
+margin_right = 318.0
+margin_bottom = 699.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ContainerBox/ContainerBox/ContainerBox/Donate"]
+margin_right = 318.0
+margin_bottom = 172.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "Donate"
+
+[node name="DummyBox2" type="VBoxContainer" parent="ContainerBox/ContainerBox"]
+margin_left = 389.0
+margin_right = 1024.0
+margin_bottom = 699.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="DummyBox2" type="HBoxContainer" parent="ContainerBox"]
+margin_top = 865.0
+margin_right = 1024.0
+margin_bottom = 1024.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/Play/PlayButton" to="." method="_on_PlayButton_pressed"]
+[connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/LeaderBoards/Button" to="." method="_on_Button_pressed"]

@@ -18,10 +18,16 @@ func shuffleDeck():
 	for i in range(1,5):
 		for j in range(1,14):
 			newCard = cardScene.instance()
-			newCard.init(i,j)
+			newCard.init(i,j,0)
 			deck.append(newCard)
 	randomize()
 	deck.shuffle()
 	
 func _on_PlayButton_pressed():
 	get_node('Hand').updateHand()
+
+func _on_HomeButton_pressed():
+	var scene1 = load("res://PopUp.tscn")
+	var child1 = scene1.instance()
+	get_parent().add_child(child1)
+	pass # Replace with function body.
