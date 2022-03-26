@@ -59,7 +59,7 @@ func getTopOfPile():
 	if !NUM_CARDS == 0:
 		for card in pileCards:
 			ret.append([card.rank,card.suit])
-	print(ret)
+	#print(ret)
 	#ret.append(ranks)
 	#ret.append(suits)
 		

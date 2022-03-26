@@ -79,10 +79,10 @@ func checkArray(inputArray):
 	#next check if play is better than topOfPile
 
 func classifyArray(array):
-	print('array is ', array)
+	#print('array is ', array)
 	var returnArray = Array()
 	if array.size() == 1:
-		print('size is 1')
+		#print('size is 1')
 		returnArray.append(1)
 		returnArray.append(array[0][0])
 		returnArray.append(array[0][1])
@@ -107,22 +107,50 @@ func classifyArray(array):
 		for i in range(5):
 			rankArray.append(array[i][0])
 		rankArray.sort()
+		print(rankArray)
 		#flush
 		if array[0][1] == array[1][1] and array[1][1] == array[2][1] \
 			and array[2][1] == array[3][1] and array[3][1] == array[4][1]:
-				print('flush')
-				pass
+				if rankArray[0]+1 == rankArray[1] and rankArray[1]+1 == rankArray[2] \
+				and rankArray[2]+1 == rankArray[3] and rankArray[3]+1 == rankArray[4]:
+					print('straight flush/royal flush')
+					returnArray.append(5)
+					returnArray.append(5)
+					returnArray.append(array[0][1])
+					returnArray.append(rankArray[4])
+				else:
+					print('flush')
+					returnArray.append(5)
+					returnArray.append(2)
+					returnArray.append(array[0][1])
+					returnArray.append(rankArray[4])
 		#straight
 		elif rankArray[0]+1 == rankArray[1] and rankArray[1]+1 == rankArray[2] \
 			and rankArray[2]+1 == rankArray[3] and rankArray[3]+1 == rankArray[4]:
 				print('straight')
+				returnArray.append(5)
+				returnArray.append(1)
+				returnArray.append(rankArray[4])
+				for i in range(5):
+					if array[i][0] == rankArray[4]:
+						returnArray.append(array[i][1])
+						break
 				pass
 		elif (rankArray[0] == rankArray[1] and rankArray[1] == rankArray[2] \
 			and rankArray[2] == rankArray[3]) or (rankArray[1] == rankArray[2] \
 			and rankArray[2] == rankArray[3] and rankArray[3] == rankArray[4]):
 				print('four of a kind')
+				returnArray.append(5)
+				returnArray.append(4)
+				returnArray.append(rankArray[2])
 				pass
-		elif 0:
-			pass
+		elif (rankArray[0] == rankArray[1] and rankArray[2] == rankArray[3] \
+			and rankArray[3] == rankArray[4]) or (rankArray[0] == rankArray[1] \
+			and rankArray[1] == rankArray[2] 	and rankArray[3] == rankArray[4]):
+				print('full house')
+				returnArray.append(5)
+				returnArray.append(3)
+				returnArray.append(rankArray[2])
+				pass
 		pass
 	return returnArray
