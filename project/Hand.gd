@@ -13,6 +13,7 @@ var ANGLE
 var ANG_DIST = 0.07
 var OVAL_VECT = Vector2()
 
+
 func _ready():	
 	yield(get_parent(), "ready")
 	deck = get_parent().deck
@@ -43,14 +44,17 @@ func updateHand():
 		cards.remove(k)
 		card.queue_free()
 		NUM_CARDS -= 1
-	for card in pressedArray:	
-		ANGLE = deg2rad(90) - ANG_DIST * (NUM_CARDS - 1) / 2.0
-		for i in range(NUM_CARDS):
-			OVAL_VECT = Vector2(H_RAD * cos(ANGLE), -V_RAD * sin(ANGLE))
-			cards[i].rect_position = OVAL_CENTRE + OVAL_VECT - cards[i].rect_size / 2
-			cards[i].rect_rotation = (90 - rad2deg(ANGLE)) / 4
-			ANGLE += ANG_DIST
-	get_parent().get_node('Pile').updatePile(ranks,suits)
+	#for card in pressedArray:	
+	#update Angle, change position and rotation
+	ANGLE = deg2rad(90) - ANG_DIST * (NUM_CARDS - 1) / 2.0
+	for i in range(NUM_CARDS):
+		OVAL_VECT = Vector2(H_RAD * cos(ANGLE), -V_RAD * sin(ANGLE))
+		cards[i].rect_position = OVAL_CENTRE + OVAL_VECT - cards[i].rect_size / 2
+		cards[i].rect_rotation = (90 - rad2deg(ANGLE)) / 4
+		ANGLE += ANG_DIST
+	var pileNode = get_parent().get_node('Pile')
+	pileNode.getTopOfPile()
+	pileNode.updatePile(ranks,suits)
 #		var k = card.get_index()
 #		cards.remove(k)
 #		card.queue_free()
@@ -75,3 +79,8 @@ func changeZ(top):
 		#cards[i].Container.z_index
 	#for i in range(NUM_CARDS):
 	#	print(cards[i].get_node('Container').z_index)
+
+func checkArray():
+	var pileNode =  get_parent().get_node('Pile')
+	var currentPile = pileNode.getTopOfPile()
+	pass

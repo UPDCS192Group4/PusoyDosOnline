@@ -2,6 +2,8 @@ extends Control
 var deck = Array()
 var cardScene = preload("res://Card.tscn")
 var newCard
+var pressedArray = Array()
+
 func _ready():
 	var scene1 = load("res://Hand.tscn")
 	var child1 = scene1.instance()
@@ -11,8 +13,12 @@ func _ready():
 	add_child(child2)
 	var scene3 = load("res://Opponents.tscn")
 	var child3 = scene3.instance()
+	child3.set_name("Opponents")
 	add_child(child3)
 	shuffleDeck()
+	
+	var ranks = Array()
+	var suits = Array()
 
 func shuffleDeck():
 	for i in range(1,5):
@@ -31,3 +37,29 @@ func _on_HomeButton_pressed():
 	var child1 = scene1.instance()
 	get_parent().add_child(child1)
 	pass # Replace with function body.
+
+func addPressedCard(newRank, newSuit):
+	var temp = Array()
+	temp.append(newRank)
+	temp.append(newSuit)
+	pressedArray.append(temp)
+	checkArray()
+func removePressedCard(newRank, newSuit):
+	var temp = Array()
+	temp.append(newRank)
+	temp.append(newSuit)
+	var k = pressedArray.find(temp)
+	pressedArray.remove(k)
+	checkArray()
+
+func enablePlayButton():
+	get_node("PlayButton").text = 'PLAY'
+	get_node("PlayButton").disabled = false
+func disablePlayButton():
+	get_node("PlayButton").text = "NOPE"
+	get_node("PlayButton").disabled = true
+
+func checkArray():
+	var topOfPile = get_node('Pile').getTopOfPile()
+	#compare pressedArray to onTop
+	

@@ -35,6 +35,11 @@ func updatePile(ranks, suits):
 		pileCards[i].rect_rotation = (90 - rad2deg(ANGLE))/4
 		ANGLE += ANG_DIST
 	
+	#this part is used to demonstrate removing cards from each of the other piles
+	get_parent().get_node('Opponents').A_updateHand(ranks.size())
+	get_parent().get_node('Opponents').B_updateHand(ranks.size())
+	get_parent().get_node('Opponents').C_updateHand(ranks.size())
+	
 func changeZ(top):
 	#print('changing pile z')
 	index = pileCards.find(top)
@@ -46,3 +51,16 @@ func changeZ(top):
 		#cards[i].Container.z_index
 	#for i in range(NUM_CARDS):
 	#	print(pileCards[i].get_node('Container').z_index)
+
+func getTopOfPile():
+	var ranks = Array()
+	var suits = Array()
+	var ret = Array()
+	if !NUM_CARDS == 0:
+		for card in pileCards:
+			ret.append([card.rank,card.suit])
+	print(ret)
+	#ret.append(ranks)
+	#ret.append(suits)
+		
+	return ret
