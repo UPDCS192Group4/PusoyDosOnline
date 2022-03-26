@@ -61,5 +61,9 @@ func disablePlayButton():
 
 func checkArray():
 	var topOfPile = get_node('Pile').getTopOfPile()
-	#compare pressedArray to onTop
+	#compare pressedArray to onTop, in a three part check
+	#first check if number of cards is the same as topOfPile
 	
+	#next check if play is valid (i.e., if pair, should have the same rank)
+	
+	#next check if play is better than topOfPile
