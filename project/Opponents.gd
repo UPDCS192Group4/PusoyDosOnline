@@ -26,7 +26,7 @@ var C_NUM_CARDS = 13
 
 func _ready():	
 	yield(get_parent(), "ready")
-	deck = get_parent().deck
+	deck = get_parent().deck.duplicate(true)
 
 	A_ANGLE =  - A_ANG_DIST * (A_NUM_CARDS - 1) / 2
 	B_ANGLE = deg2rad(270) - B_ANG_DIST * (B_NUM_CARDS - 1) / 2

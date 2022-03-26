@@ -13,22 +13,44 @@ var ANGLE
 var ANG_DIST = 0.07
 var OVAL_VECT = Vector2()
 
-
 func _ready():	
 	yield(get_parent(), "ready")
+	#shuffleDeck()
 	deck = get_parent().deck
 	
 	ANGLE = deg2rad(90) - ANG_DIST * (NUM_CARDS - 1) / 2
-	for i in range(13):
+	for i in range(NUM_CARDS):
+		yield(get_tree().create_timer(0.1), "timeout")
 		cards.append(deck[i])
 		cards[i].isCurrentPlayer = 1
 		cards[i].changeFace()
 		add_child(cards[i])
+		print(i, ' ', cards[i].rank, ' ', cards[i].suit)
 		OVAL_VECT = Vector2(H_RAD * cos(ANGLE), -V_RAD * sin(ANGLE))
 		cards[i].rect_position = OVAL_CENTRE + OVAL_VECT - cards[i].rect_size / 2
+		#cards[i].rect_position.x -= cards[i].rect_size.x
+		print(OVAL_VECT, cards[i].rect_position)
 		cards[i].rect_rotation = (90 - rad2deg(ANGLE)) / 4
 		ANGLE += ANG_DIST
 
+func shuffleDeck():
+#	for i in range(1,5):
+#		for j in range(1,14):
+#			newCard = cardScene.instance()
+#			newCard.init(i,j,0)
+#			deck.append(newCard)
+	
+	#uncomment to show that straight works:
+	var newCard
+	for i in range(1,5):
+		for j in range(1,14):
+			newCard = cardScene.instance()
+			newCard.init(i,j,0)
+			deck.append(newCard)
+	randomize()
+	#uncomment to show that flush works:
+	deck.shuffle()
+	
 func updateHand(): 
 	var pressedArray = Array()
 	var ranks = Array()

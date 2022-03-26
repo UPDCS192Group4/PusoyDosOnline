@@ -71,6 +71,26 @@ func checkArray(inputArray):
 	topOfPile = classifyArray(topOfPile)
 	inputArray = classifyArray(inputArray)
 	print('log ',topOfPile,inputArray)
+	if topOfPile[0] == 0 and inputArray[0] !=0:
+		enablePlayButton()
+		return
+	elif topOfPile[0] == 0 and inputArray[0] == 0:
+		disablePlayButton()
+		return
+	if topOfPile[0] != inputArray[0]:
+		disablePlayButton()
+		return
+	if topOfPile[0] == 1:
+		if topOfPile[1] > inputArray[1]:
+			disablePlayButton()
+		else:
+			enablePlayButton()
+	if topOfPile[0] == 2:
+		if topOfPile[1] < inputArray[1] or \
+			(topOfPile[1] == inputArray[1] and topOfPile[2] > inputArray[2]):
+				enablePlayButton()
+		else:
+			disablePlayButton()
 	#compare pressedArray to onTop, in a three part check
 	#first check if number of cards is the same as topOfPile
 	
@@ -81,6 +101,8 @@ func checkArray(inputArray):
 func classifyArray(array):
 	#print('array is ', array)
 	var returnArray = Array()
+	if array.size() == 0:
+		returnArray.append(0)
 	if array.size() == 1:
 		#print('size is 1')
 		returnArray.append(1)
@@ -153,4 +175,6 @@ func classifyArray(array):
 				returnArray.append(rankArray[2])
 				pass
 		pass
+	else:
+		returnArray.append(0)
 	return returnArray
