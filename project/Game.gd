@@ -18,7 +18,7 @@ func shuffleDeck():
 	for i in range(1,5):
 		for j in range(1,14):
 			newCard = cardScene.instance()
-			newCard.init(i,j)
+			newCard.init(i,j,0)
 			deck.append(newCard)
 	randomize()
 	deck.shuffle()

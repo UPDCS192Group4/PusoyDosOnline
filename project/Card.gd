@@ -13,12 +13,13 @@ var cardHovered = preload("res://assets/cards/card_on_hover.png")
 func _ready():
 	pass
 
-func init(inputSuit, inputRank):
+func init(inputSuit, inputRank, pileCard):
 	rank = inputRank
 	suit = inputSuit
 	$Container/CardTexture.texture = cardBack
 	$Container/CardButton.texture_hover = null
 	$Container/CardButton.texture_pressed = null
+	isPile = pileCard
 	
 func changeFace():
 	if isCurrentPlayer or isPile:
@@ -29,7 +30,8 @@ func changeFace():
 		$Container/CardButton.texture_pressed = cardPressed
 		
 func _on_CardButton_mouse_entered():
-	if isCurrentPlayer == 0:
+	#print('entered ', isCurrentPlayer, ' ', isPile, ' ', get_parent())
+	if isCurrentPlayer == 0 and isPile == 0:
 		return
 	get_parent().changeZ(self)
 	pass # Replace with function body.

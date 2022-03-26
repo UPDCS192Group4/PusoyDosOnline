@@ -10,7 +10,7 @@ var V_RAD = 400
 var ANGLE
 var ANG_DIST = 0.15
 var OVAL_VECT = Vector2()
-var NUM_CARDS
+var NUM_CARDS = 0
 
 func _ready():
 	pass
@@ -24,7 +24,7 @@ func updatePile(ranks, suits):
 	var newCard
 	for i in range(ranks.size()):
 		newCard = cardScene.instance()
-		newCard.init(suits[i], ranks[i])
+		newCard.init(suits[i], ranks[i], 1)
 		newCard.isPile = 1
 		newCard.changeFace()
 		pileCards.append(newCard)
@@ -36,6 +36,7 @@ func updatePile(ranks, suits):
 		ANGLE += ANG_DIST
 	
 func changeZ(top):
+	#print('changing pile z')
 	index = pileCards.find(top)
 	pileCards[index].get_node('Container').z_index = NUM_CARDS
 	for i in range(index-1, -1, -1):
@@ -43,5 +44,5 @@ func changeZ(top):
 	for i in range(index+1, NUM_CARDS):
 		pileCards[i].get_node('Container').z_index = NUM_CARDS - i - 1
 		#cards[i].Container.z_index
-	for i in range(NUM_CARDS):
-		print(pileCards[i].get_node('Container').z_index)
+	#for i in range(NUM_CARDS):
+	#	print(pileCards[i].get_node('Container').z_index)
