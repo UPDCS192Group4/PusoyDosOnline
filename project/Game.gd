@@ -18,13 +18,22 @@ func _ready():
 	shuffleDeck()
 
 func shuffleDeck():
-	for i in range(1,5):
-		for j in range(1,14):
+#	for i in range(1,5):
+#		for j in range(1,14):
+#			newCard = cardScene.instance()
+#			newCard.init(i,j,0)
+#			deck.append(newCard)
+	
+	#uncomment to show that straight works:
+	for i in range(1,14):
+		for j in range(1,5):
 			newCard = cardScene.instance()
 			newCard.init(i,j,0)
 			deck.append(newCard)
 	randomize()
-	deck.shuffle()
+	#uncomment to show that flush works:
+	#deck.shuffle()
+	
 	
 func _on_PlayButton_pressed():
 	get_node('Hand').updateHand()
@@ -94,5 +103,26 @@ func classifyArray(array):
 	elif array.size() == 4:
 		returnArray.append(0)
 	elif array.size() == 5:
+		var rankArray = Array()
+		for i in range(5):
+			rankArray.append(array[i][0])
+		rankArray.sort()
+		#flush
+		if array[0][1] == array[1][1] and array[1][1] == array[2][1] \
+			and array[2][1] == array[3][1] and array[3][1] == array[4][1]:
+				print('flush')
+				pass
+		#straight
+		elif rankArray[0]+1 == rankArray[1] and rankArray[1]+1 == rankArray[2] \
+			and rankArray[2]+1 == rankArray[3] and rankArray[3]+1 == rankArray[4]:
+				print('straight')
+				pass
+		elif (rankArray[0] == rankArray[1] and rankArray[1] == rankArray[2] \
+			and rankArray[2] == rankArray[3]) or (rankArray[1] == rankArray[2] \
+			and rankArray[2] == rankArray[3] and rankArray[3] == rankArray[4]):
+				print('four of a kind')
+				pass
+		elif 0:
+			pass
 		pass
 	return returnArray
