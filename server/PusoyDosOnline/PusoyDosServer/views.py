@@ -1,4 +1,3 @@
-from xmlrpc.client import ResponseError
 from django.shortcuts import redirect, render
 from django.http import (Http404, HttpResponseRedirect, JsonResponse, HttpRequest, HttpResponseBadRequest)
 from django.utils import timezone
@@ -10,6 +9,13 @@ from rest_framework.response import Response
 
 from .models import *
 from .serializers import *
+
+# Views for Lobbies
+def create_casual_lobby(request):
+    pass
+
+def join_casual_lobby(request, shorthand):
+    pass
 
 # Permissions class for UserViewSet
 class UserPermissions(permissions.AllowAny):
@@ -52,10 +58,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
         """
         Get your own profile (stats, etc)
         """
-        try:
-            user = self.UserModel.objects.get(username=request.user.username) # find a user by their username
-        except self.UserModel.DoesNotExist:
-            return Response({"detail": "user not found"}, status=status.HTTP_404_NOT_FOUND)
+        user = request.user
         serializer = self.get_serializer(user, many=False)
         return Response(serializer.data)
     

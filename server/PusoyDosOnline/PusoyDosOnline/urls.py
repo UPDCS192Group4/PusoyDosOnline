@@ -35,4 +35,8 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    
+    # Lobby Views
+    # path('lobby/casual/create', views.create_casual_lobby, name="casual_create"),
+    # path('lobby/casual/join/<shorthand:slug>', views.join_casual_lobby, name="casual_join"),
 ]

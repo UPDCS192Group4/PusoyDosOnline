@@ -11,6 +11,7 @@ class Lobby(models.Model):
     Lobby information
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    shorthand = models.CharField(max_length=5, default="", blank=True)
     websocket = models.CharField(max_length=128, default="", blank=True)
     owner = models.UUIDField(null=True)
     creation_date = models.DateTimeField(default=timezone.now)
