@@ -4,6 +4,10 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django_countries.fields import CountryField
+from random import choices
+
+def generate_shorthand():
+    return "".join(choices("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", k=5))
 
 # Create your models here.
 class Lobby(models.Model):
@@ -11,8 +15,8 @@ class Lobby(models.Model):
     Lobby information
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    shorthand = models.CharField(max_length=5, default="", blank=True)
-    websocket = models.CharField(max_length=128, default="", blank=True)
+    shorthand = models.CharField(max_length=5, default=generate_shorthand, unique=True)
+    websocket = models.CharField(max_length=128, default="", blank=True) # websocket will only be populated if a game is running from this lobby
     owner = models.UUIDField(null=True)
     creation_date = models.DateTimeField(default=timezone.now)
     last_activity = models.DateTimeField(default=timezone.now)

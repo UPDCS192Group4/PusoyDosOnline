@@ -1,21 +1,15 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import (Http404, HttpResponseRedirect, JsonResponse, HttpRequest, HttpResponseBadRequest)
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
-from rest_framework import viewsets, permissions, status, mixins
-from rest_framework.decorators import action, api_view, permission_classes
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import viewsets, permissions, status, mixins, serializers
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 
 from .models import *
 from .serializers import *
-
-# Views for Lobbies
-def create_casual_lobby(request):
-    pass
-
-def join_casual_lobby(request, shorthand):
-    pass
 
 # Permissions class for UserViewSet
 class UserPermissions(permissions.AllowAny):
@@ -93,3 +87,34 @@ class RegisterViewSet(mixins.CreateModelMixin,
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
     throttle_scope = "register"
+    
+class CasualLobbyViewSet(mixins.CreateModelMixin,
+                         mixins.RetrieveModelMixin,
+                         mixins.ListModelMixin,
+                         viewsets.GenericViewSet):
+    """
+    API endpoint for generating and getting casual lobbies
+    """
+    queryset = Lobby.objects.all()
+    serializer_class = CasualLobbySerializer
+    permission_classes = [UserPermissions]
+    perms = {
+        permissions.IsAuthenticated: ["create", "retrieve"],
+        permissions.IsAdminUser: ["list"],
+    }
+    
+    def perform_create(self, serializer):
+        if self.request.user.current_lobby != None:
+            raise serializers.ValidationError("User in a lobby not allowed to create a new one")
+        new_lobby = serializer.save(owner=self.request.user.id)
+        self.request.user.current_lobby = Lobby.objects.all().get(shorthand=new_lobby.shorthand)
+        self.request.user.save()
+    
+    def retrieve(self, request, pk=None):
+        """
+        Retrieve a lobby via its shorthand
+        Will be used by clients to get their lobbies
+        """
+        lobby = get_object_or_404(self.queryset, shorthand=pk)
+        serializer = CasualLobbySerializer(lobby)
+        return Response(serializer.data)

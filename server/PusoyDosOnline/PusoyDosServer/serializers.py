@@ -4,6 +4,8 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django_countries.serializer_fields import CountryField
 
+from .models import *
+
 
 class UserSerializer(serializers.ModelSerializer):
     country_code = CountryField()
@@ -48,3 +50,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         
         return user
+    
+class CasualLobbySerializer(serializers.ModelSerializer):
+    shorthand = serializers.CharField(read_only=True)
+    id = serializers.UUIDField(read_only=True)
+    owner = serializers.UUIDField(read_only=True)
+    
+    class Meta:
+        model = Lobby
+        fields = ['id', 'shorthand', 'owner']
+        
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        if "owner" in ret:
+            ret.pop("owner") # Don't show the owner IDs other people
+        return ret

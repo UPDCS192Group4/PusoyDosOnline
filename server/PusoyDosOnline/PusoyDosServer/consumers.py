@@ -36,6 +36,11 @@ class LobbyConsumer(JsonWebsocketConsumer):
             self.close()
             return
         
+        if self.scope["user"].current_lobby == None or str(self.scope["user"].current_lobby.id) != self.lobby_id:
+            print("User is not allowed to be in this lobby!")
+            self.close()
+            return
+        
         print("User is authenticated!")
         self.lobby_group_name = f"lobby_{self.lobby_id}"
         self.user_id = self.scope["user"].id
@@ -55,7 +60,16 @@ class LobbyConsumer(JsonWebsocketConsumer):
         )
     
     def disconnect(self, code):
-        if self._is_authenticated():
+        if self._is_authenticated() and self.scope["user"].current_lobby:
+            # Announce to group that user left
+            async_to_sync(self.channel_layer.group_send)(
+                self.lobby_group_name,
+                {
+                    "type": "user_leave",
+                    "username": self.scope["user"].username
+                }
+            )
+            
             # Leave the room group
             async_to_sync(self.channel_layer.group_discard)(
                 self.lobby_group_name,
@@ -68,7 +82,32 @@ class LobbyConsumer(JsonWebsocketConsumer):
         Args:
             content (dict): JSON data decoded into dictionary
         """
-        types = ["chat_received", "user_join", "user_leave", "self_leave"]
+        
+        if not "type" in content:
+            self.send(text_data=json.dumps({
+                "type": "error",
+                "error": "Invalid lobby data sent",
+            }))
+            return
+        
+        if content["type"] == "chat" and "message" in content:
+            async_to_sync(self.channel_layer.group_send)(
+                self.lobby_group_name,
+                {
+                    "type": "chat_received",
+                    "message": content["message"],
+                }
+            )
+            return
+        
+        if content["type"] == "leave":
+            # Remove the lobby from the user
+            self.scope["user"].current_lobby = None
+            self.scope["user"].save()
+            # Close the connection
+            self.close()
+            return
+            
     
     def chat_received(self, event):
         self.send(text_data=json.dumps({
