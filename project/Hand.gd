@@ -16,7 +16,7 @@ var OVAL_VECT = Vector2()
 func _ready():	
 	yield(get_parent(), "ready")
 	#shuffleDeck()
-	deck = get_parent().deck
+	deck = get_parent().hand
 	
 	ANGLE = deg2rad(90) - ANG_DIST * (NUM_CARDS - 1) / 2
 	for i in range(NUM_CARDS):
