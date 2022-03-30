@@ -19,22 +19,22 @@ func _ready():
 	disablePlayButton()
 
 func shuffleDeck():
-#	for i in range(1,5):
-#		for j in range(1,14):
-#			newCard = cardScene.instance()
-#			newCard.init(i,j,0)
-#			deck.append(newCard)
-	
-	# Uncomment to show that straight works:
-	for i in range(1,14):
-		for j in range(1,5):
+	for i in range(1,5):
+		for j in range(1,14):
 			newCard = cardScene.instance()
 			newCard.init(i,j,0)
 			deck.append(newCard)
-	randomize()
 	
+	# Uncomment to show that straight works:
+#	for i in range(1,14):
+#		for j in range(1,5):
+#			newCard = cardScene.instance()
+#			newCard.init(i,j,0)
+#			deck.append(newCard)
+			
+	randomize()	
 	# Uncomment to show that flush works:
-	#deck.shuffle()
+	deck.shuffle()
 	
 func _on_PlayButton_pressed():
 	get_node('Hand').updateHand()

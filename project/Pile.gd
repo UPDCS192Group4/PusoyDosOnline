@@ -39,7 +39,7 @@ func updatePile(ranks, suits):
 	#get_parent().get_node('Opponents').A_updateHand(ranks.size())
 	#get_parent().get_node('Opponents').B_updateHand(ranks.size())
 	#get_parent().get_node('Opponents').C_updateHand(ranks.size())
-	get_parent().get_node('Game').disablePlayButton()
+	get_parent().disablePlayButton()
 	
 func changeZ(top):
 	#print('changing pile z')
