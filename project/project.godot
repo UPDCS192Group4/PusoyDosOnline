@@ -24,6 +24,10 @@ config/name="Project"
 run/main_scene="res://Home.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Websocket="*res://Websocket.gd"
+
 [display]
 
 window/size/height=1024
