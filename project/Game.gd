@@ -4,7 +4,19 @@ var cardScene = preload("res://Card.tscn")
 var newCard
 var pressedArray = Array()
 
+var ws = Websocket.getSocket()
+
 func _ready():
+	ws = Websocket.getSocket()
+	# ws.connect("connection_closed", self, "_connection_failed")
+	# ws.connect("connection_error", self, "_connection_failed")
+	# ws.connect("connection_established", self, "_connection_success")
+	ws.connect("data_received", self, "_on_data_received")
+
+func _process(delta):
+	ws.poll()
+	
+func loadGame():
 	var scene1 = load("res://Hand.tscn")
 	var child1 = scene1.instance()
 	add_child(child1)
@@ -16,6 +28,9 @@ func _ready():
 	child3.set_name("Opponents")
 	add_child(child3)
 	shuffleDeck()
+	emit_signal("ready")
+	#what is this
+	#Label.visible = false
 
 func shuffleDeck():
 #	for i in range(1,5):
@@ -192,3 +207,34 @@ func customSort(a,b):
 			pass
 		elif a[i] > b[i]:
 			return  true
+
+func _on_data_received():
+	print("receiving data...")
+	var data = ws.get_peer(1).get_packet().get_string_from_utf8()
+	var msg = data.split(" ")
+	print(msg)
+	match(msg[0]):
+		"hand":
+			var hand_string = msg[1].split(",")
+			print("received hand from server: ", hand_string)
+			for card in hand_string:
+				var card_split = card.split("-")
+				var suit = int(card_split[0])
+				var value = int(card_split[1])
+				newCard = cardScene.instance()
+				newCard.init(suit, value)
+				hand.append(newCard)
+			self.loadGame()
+		"play":
+			var newPile=msg[2].split(",")
+			var suits = Array()
+			var ranks = Array()
+			var tempString
+			for i in newPile:
+				tempString = i.split("-")
+				suits.append(int(tempString[0]))
+				ranks.append(int(tempString[1]))
+			print(ranks,suits)
+			print(msg[2])
+			get_node("Pile").updatePile(ranks,suits)
+	
