@@ -226,6 +226,7 @@ func _on_data_received():
 				newCard.init(suit, value, 0)
 				hand.append(newCard)
 			self.loadGame()
+			self.disablePlayButton()
 		"play":
 			var newPile=msg[2].split(",")
 			var suits = Array()
