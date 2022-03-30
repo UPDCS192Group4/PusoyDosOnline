@@ -25,11 +25,8 @@ func _ready():
 		cards[i].isCurrentPlayer = 1
 		cards[i].changeFace()
 		add_child(cards[i])
-		#print(i, ' ', cards[i].rank, ' ', cards[i].suit)
 		OVAL_VECT = Vector2(H_RAD * cos(ANGLE), -V_RAD * sin(ANGLE))
 		cards[i].rect_position = OVAL_CENTRE + OVAL_VECT - cards[i].rect_size / 2
-		#cards[i].rect_position.x -= cards[i].rect_size.x
-		#print(OVAL_VECT, cards[i].rect_position)
 		cards[i].rect_rotation = (90 - rad2deg(ANGLE)) / 4
 		ANGLE += ANG_DIST
 
@@ -55,11 +52,19 @@ func updateHand():
 	var pressedArray = Array()
 	var ranks = Array()
 	var suits = Array()
+	
+	# add variable for message-passing between hosts
+	var cards_string = PoolStringArray() # combined ranks and suits but in string
+	
 	for card in cards:
 		if card._is_pressed:
 			pressedArray.append(card)
 			ranks.append(card.rank)
 			suits.append(card.suit)
+			
+			#update added variable
+			cards_string.append(str(card.suit) + "-" + str(card.rank))
+			
 	ANG_DIST += 0.0075 * pressedArray.size()
 	for card in pressedArray:			
 		var k = cards.find(card)
@@ -74,9 +79,14 @@ func updateHand():
 		cards[i].rect_position = OVAL_CENTRE + OVAL_VECT - cards[i].rect_size / 2
 		cards[i].rect_rotation = (90 - rad2deg(ANGLE)) / 4
 		ANGLE += ANG_DIST
+		
 	var pileNode = get_parent().get_node('Pile')
 	pileNode.getTopOfPile()
 	pileNode.updatePile(ranks,suits)
+	
+	var play_message = "play " + cards_string.join(",")
+	print("played ", play_message)
+	get_parent().ws.get_peer(1).put_packet(play_message.to_utf8())
 #		var k = card.get_index()
 #		cards.remove(k)
 #		card.queue_free()
