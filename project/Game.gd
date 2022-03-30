@@ -222,7 +222,7 @@ func _on_data_received():
 				var suit = int(card_split[0])
 				var value = int(card_split[1])
 				newCard = cardScene.instance()
-				newCard.init(suit, value)
+				newCard.init(suit, value, 0)
 				#hand.append(newCard)
 			self.loadGame()
 		"play":
