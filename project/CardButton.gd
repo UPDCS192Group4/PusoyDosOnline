@@ -10,7 +10,7 @@ func _pressed():
 	if get_parent().get_parent().isCurrentPlayer == 0:
 		return
 	
-	var game = get_tree().root.get_child(0)
+	var game = get_tree().root.get_node('Game')
 	if _texture_toggle == 0:
 		self.texture_normal = _texture2
 		get_parent().get_parent().rect_scale *= 1.1

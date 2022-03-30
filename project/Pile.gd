@@ -36,9 +36,10 @@ func updatePile(ranks, suits):
 		ANGLE += ANG_DIST
 	
 	#this part is used to demonstrate removing cards from each of the other piles
-	get_parent().get_node('Opponents').A_updateHand(ranks.size())
-	get_parent().get_node('Opponents').B_updateHand(ranks.size())
-	get_parent().get_node('Opponents').C_updateHand(ranks.size())
+	#get_parent().get_node('Opponents').A_updateHand(ranks.size())
+	#get_parent().get_node('Opponents').B_updateHand(ranks.size())
+	#get_parent().get_node('Opponents').C_updateHand(ranks.size())
+	get_parent().get_node('Game').disablePlayButton()
 	
 func changeZ(top):
 	#print('changing pile z')

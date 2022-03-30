@@ -16,6 +16,7 @@ func _ready():
 	child3.set_name("Opponents")
 	add_child(child3)
 	shuffleDeck()
+	disablePlayButton()
 
 func shuffleDeck():
 #	for i in range(1,5):
