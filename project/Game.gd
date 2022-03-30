@@ -24,16 +24,16 @@ func shuffleDeck():
 #			newCard.init(i,j,0)
 #			deck.append(newCard)
 	
-	#uncomment to show that straight works:
+	# Uncomment to show that straight works:
 	for i in range(1,14):
 		for j in range(1,5):
 			newCard = cardScene.instance()
 			newCard.init(i,j,0)
 			deck.append(newCard)
 	randomize()
-	#uncomment to show that flush works:
-	#deck.shuffle()
 	
+	# Uncomment to show that flush works:
+	#deck.shuffle()
 	
 func _on_PlayButton_pressed():
 	get_node('Hand').updateHand()
@@ -43,7 +43,7 @@ func _on_HomeButton_pressed():
 	var scene1 = load("res://PopUp.tscn")
 	var child1 = scene1.instance()
 	get_parent().add_child(child1)
-	pass # Replace with function body.
+	pass
 
 func addPressedCard(newRank, newSuit):
 	var temp = Array()
@@ -51,6 +51,7 @@ func addPressedCard(newRank, newSuit):
 	temp.append(newSuit)
 	pressedArray.append(temp)
 	checkArray(pressedArray)
+	
 func removePressedCard(newRank, newSuit):
 	var temp = Array()
 	temp.append(newRank)
@@ -62,6 +63,7 @@ func removePressedCard(newRank, newSuit):
 func enablePlayButton():
 	get_node("PlayButton").text = 'PLAY'
 	get_node("PlayButton").disabled = false
+	
 func disablePlayButton():
 	get_node("PlayButton").text = "NOPE"
 	get_node("PlayButton").disabled = true
@@ -70,7 +72,7 @@ func checkArray(inputArray):
 	var topOfPile = get_node('Pile').getTopOfPile()
 	topOfPile = classifyArray(topOfPile)
 	inputArray = classifyArray(inputArray)
-	print('log ',topOfPile,inputArray)
+	#print('log ',topOfPile,inputArray)
 	if topOfPile[0] == 0 and inputArray[0] !=0:
 		enablePlayButton()
 		return
@@ -80,31 +82,27 @@ func checkArray(inputArray):
 	if topOfPile[0] != inputArray[0]:
 		disablePlayButton()
 		return
-	if topOfPile[0] == 1:
-		if topOfPile[1] > inputArray[1]:
-			disablePlayButton()
-		else:
-			enablePlayButton()
-	if topOfPile[0] == 2:
-		if topOfPile[1] < inputArray[1] or \
-			(topOfPile[1] == inputArray[1] and topOfPile[2] > inputArray[2]):
-				enablePlayButton()
-		else:
-			disablePlayButton()
-	#compare pressedArray to onTop, in a three part check
-	#first check if number of cards is the same as topOfPile
-	
-	#next check if play is valid (i.e., if pair, should have the same rank)
-	
-	#next check if play is better than topOfPile
+		
+	# Compare arrays topOfPile and inputArray using customSort()
+	if customSort(inputArray, topOfPile):
+		print('enabling')
+		enablePlayButton()
+		return
+	else:
+		disablePlayButton()
+		return
 
 func classifyArray(array):
-	#print('array is ', array)
+	# If an array of selected cards is invalid, this function returns [0].
+	# Otherwise, this function returns [n,a1,a2,...] where n is the number of cards
+	# in the selection and a1,a2,.. are other quantifiers for the array.
+	# Two arrays with the same n can be compared by comparing their quantifiers.
+	# Two arrays with different n cannot be compared and one cannot be played after the other.
 	var returnArray = Array()
 	if array.size() == 0:
 		returnArray.append(0)
 	if array.size() == 1:
-		#print('size is 1')
+		# For array of length 1, quantifiers are rank, suit, in that order.
 		returnArray.append(1)
 		returnArray.append(array[0][0])
 		returnArray.append(array[0][1])
@@ -112,6 +110,7 @@ func classifyArray(array):
 		if array[0][0] != array[1][0]:
 			returnArray.append(0)
 		else:
+			# For array of length 2, quantifiers are rank, suit, in that order.
 			returnArray.append(2)
 			returnArray.append(array[0][0])
 			returnArray.append(max(array[0][1],array[1][1]))
@@ -129,7 +128,7 @@ func classifyArray(array):
 		for i in range(5):
 			rankArray.append(array[i][0])
 		rankArray.sort()
-		print(rankArray)
+		print('rank array', rankArray)
 		#flush
 		if array[0][1] == array[1][1] and array[1][1] == array[2][1] \
 			and array[2][1] == array[3][1] and array[3][1] == array[4][1]:
@@ -157,7 +156,7 @@ func classifyArray(array):
 					if array[i][0] == rankArray[4]:
 						returnArray.append(array[i][1])
 						break
-				pass
+		#four of a kind
 		elif (rankArray[0] == rankArray[1] and rankArray[1] == rankArray[2] \
 			and rankArray[2] == rankArray[3]) or (rankArray[1] == rankArray[2] \
 			and rankArray[2] == rankArray[3] and rankArray[3] == rankArray[4]):
@@ -165,7 +164,7 @@ func classifyArray(array):
 				returnArray.append(5)
 				returnArray.append(4)
 				returnArray.append(rankArray[2])
-				pass
+		#full house
 		elif (rankArray[0] == rankArray[1] and rankArray[2] == rankArray[3] \
 			and rankArray[3] == rankArray[4]) or (rankArray[0] == rankArray[1] \
 			and rankArray[1] == rankArray[2] 	and rankArray[3] == rankArray[4]):
@@ -173,8 +172,23 @@ func classifyArray(array):
 				returnArray.append(5)
 				returnArray.append(3)
 				returnArray.append(rankArray[2])
-				pass
-		pass
+		else:
+			returnArray.append(0)
 	else:
 		returnArray.append(0)
 	return returnArray
+
+func customSort(a,b):
+	# Catch faulty inputs by first comparing size:
+	if a.size() != b.size():
+		print('Arrays are not of the same size.')
+		return false
+		
+	#Checks if the values of a are at least the values in b.
+	for i in range(a.size()):
+		if a[i] < b[i]:
+			return false
+		elif a[i] == b[i]:
+			pass
+		elif a[i] > b[i]:
+			return  true

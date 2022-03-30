@@ -25,11 +25,11 @@ func _ready():
 		cards[i].isCurrentPlayer = 1
 		cards[i].changeFace()
 		add_child(cards[i])
-		print(i, ' ', cards[i].rank, ' ', cards[i].suit)
+		#print(i, ' ', cards[i].rank, ' ', cards[i].suit)
 		OVAL_VECT = Vector2(H_RAD * cos(ANGLE), -V_RAD * sin(ANGLE))
 		cards[i].rect_position = OVAL_CENTRE + OVAL_VECT - cards[i].rect_size / 2
 		#cards[i].rect_position.x -= cards[i].rect_size.x
-		print(OVAL_VECT, cards[i].rect_position)
+		#print(OVAL_VECT, cards[i].rect_position)
 		cards[i].rect_rotation = (90 - rad2deg(ANGLE)) / 4
 		ANGLE += ANG_DIST
 
