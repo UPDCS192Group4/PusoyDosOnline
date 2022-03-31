@@ -65,3 +65,15 @@ class CasualLobbySerializer(serializers.ModelSerializer):
         if "owner" in ret:
             ret.pop("owner") # Don't show the owner IDs other people
         return ret
+    
+class FriendRequestSerializer(serializers.ModelSerializer):
+    from_user_name = serializers.CharField(read_only=True)
+    to_user_name = serializers.CharField()
+    
+    def create(self, validated_data):
+        friend_request = FriendRequest.objects.create(
+            from_user = User.objects.all().get(username=validated_data["from_user_name"]),
+            to_user = User.objects.all().get(username=validated_data["to_user_name"]),
+        )
+        
+        return friend_request

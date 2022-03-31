@@ -8,6 +8,8 @@ class LobbyConsumer(JsonWebsocketConsumer):
     Consumer responsible for lobby websockets.
     This consumer should handle people joining and leaving a lobby.
     This consumer should also support both types of lobbies.
+    
+    TODO: Turn this to AsyncJsonWebsocketConsumer before release
     """
     def _is_authenticated(self):
         """
@@ -25,8 +27,6 @@ class LobbyConsumer(JsonWebsocketConsumer):
     def connect(self):
         self.lobby_id = self.scope["url_route"]["kwargs"]["lobby_id"]
         print(f"Connection attempted to lobby {self.lobby_id}")
-        
-        self.accept()
         
         # Check if the user is allowed to be in this lobby
         # If the user's lobby_id in the backend is not set to this lobby
@@ -60,21 +60,25 @@ class LobbyConsumer(JsonWebsocketConsumer):
         )
     
     def disconnect(self, code):
-        if self._is_authenticated() and self.scope["user"].current_lobby:
-            # Announce to group that user left
-            async_to_sync(self.channel_layer.group_send)(
-                self.lobby_group_name,
-                {
-                    "type": "user_leave",
-                    "username": self.scope["user"].username
-                }
-            )
-            
-            # Leave the room group
-            async_to_sync(self.channel_layer.group_discard)(
-                self.lobby_group_name,
-                self.channel_name
-            )
+        # If this is a case of an unauthenticated user or a user
+        # not belonging to this lobby, don't do anything special
+        if not self._is_authenticated() or self.scope["user"].current_lobby == None:
+            return
+        
+        # Announce to group that user left
+        async_to_sync(self.channel_layer.group_send)(
+            self.lobby_group_name,
+            {
+                "type": "user_leave",
+                "username": self.scope["user"].username
+            }
+        )
+        
+        # Leave the room group
+        async_to_sync(self.channel_layer.group_discard)(
+            self.lobby_group_name,
+            self.channel_name
+        )
     
     def receive_json(self, content):
         """

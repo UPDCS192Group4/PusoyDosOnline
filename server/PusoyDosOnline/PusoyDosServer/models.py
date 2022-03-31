@@ -41,10 +41,16 @@ class User(AbstractUser):
     lost_games = models.IntegerField(default=0)
     winstreak = models.IntegerField(default=0)
     
+    friends = models.ManyToManyField("User", blank=True)
+    
     def __str__(self):
         return self.username
     
     def get_short_name(self):
         # Override the AbstractUser function for this just in case it's used elsewhere
         return self.username
+    
+class FriendRequest(models.Model):
+    from_user = models.ForeignKey(User, related_name="from_user", on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name="to_user", on_delete=models.CASCADE)
     

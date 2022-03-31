@@ -71,10 +71,12 @@ class UserViewSet(mixins.RetrieveModelMixin,
     
     @action(detail=True)
     def set_new_password(self, request):
+        # TODO: Set new password on user request
         pass
     
     @action(detail=True)
     def set_country(self, request):
+        # TODO: Set a user's country upon request
         pass
 
 class RegisterViewSet(mixins.CreateModelMixin,
@@ -87,6 +89,30 @@ class RegisterViewSet(mixins.CreateModelMixin,
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
     throttle_scope = "register"
+    
+class FriendRequestViewSet(mixins.CreateModelMixin,
+                           mixins.RetrieveModelMixin,
+                           mixins.ListModelMixin,
+                           viewsets.GenericViewSet):
+    queryset = FriendRequest.objects.all()
+    serializer_class = FriendRequestSerializer
+    permission_classes = [UserPermissions]
+    perms = {
+        permissions.IsAuthenticated: ["create", "retrieve"],
+        permissions.IsAdminUser: ["list"],
+    }
+    
+    def perform_create(self, serializer):
+        from_user_name = self.request.user.username
+        
+        if not FriendRequest.objects.all().get().exists():
+            raise serializers.ValidationError("You already sent a friend request to this user!")
+        
+        new_request = serializer.save(from_user_name=from_user_name)
+    
+    def retrieve(self, request, pk=None):
+        from_user_name = self.request.user.username
+        serializer = FriendRequestSerializer()
     
 class CasualLobbyViewSet(mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,
@@ -116,5 +142,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         Will be used by clients to get their lobbies
         """
         lobby = get_object_or_404(self.queryset, shorthand=pk)
+        self.request.user.current_lobby = lobby
+        self.request.user.save()
         serializer = CasualLobbySerializer(lobby)
         return Response(serializer.data)
