@@ -91,28 +91,45 @@ class RegisterViewSet(mixins.CreateModelMixin,
     throttle_scope = "register"
     
 class FriendRequestViewSet(mixins.CreateModelMixin,
-                           mixins.RetrieveModelMixin,
                            mixins.ListModelMixin,
                            viewsets.GenericViewSet):
     queryset = FriendRequest.objects.all()
     serializer_class = FriendRequestSerializer
     permission_classes = [UserPermissions]
     perms = {
-        permissions.IsAuthenticated: ["create", "retrieve"],
-        permissions.IsAdminUser: ["list"],
+        permissions.IsAuthenticated: ["create", "accept", "reject", "list"],
     }
     
     def perform_create(self, serializer):
         from_user_name = self.request.user.username
-        # Check if the friend request already exists
-        if not self.queryset.get(from_user=self.request.user).exists():
-            raise serializers.ValidationError("You already sent a friend request to this user!")
-        
-        serializer.save(from_user_name=from_user_name)
+        if serializer.is_valid():
+            # Validate if to_user exists
+            to_user = User.objects.get(username=serializer.validated_data["to_user"]["username"])
+            
+            if self.queryset.filter(from_user=self.request.user, to_user=to_user).exists():
+                # Validate if friend request already sent
+                raise serializers.ValidationError({"detail": "Friend request already sent"})
+            
+            serializer.save(from_user_name=from_user_name)
     
-    def retrieve(self, request, pk=None):
-        from_user_name = self.request.user.username
-        serializer = FriendRequestSerializer()
+    def list(self, request):
+        queryset = self.filter_queryset(self.get_queryset().filter(from_user=self.request.user))
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+        
+    @action(detail=False, methods=["POST"])
+    def accept(self, request):
+        pass
+    
+    @action(detail=False, methods=["POST"])
+    def reject(self, request):
+        pass
     
 class CasualLobbyViewSet(mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,

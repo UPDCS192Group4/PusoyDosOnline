@@ -72,13 +72,23 @@ class CasualLobbySerializer(serializers.ModelSerializer):
         return ret
     
 class FriendRequestSerializer(serializers.ModelSerializer):
-    from_user_name = serializers.CharField(read_only=True)
-    to_user_name = serializers.CharField()
+    from_user_name = serializers.CharField(read_only=True, source="from_user.username")
+    to_user_name = serializers.CharField(source="to_user.username")
+    sent_at = serializers.DateTimeField(read_only=True)
+    
+    class Meta:
+        model = FriendRequest
+        fields = ["from_user_name", "to_user_name", "sent_at"]
+        
+    def validate(self, attrs):
+        if not User.objects.filter(username=attrs["to_user"]["username"]).exists():
+            raise serializers.ValidationError({"detail": "Target user does not exist"})
+        return attrs
     
     def create(self, validated_data):
         friend_request = FriendRequest.objects.create(
-            from_user = User.objects.all().get(username=validated_data["from_user_name"]),
-            to_user = User.objects.all().get(username=validated_data["to_user_name"]),
+            from_user = User.objects.get(username=validated_data["from_user_name"]),
+            to_user = User.objects.get(username=validated_data["to_user"]["username"]),
         )
         
         return friend_request
