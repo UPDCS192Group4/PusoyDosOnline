@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets, permissions, status, mixins, serializers
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
+from django_countries import countries
 
 from .models import *
 from .serializers import *
@@ -31,7 +32,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
     serializer_class = UserSerializer
     permission_classes = [UserPermissions]
     perms = {
-        permissions.IsAuthenticated: ["profile", "self_profile", "leaderboard"],
+        permissions.IsAuthenticated: ["profile", "self_profile", "leaderboard", "set_new_password", "set_country"],
         permissions.IsAdminUser: ["list", "retrieve"],
     }
     
@@ -69,15 +70,40 @@ class UserViewSet(mixins.RetrieveModelMixin,
         serializer = self.get_serializer(highest_rated, many=True)
         return Response(serializer.data)
     
-    @action(detail=True)
+    @action(detail=False, methods=["POST"])
     def set_new_password(self, request):
-        # TODO: Set new password on user request
-        pass
+        # TODO: Move this to separate serializer?
+        if not "old_pass" in request.data or not "new_pass" in request.data or not "new_pass_check" in request.data:
+            raise serializers.ValidationError({"detail": "No password or password check data passed"})
+        
+        # Check if new_pass == new_pass_check
+        new_pass = request.data["new_pass"]
+        if not new_pass == request.data["new_pass_check"]:
+            raise serializers.ValidationError({"detail": "Invalid password"})
+        
+        # Check if the old password is correct
+        if not self.request.user.check_password(request.data["old_pass"]):
+            raise serializers.ValidationError({"detail": "Incorrect password"})
+        
+        # Validate new password
+        try:
+            validate_password(new_pass, User)
+        except:
+            raise serializers.ValidationError({"detail": "Invalid password"})
+        self.request.user.set_password(new_pass)
+        self.request.user.save()
+        return Response({"detail": "Password successfully changed"})
     
-    @action(detail=True)
+    @action(detail=False, methods=["GET", "POST"])
     def set_country(self, request):
-        # TODO: Set a user's country upon request
-        pass
+        if not "country_code" in request.data:
+            return Response({"detail": "No country code data passed"})
+        country_code = request.data["country_code"]
+        if not country_code in dict(countries):
+            raise serializers.ValidationError({"detail": "Incorrect country code"})
+        self.request.user.country_code = country_code
+        self.request.user.save()
+        return Response({"detail": f"Changed your country to {country_code}"})
 
 class RegisterViewSet(mixins.CreateModelMixin,
                       viewsets.GenericViewSet):
@@ -123,13 +149,29 @@ class FriendRequestViewSet(mixins.CreateModelMixin,
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
         
-    @action(detail=False, methods=["POST"])
-    def accept(self, request):
-        pass
+    @action(detail=True, methods=["GET", "POST"])
+    def accept(self, request, pk=None):
+        from_user = self.request.user
+        to_user = get_object_or_404(User, username=pk)
+        try:
+            count, frs = FriendRequest.objects.filter(from_user=from_user, to_user=to_user).delete()
+            from_user.friends.add(to_user)
+            to_user.friends.add(from_user)
+            from_user.save()
+            to_user.save()
+            return Response({"detail": f"Accepted"})
+        except FriendRequest.DoesNotExist:
+            return Response({"error": "Cannot find friend request"})
     
-    @action(detail=False, methods=["POST"])
-    def reject(self, request):
-        pass
+    @action(detail=True, methods=["POST"])
+    def reject(self, request, pk=None):
+        from_user = self.request.user
+        to_user = get_object_or_404(User, username=pk)
+        try:
+            count, frs = FriendRequest.objects.filter(from_user=from_user, to_user=to_user).delete()
+            return Response({"detail": f"Rejected"})
+        except FriendRequest.DoesNotExist:
+            return Response({"error": "Cannot find friend request"})
     
 class CasualLobbyViewSet(mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,

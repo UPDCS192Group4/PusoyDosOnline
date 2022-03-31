@@ -34,7 +34,7 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     rating = models.IntegerField("Elo Rating", default=1000)
     current_lobby = models.ForeignKey(Lobby, on_delete=models.SET_NULL, null=True, blank=True)
-    country_code = CountryField()
+    country_code = CountryField(default="AQ")
     highest_rating = models.IntegerField("Max Rating", default=1000)
     played_games = models.IntegerField(default=0)
     won_games = models.IntegerField(default=0)
@@ -54,4 +54,7 @@ class FriendRequest(models.Model):
     from_user = models.ForeignKey(User, related_name="from_user", on_delete=models.CASCADE)
     to_user = models.ForeignKey(User, related_name="to_user", on_delete=models.CASCADE)
     sent_at = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return f"{self.from_user.username} -> {self.to_user.username}"
     

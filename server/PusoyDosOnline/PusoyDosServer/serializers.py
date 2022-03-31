@@ -10,6 +10,19 @@ class FriendSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ['username', 'rating', 'country_code']
+        
+class PasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password_check = serializers.CharField(write_only=True, required=True) # make sure that the user knows what password they're inputting
+    
+    class Meta:
+        model = get_user_model()
+        fields = ["password", "password_check"]
+    
+    def validate(self, attrs):
+        if attrs["password"] != attrs["password_check"]:
+            raise serializers.ValidationError({"password": "password check is not the same as password input"})
+        return attrs
 
 class UserSerializer(serializers.ModelSerializer):
     country_code = CountryField()
@@ -17,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ['id', 'username', 'rating', 'country_code', 'played_games', 'won_games', 'lost_games', 'winstreak', 'friends']
+        read_only_fields = ['id', 'username', 'rating', 'played_games', 'won_games', 'lost_games', 'winstreak', 'friends']
         
     def to_representation(self, instance):
         """
