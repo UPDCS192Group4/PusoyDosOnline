@@ -104,11 +104,11 @@ class FriendRequestViewSet(mixins.CreateModelMixin,
     
     def perform_create(self, serializer):
         from_user_name = self.request.user.username
-        
-        if not FriendRequest.objects.all().get().exists():
+        # Check if the friend request already exists
+        if not self.queryset.get(from_user=self.request.user).exists():
             raise serializers.ValidationError("You already sent a friend request to this user!")
         
-        new_request = serializer.save(from_user_name=from_user_name)
+        serializer.save(from_user_name=from_user_name)
     
     def retrieve(self, request, pk=None):
         from_user_name = self.request.user.username
@@ -133,7 +133,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         if self.request.user.current_lobby != None:
             raise serializers.ValidationError("User in a lobby not allowed to create a new one")
         new_lobby = serializer.save(owner=self.request.user.id)
-        self.request.user.current_lobby = Lobby.objects.all().get(shorthand=new_lobby.shorthand)
+        self.request.user.current_lobby = self.queryset.get(shorthand=new_lobby.shorthand)
         self.request.user.save()
     
     def retrieve(self, request, pk=None):

@@ -6,12 +6,17 @@ from django_countries.serializer_fields import CountryField
 
 from .models import *
 
+class FriendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ['username', 'rating', 'country_code']
 
 class UserSerializer(serializers.ModelSerializer):
     country_code = CountryField()
+    friends = FriendSerializer(many=True)
     class Meta:
         model = get_user_model()
-        fields = ['id', 'username', 'rating', 'country_code', 'played_games', 'won_games', 'lost_games', 'winstreak']
+        fields = ['id', 'username', 'rating', 'country_code', 'played_games', 'won_games', 'lost_games', 'winstreak', 'friends']
         
     def to_representation(self, instance):
         """
