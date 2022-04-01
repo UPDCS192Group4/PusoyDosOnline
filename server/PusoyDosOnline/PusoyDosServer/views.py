@@ -78,7 +78,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
         
         # Check if new_pass == new_pass_check
         new_pass = request.data["new_pass"]
-        if not new_pass == request.data["new_pass_check"]:
+        if new_pass != request.data["new_pass_check"]:
             raise serializers.ValidationError({"detail": "Invalid password"})
         
         # Check if the old password is correct
@@ -96,6 +96,9 @@ class UserViewSet(mixins.RetrieveModelMixin,
     
     @action(detail=False, methods=["GET", "POST"])
     def set_country(self, request):
+        """
+        Set your country given an ISO country code
+        """
         if not "country_code" in request.data:
             return Response({"detail": "No country code data passed"})
         country_code = request.data["country_code"]
@@ -107,6 +110,9 @@ class UserViewSet(mixins.RetrieveModelMixin,
     
     @action(detail=False, methods=["GET", "POST"], url_path="remove_friend/(?P<username>[\w.@+-]+)")
     def remove_friend(self, request, username=""):
+        """
+        Remove existing friend in current user's friend list
+        """
         find_friend = self.request.user.friends.all().filter(username=username)
         if not find_friend.exists():
             raise serializers.ValidationError({"detail": "Friend not found"})
