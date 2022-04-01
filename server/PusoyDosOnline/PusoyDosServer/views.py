@@ -32,7 +32,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
     serializer_class = UserSerializer
     permission_classes = [UserPermissions]
     perms = {
-        permissions.IsAuthenticated: ["profile", "self_profile", "leaderboard", "set_new_password", "set_country"],
+        permissions.IsAuthenticated: ["profile", "self_profile", "leaderboard", "set_new_password", "set_country", "remove_friend"],
         permissions.IsAdminUser: ["list", "retrieve"],
     }
     
@@ -104,6 +104,18 @@ class UserViewSet(mixins.RetrieveModelMixin,
         self.request.user.country_code = country_code
         self.request.user.save()
         return Response({"detail": f"Changed your country to {country_code}"})
+    
+    @action(detail=False, methods=["GET", "POST"], url_path="remove_friend/(?P<username>[\w.@+-]+)")
+    def remove_friend(self, request, username=""):
+        find_friend = self.request.user.friends.all().filter(username=username)
+        if not find_friend.exists():
+            raise serializers.ValidationError({"detail": "Friend not found"})
+        friend_to_remove = find_friend.first()
+        self.request.user.friends.remove(friend_to_remove)
+        friend_to_remove.friends.remove(self.request.user)
+        self.request.user.save()
+        friend_to_remove.save()
+        return Response({"detail": "Friend successfully removed"})
 
 class RegisterViewSet(mixins.CreateModelMixin,
                       viewsets.GenericViewSet):
