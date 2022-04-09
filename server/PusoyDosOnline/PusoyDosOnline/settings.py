@@ -10,20 +10,25 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# ASGI Application Setting
+ASGI_APPLICATION = "PusoyDosOnline.asgi.application"
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5r9a(zi(1)*!sde#x@m4v3m5h*)9&m6%*=zj!o^8nrhzyzg%x7'
+SECRET_KEY = os.getenv("DJANGO_SECRETKEY", default='django-insecure-5r9a(zi(1)*!sde#x@m4v3m5h*)9&m6%*=zj!o^8nrhzyzg%x7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG", default="False") == "True"
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'PusoyDosServer',
+    'rest_framework',
+    'django_countries',
+    'rest_framework_simplejwt',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -75,11 +85,14 @@ WSGI_APPLICATION = 'PusoyDosOnline.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv("DB_NAME", default="PusoyDosOnline"),
+        'USER': os.getenv("DB_USER", default="web"),
+        'PASSWORD': os.getenv("DB_PASS", default="thisisarandompassword"),
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -121,3 +134,38 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom user model
+AUTH_USER_MODEL = 'PusoyDosServer.User'
+LOGIN_URL = '/api/login/'
+LOGIN_REDIRECT_URL = '/api/users/profile/'
+
+# REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'register': '12/hour', # throttle registrations to at least once every 5 minutes (per hour)
+    }
+}
+
+# Simple JWT settings
+# Documentation: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60), # 60 minute lifespan for access tokens
+}
+
+# Redis Access for Channels
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)]
+        }
+    }
+}
