@@ -27,6 +27,7 @@ config/icon="res://icon.png"
 [autoload]
 
 URLs="*res://singletons/URLs.gd"
+AccountInfo="*res://singletons/Account.gd"
 
 [display]
 

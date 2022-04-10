@@ -1,11 +1,13 @@
 extends Node
 
-var 
+var logged_in = false
+var _token = ""
 
 func _ready():
-	pass # Replace with function body.
+	pass
 
+func getToken():
+	return _token
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func setToken(token):
+	_token = token

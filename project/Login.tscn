@@ -236,6 +236,302 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.2
 
+[node name="Register" type="VBoxContainer" parent="A/B"]
+visible = false
+margin_left = 513.0
+margin_right = 963.0
+margin_bottom = 897.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 8.0
+
+[node name="DummyBox" type="HBoxContainer" parent="A/B/Register"]
+margin_right = 450.0
+margin_bottom = 113.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+
+[node name="DummyBox2" type="HBoxContainer" parent="A/B/Register/DummyBox"]
+margin_right = 176.0
+margin_bottom = 113.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/DummyBox"]
+margin_left = 180.0
+margin_right = 269.0
+margin_bottom = 113.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+custom_fonts/normal_font = ExtResource( 1 )
+text = "REGISTER"
+scroll_active = false
+
+[node name="DummyBox" type="HBoxContainer" parent="A/B/Register/DummyBox"]
+margin_left = 273.0
+margin_right = 450.0
+margin_bottom = 113.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="UserBox" type="VBoxContainer" parent="A/B/Register"]
+margin_top = 117.0
+margin_right = 450.0
+margin_bottom = 259.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Username" type="HBoxContainer" parent="A/B/Register/UserBox"]
+margin_right = 450.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/UserBox/Username"]
+margin_right = 127.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+custom_fonts/normal_font = ExtResource( 1 )
+text = "Username"
+scroll_active = false
+
+[node name="LineEdit" type="LineEdit" parent="A/B/Register/UserBox/Username"]
+margin_left = 131.0
+margin_right = 450.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 2 )
+text = "user1"
+
+[node name="UserError" type="VBoxContainer" parent="A/B/Register/UserBox"]
+margin_top = 54.0
+margin_right = 450.0
+margin_bottom = 142.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.8
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/UserBox/UserError"]
+margin_right = 450.0
+margin_bottom = 88.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.32
+custom_colors/default_color = Color( 1, 0, 0, 1 )
+custom_fonts/normal_font = ExtResource( 1 )
+text = "ERROR MESSAGE HERE"
+
+[node name="EmailBox" type="VBoxContainer" parent="A/B/Register"]
+margin_top = 263.0
+margin_right = 450.0
+margin_bottom = 405.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Email" type="HBoxContainer" parent="A/B/Register/EmailBox"]
+margin_right = 450.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/EmailBox/Email"]
+margin_right = 127.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+custom_fonts/normal_font = ExtResource( 1 )
+text = "Email"
+scroll_active = false
+
+[node name="LineEdit" type="LineEdit" parent="A/B/Register/EmailBox/Email"]
+margin_left = 131.0
+margin_right = 450.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 2 )
+text = "user1"
+
+[node name="EmailError" type="VBoxContainer" parent="A/B/Register/EmailBox"]
+margin_top = 54.0
+margin_right = 450.0
+margin_bottom = 142.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.8
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/EmailBox/EmailError"]
+margin_right = 450.0
+margin_bottom = 88.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.32
+custom_colors/default_color = Color( 1, 0, 0, 1 )
+custom_fonts/normal_font = ExtResource( 1 )
+text = "ERROR MESSAGE HERE"
+
+[node name="DummyBox2" type="VBoxContainer" parent="A/B/Register"]
+visible = false
+margin_top = 373.0
+margin_right = 813.0
+margin_bottom = 409.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.09
+
+[node name="PassBox" type="VBoxContainer" parent="A/B/Register"]
+margin_top = 409.0
+margin_right = 450.0
+margin_bottom = 551.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Password" type="HBoxContainer" parent="A/B/Register/PassBox"]
+margin_right = 450.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/PassBox/Password"]
+margin_right = 127.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+custom_fonts/normal_font = ExtResource( 1 )
+text = "Password"
+scroll_active = false
+
+[node name="LineEdit" type="LineEdit" parent="A/B/Register/PassBox/Password"]
+margin_left = 131.0
+margin_right = 450.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 2 )
+text = "samplepass1word"
+secret = true
+
+[node name="PassError" type="VBoxContainer" parent="A/B/Register/PassBox"]
+margin_top = 54.0
+margin_right = 450.0
+margin_bottom = 142.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.8
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/PassBox/PassError"]
+margin_right = 450.0
+margin_bottom = 88.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.32
+custom_colors/default_color = Color( 1, 0, 0, 1 )
+custom_fonts/normal_font = ExtResource( 1 )
+text = "error message here"
+
+[node name="ConfBox" type="VBoxContainer" parent="A/B/Register"]
+margin_top = 555.0
+margin_right = 450.0
+margin_bottom = 697.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Confirm" type="HBoxContainer" parent="A/B/Register/ConfBox"]
+margin_right = 450.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/ConfBox/Confirm"]
+margin_right = 127.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+custom_fonts/normal_font = ExtResource( 1 )
+text = "Password"
+scroll_active = false
+
+[node name="LineEdit" type="LineEdit" parent="A/B/Register/ConfBox/Confirm"]
+margin_left = 131.0
+margin_right = 450.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 2 )
+text = "samplepass1word"
+secret = true
+
+[node name="ConfError" type="VBoxContainer" parent="A/B/Register/ConfBox"]
+margin_top = 54.0
+margin_right = 450.0
+margin_bottom = 142.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.8
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/ConfBox/ConfError"]
+margin_right = 450.0
+margin_bottom = 88.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.32
+custom_colors/default_color = Color( 0.396078, 0.396078, 0.396078, 1 )
+custom_fonts/normal_font = ExtResource( 1 )
+text = "Confirm Password"
+
+[node name="DummyBox3" type="VBoxContainer" parent="A/B/Register"]
+margin_top = 701.0
+margin_right = 450.0
+margin_bottom = 738.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.13
+
+[node name="Buttons" type="HBoxContainer" parent="A/B/Register"]
+margin_top = 742.0
+margin_right = 450.0
+margin_bottom = 836.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.33
+
+[node name="ToLogin" type="Button" parent="A/B/Register/Buttons"]
+margin_right = 223.0
+margin_bottom = 94.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 1 )
+text = "BACK"
+
+[node name="Register" type="Button" parent="A/B/Register/Buttons"]
+margin_left = 227.0
+margin_right = 450.0
+margin_bottom = 94.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 1 )
+text = "REGISTER"
+
+[node name="DummyBox4" type="VBoxContainer" parent="A/B/Register"]
+margin_top = 840.0
+margin_right = 450.0
+margin_bottom = 897.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+
 [node name="DummyBox2" type="VBoxContainer" parent="A/B"]
 margin_left = 922.0
 margin_right = 1024.0
@@ -256,5 +552,7 @@ size_flags_vertical = 3
 
 [connection signal="pressed" from="A/B/Login/Buttons/ToReg" to="." method="_on_ToReg_pressed"]
 [connection signal="pressed" from="A/B/Login/Buttons/Login" to="." method="_on_Login_pressed"]
+[connection signal="pressed" from="A/B/Register/Buttons/ToLogin" to="." method="_on_ToLogin_pressed"]
+[connection signal="pressed" from="A/B/Register/Buttons/Register" to="." method="_on_Register_pressed"]
 [connection signal="request_completed" from="LoginRequest" to="." method="_on_LoginRequest_request_completed"]
 [connection signal="request_completed" from="RegisterRequest" to="." method="_on_RegisterRequest_request_completed"]
