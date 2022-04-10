@@ -1,0 +1,260 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/fonts/home_dynamicfont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://assets/fonts/nokia_cellphone.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Login.gd" type="Script" id=3]
+
+[node name="Login" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0156863, 0.32549, 0.180392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="A" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DummyBox" type="HBoxContainer" parent="A"]
+margin_right = 1024.0
+margin_bottom = 59.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="B" type="HBoxContainer" parent="A"]
+margin_top = 63.0
+margin_right = 1024.0
+margin_bottom = 960.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 15.0
+
+[node name="DummyBox" type="VBoxContainer" parent="A/B"]
+margin_right = 101.0
+margin_bottom = 897.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Login" type="VBoxContainer" parent="A/B"]
+margin_left = 105.0
+margin_right = 918.0
+margin_bottom = 897.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 8.0
+
+[node name="DummyBox" type="HBoxContainer" parent="A/B/Login"]
+margin_right = 813.0
+margin_bottom = 162.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+
+[node name="DummyBox2" type="HBoxContainer" parent="A/B/Login/DummyBox"]
+margin_right = 342.0
+margin_bottom = 162.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Login/DummyBox"]
+margin_left = 346.0
+margin_right = 466.0
+margin_bottom = 162.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.07
+custom_fonts/normal_font = ExtResource( 1 )
+text = "LOGIN"
+scroll_active = false
+
+[node name="DummyBox" type="HBoxContainer" parent="A/B/Login/DummyBox"]
+margin_left = 470.0
+margin_right = 813.0
+margin_bottom = 162.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="UserBox" type="VBoxContainer" parent="A/B/Login"]
+margin_top = 166.0
+margin_right = 813.0
+margin_bottom = 369.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Username" type="HBoxContainer" parent="A/B/Login/UserBox"]
+margin_right = 813.0
+margin_bottom = 71.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Login/UserBox/Username"]
+margin_right = 231.0
+margin_bottom = 71.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+custom_fonts/normal_font = ExtResource( 1 )
+text = "Username"
+
+[node name="LineEdit" type="LineEdit" parent="A/B/Login/UserBox/Username"]
+margin_left = 235.0
+margin_right = 813.0
+margin_bottom = 71.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 2 )
+text = "user1"
+
+[node name="UserError" type="VBoxContainer" parent="A/B/Login/UserBox"]
+margin_top = 75.0
+margin_right = 813.0
+margin_bottom = 203.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.8
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Login/UserBox/UserError"]
+margin_right = 813.0
+margin_bottom = 128.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.32
+custom_colors/default_color = Color( 1, 0, 0, 1 )
+custom_fonts/normal_font = ExtResource( 1 )
+text = "ERROR MESSAGE HERE"
+
+[node name="DummyBox2" type="VBoxContainer" parent="A/B/Login"]
+margin_top = 373.0
+margin_right = 813.0
+margin_bottom = 409.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.09
+
+[node name="PassBox" type="VBoxContainer" parent="A/B/Login"]
+margin_top = 413.0
+margin_right = 813.0
+margin_bottom = 617.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Password" type="HBoxContainer" parent="A/B/Login/PassBox"]
+margin_right = 813.0
+margin_bottom = 71.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Login/PassBox/Password"]
+margin_right = 231.0
+margin_bottom = 71.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+custom_fonts/normal_font = ExtResource( 1 )
+text = "Password"
+
+[node name="LineEdit" type="LineEdit" parent="A/B/Login/PassBox/Password"]
+margin_left = 235.0
+margin_right = 813.0
+margin_bottom = 71.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 2 )
+text = "samplepass1word"
+secret = true
+
+[node name="PassError" type="VBoxContainer" parent="A/B/Login/PassBox"]
+margin_top = 75.0
+margin_right = 813.0
+margin_bottom = 204.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.8
+
+[node name="RichTextLabel" type="RichTextLabel" parent="A/B/Login/PassBox/PassError"]
+margin_right = 813.0
+margin_bottom = 129.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.32
+custom_colors/default_color = Color( 1, 0, 0, 1 )
+custom_fonts/normal_font = ExtResource( 1 )
+text = "error message here"
+
+[node name="DummyBox3" type="VBoxContainer" parent="A/B/Login"]
+margin_top = 621.0
+margin_right = 813.0
+margin_bottom = 673.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.13
+
+[node name="Buttons" type="HBoxContainer" parent="A/B/Login"]
+margin_top = 677.0
+margin_right = 813.0
+margin_bottom = 811.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.33
+
+[node name="ToReg" type="Button" parent="A/B/Login/Buttons"]
+margin_right = 404.0
+margin_bottom = 134.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 1 )
+text = "REGISTER"
+
+[node name="Login" type="Button" parent="A/B/Login/Buttons"]
+margin_left = 408.0
+margin_right = 813.0
+margin_bottom = 134.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 1 )
+text = "LOGIN"
+
+[node name="DummyBox4" type="VBoxContainer" parent="A/B/Login"]
+margin_top = 815.0
+margin_right = 813.0
+margin_bottom = 897.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="DummyBox2" type="VBoxContainer" parent="A/B"]
+margin_left = 922.0
+margin_right = 1024.0
+margin_bottom = 897.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DummyBox2" type="HBoxContainer" parent="A"]
+margin_top = 964.0
+margin_right = 1024.0
+margin_bottom = 1024.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LoginRequest" type="HTTPRequest" parent="."]
+
+[node name="RegisterRequest" type="HTTPRequest" parent="."]
+
+[connection signal="pressed" from="A/B/Login/Buttons/ToReg" to="." method="_on_ToReg_pressed"]
+[connection signal="pressed" from="A/B/Login/Buttons/Login" to="." method="_on_Login_pressed"]
+[connection signal="request_completed" from="LoginRequest" to="." method="_on_LoginRequest_request_completed"]
+[connection signal="request_completed" from="RegisterRequest" to="." method="_on_RegisterRequest_request_completed"]
