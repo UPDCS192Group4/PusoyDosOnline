@@ -48,6 +48,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Login" type="VBoxContainer" parent="A/B"]
+visible = false
 margin_left = 105.0
 margin_right = 918.0
 margin_bottom = 897.0
@@ -237,31 +238,30 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 0.2
 
 [node name="Register" type="VBoxContainer" parent="A/B"]
-visible = false
-margin_left = 513.0
-margin_right = 963.0
+margin_left = 105.0
+margin_right = 918.0
 margin_bottom = 897.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 8.0
 
 [node name="DummyBox" type="HBoxContainer" parent="A/B/Register"]
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 113.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.4
 
 [node name="DummyBox2" type="HBoxContainer" parent="A/B/Register/DummyBox"]
-margin_right = 176.0
+margin_right = 322.0
 margin_bottom = 113.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/DummyBox"]
-margin_left = 180.0
-margin_right = 269.0
+margin_left = 326.0
+margin_right = 487.0
 margin_bottom = 113.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -271,8 +271,8 @@ text = "REGISTER"
 scroll_active = false
 
 [node name="DummyBox" type="HBoxContainer" parent="A/B/Register/DummyBox"]
-margin_left = 273.0
-margin_right = 450.0
+margin_left = 491.0
+margin_right = 813.0
 margin_bottom = 113.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -280,20 +280,20 @@ size_flags_stretch_ratio = 0.2
 
 [node name="UserBox" type="VBoxContainer" parent="A/B/Register"]
 margin_top = 117.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 259.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 
 [node name="Username" type="HBoxContainer" parent="A/B/Register/UserBox"]
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/UserBox/Username"]
-margin_right = 127.0
+margin_right = 231.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -303,8 +303,8 @@ text = "Username"
 scroll_active = false
 
 [node name="LineEdit" type="LineEdit" parent="A/B/Register/UserBox/Username"]
-margin_left = 131.0
-margin_right = 450.0
+margin_left = 235.0
+margin_right = 813.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -313,14 +313,14 @@ text = "user1"
 
 [node name="UserError" type="VBoxContainer" parent="A/B/Register/UserBox"]
 margin_top = 54.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 142.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.8
 
 [node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/UserBox/UserError"]
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 88.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -331,20 +331,20 @@ text = "ERROR MESSAGE HERE"
 
 [node name="EmailBox" type="VBoxContainer" parent="A/B/Register"]
 margin_top = 263.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 405.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 
 [node name="Email" type="HBoxContainer" parent="A/B/Register/EmailBox"]
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/EmailBox/Email"]
-margin_right = 127.0
+margin_right = 231.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -354,8 +354,8 @@ text = "Email"
 scroll_active = false
 
 [node name="LineEdit" type="LineEdit" parent="A/B/Register/EmailBox/Email"]
-margin_left = 131.0
-margin_right = 450.0
+margin_left = 235.0
+margin_right = 813.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -364,14 +364,14 @@ text = "user1"
 
 [node name="EmailError" type="VBoxContainer" parent="A/B/Register/EmailBox"]
 margin_top = 54.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 142.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.8
 
 [node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/EmailBox/EmailError"]
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 88.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -391,20 +391,20 @@ size_flags_stretch_ratio = 0.09
 
 [node name="PassBox" type="VBoxContainer" parent="A/B/Register"]
 margin_top = 409.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 551.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 
 [node name="Password" type="HBoxContainer" parent="A/B/Register/PassBox"]
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/PassBox/Password"]
-margin_right = 127.0
+margin_right = 231.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -414,8 +414,8 @@ text = "Password"
 scroll_active = false
 
 [node name="LineEdit" type="LineEdit" parent="A/B/Register/PassBox/Password"]
-margin_left = 131.0
-margin_right = 450.0
+margin_left = 235.0
+margin_right = 813.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -425,14 +425,14 @@ secret = true
 
 [node name="PassError" type="VBoxContainer" parent="A/B/Register/PassBox"]
 margin_top = 54.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 142.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.8
 
 [node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/PassBox/PassError"]
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 88.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -443,31 +443,31 @@ text = "error message here"
 
 [node name="ConfBox" type="VBoxContainer" parent="A/B/Register"]
 margin_top = 555.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 697.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 
 [node name="Confirm" type="HBoxContainer" parent="A/B/Register/ConfBox"]
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/ConfBox/Confirm"]
-margin_right = 127.0
+margin_right = 231.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.4
 custom_fonts/normal_font = ExtResource( 1 )
-text = "Password"
+text = "Re enter"
 scroll_active = false
 
 [node name="LineEdit" type="LineEdit" parent="A/B/Register/ConfBox/Confirm"]
-margin_left = 131.0
-margin_right = 450.0
+margin_left = 235.0
+margin_right = 813.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -477,25 +477,25 @@ secret = true
 
 [node name="ConfError" type="VBoxContainer" parent="A/B/Register/ConfBox"]
 margin_top = 54.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 142.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.8
 
 [node name="RichTextLabel" type="RichTextLabel" parent="A/B/Register/ConfBox/ConfError"]
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 88.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.32
-custom_colors/default_color = Color( 0.396078, 0.396078, 0.396078, 1 )
+custom_colors/default_color = Color( 0.392157, 0.392157, 0.392157, 1 )
 custom_fonts/normal_font = ExtResource( 1 )
 text = "Confirm Password"
 
 [node name="DummyBox3" type="VBoxContainer" parent="A/B/Register"]
 margin_top = 701.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 738.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -503,22 +503,22 @@ size_flags_stretch_ratio = 0.13
 
 [node name="Buttons" type="HBoxContainer" parent="A/B/Register"]
 margin_top = 742.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 836.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.33
 
 [node name="ToLogin" type="Button" parent="A/B/Register/Buttons"]
-margin_right = 223.0
+margin_right = 404.0
 margin_bottom = 94.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
 text = "BACK"
 
 [node name="Register" type="Button" parent="A/B/Register/Buttons"]
-margin_left = 227.0
-margin_right = 450.0
+margin_left = 408.0
+margin_right = 813.0
 margin_bottom = 94.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 1 )
@@ -526,7 +526,7 @@ text = "REGISTER"
 
 [node name="DummyBox4" type="VBoxContainer" parent="A/B/Register"]
 margin_top = 840.0
-margin_right = 450.0
+margin_right = 813.0
 margin_bottom = 897.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
