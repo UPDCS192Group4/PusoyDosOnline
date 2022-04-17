@@ -19,6 +19,7 @@ var reg_conffield
 var reg_conferr
 var reg_err_map
 
+var buttons = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -44,6 +45,11 @@ func _ready():
 		"password_check": reg_conferr
 	}
 
+	buttons.append(get_node("A/B/Login/Buttons/ToReg"))
+	buttons.append(get_node("A/B/Login/Buttons/Login"))
+	buttons.append(get_node("A/B/Register/Buttons/ToLogin"))
+	buttons.append(get_node("A/B/Register/Buttons/Register"))
+
 	usererr.text = ""
 	passerr.text = ""
 	reg_usererr.text = ""
@@ -59,6 +65,14 @@ func userValid(username):
 func passValid(password):
 	return true
 
+func _disable_buttons():
+	for button in buttons:
+		button.disabled = true
+		
+func _enable_buttons():
+	for button in buttons:
+		button.disabled = false
+
 func _clear_login_err():
 	usererr.text = ""
 	usererr.add_color_override("default_color", Color(1, 0, 0))
@@ -72,6 +86,7 @@ func _clear_reg_err():
 	reg_conferr.add_color_override("default_color", Color(100.0/255, 100.0/255, 100.0/255))
 
 func _on_Login_pressed():
+	_disable_buttons()
 	_clear_login_err()
 	var username = userfield.text
 	var password = passfield.text
@@ -79,6 +94,7 @@ func _on_Login_pressed():
 		_login(username, password)
 		
 func _on_Register_pressed():
+	_disable_buttons()
 	_clear_reg_err()
 	var username = reg_userfield.text
 	var email = reg_emailfield.text
@@ -119,6 +135,7 @@ func _on_LoginRequest_request_completed(result, response_code, headers, body):
 			passerr.text = json.result["password"][0]
 	if(response_code == 401):
 		usererr.text = json.result["detail"]
+	_enable_buttons()
 	
 func _on_RegisterRequest_request_completed(result, response_code, headers, body):
 	print("RESPONSE:")
@@ -139,6 +156,7 @@ func _on_RegisterRequest_request_completed(result, response_code, headers, body)
 			reg_err_map[key].text = json.result[key][0]
 			if (key == "password_check"):
 				reg_conferr.add_color_override("default_color", Color(1,0,0))
+	_enable_buttons()
 	
 func _on_ToReg_pressed():
 	# Test
