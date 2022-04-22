@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import (Http404, HttpResponseRedirect, JsonResponse, HttpRequest, HttpResponseBadRequest)
+from django.http import (Http404, HttpResponseRedirect, JsonResponse, HttpRequest, HttpResponseBadRequest, HttpResponse)
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -217,3 +217,35 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         self.request.user.save()
         serializer = CasualLobbySerializer(lobby)
         return Response(serializer.data)
+
+import json
+def leaderboards(request):
+    users = User.objects.all()
+    ratingDictionary = {}
+    ratings = []
+    numUsers = 0
+    for user in users:
+        numUsers+=1
+        if user.rating not in ratings:
+            ratings.append(user.rating)
+        if user.rating in ratingDictionary:
+            ratingDictionary[user.rating].append(str(user))
+        else:
+            ratingDictionary[user.rating] = [str(user)]
+
+    returnDictionary = {}
+    addedUsers = 0
+    counter = 0
+    ratings.sort(reverse=True)
+    while(addedUsers < numUsers and addedUsers < 3):
+        temp = ratings[counter]
+        for user in ratingDictionary[temp]:
+            returnDictionary[user] = temp
+            addedUsers+=1
+        counter += 1
+
+    returnString = ''
+    for user in returnDictionary:
+        returnString += '['+user+':'+str(returnDictionary[user])+']'
+
+    return HttpResponse(json.dumps(returnDictionary))

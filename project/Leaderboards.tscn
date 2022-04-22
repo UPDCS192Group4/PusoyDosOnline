@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/fonts/home_dynamicfont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Leaderboards.gd" type="Script" id=2]
+[ext_resource path="res://assets/fonts/nokiafc22.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://assets/fonts/leaderboardsfont.tres" type="DynamicFont" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 60
+font_data = ExtResource( 3 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -37,5 +43,108 @@ text = "HOME"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="LeaderboardsRequest" type="HTTPRequest" parent="."]
+
+[node name="Error_message" type="Label" parent="."]
+visible = false
+margin_left = 120.0
+margin_top = 198.0
+margin_right = 927.0
+margin_bottom = 339.0
+custom_fonts/font = SubResource( 1 )
+text = "! CANNOT BE LOADED !"
+
+[node name="boards" type="VBoxContainer" parent="."]
+margin_left = 228.0
+margin_top = 171.0
+margin_right = 769.0
+margin_bottom = 841.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="player1" type="HBoxContainer" parent="boards"]
+margin_right = 541.0
+margin_bottom = 220.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="name" type="Label" parent="boards/player1"]
+margin_right = 268.0
+margin_bottom = 220.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "test"
+align = 1
+valign = 1
+
+[node name="score" type="Label" parent="boards/player1"]
+margin_left = 272.0
+margin_right = 541.0
+margin_bottom = 220.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "test"
+align = 1
+valign = 1
+
+[node name="player2" type="HBoxContainer" parent="boards"]
+margin_top = 224.0
+margin_right = 541.0
+margin_bottom = 445.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="name" type="Label" parent="boards/player2"]
+margin_right = 268.0
+margin_bottom = 221.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "test"
+align = 1
+valign = 1
+
+[node name="score" type="Label" parent="boards/player2"]
+margin_left = 272.0
+margin_right = 541.0
+margin_bottom = 221.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "test"
+align = 1
+valign = 1
+
+[node name="player3" type="HBoxContainer" parent="boards"]
+margin_top = 449.0
+margin_right = 541.0
+margin_bottom = 670.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="name" type="Label" parent="boards/player3"]
+margin_right = 268.0
+margin_bottom = 221.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "test"
+align = 1
+valign = 1
+
+[node name="score" type="Label" parent="boards/player3"]
+margin_left = 272.0
+margin_right = 541.0
+margin_bottom = 221.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "test"
+align = 1
+valign = 1
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
