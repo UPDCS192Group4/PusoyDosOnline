@@ -120,11 +120,9 @@ func _register(username, email, password, confirm):
 	print("Err code", err)
 
 func _on_LoginRequest_request_completed(result, response_code, headers, body):
-	print("RESPONSE:")
-	print("r", result, " c", response_code, " h", headers)
 	var json = JSON.parse(body.get_string_from_utf8())
-	print("b", json.result)
-	print()
+	URLs.access = json.result["access"]
+	URLs.refresh = json.result["refresh"]
 	if(response_code == 200):
 		AccountInfo.setToken(json.result["access"])
 		get_tree().change_scene_to(home_scene)

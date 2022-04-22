@@ -6,25 +6,26 @@ func _ready():
 	_get_leaderboards()
 	
 func _get_leaderboards():
-	print('part1')
 	var url = URLs.leaderboards
+	var headers = ['Content-Type: application/json', 'Authorization: Bearer '+URLs.access]
 	$LeaderboardsRequest.connect("request_completed", self, "_get_request_completed")
-	print('part2')
-	var error = $LeaderboardsRequest.request(url)
-	if error != OK:
+	var err = $LeaderboardsRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	if err != OK:
 		push_error("An error occurred when querying the leaderboards!")
 		$Error_message.show()
-	print('part3')
 
 func _on_Button_pressed():	
 	yield(get_tree().create_timer(0.5), "timeout")
 	get_tree().change_scene("res://Home.tscn")
 
 func _get_request_completed(result,response_code,header,body):
-	print('part4')
 	var response = parse_json(body.get_string_from_utf8())
+	print(response)
 	var counter = 0
-	for i in response:
-		$boards.get_child(counter).get_node("name").text = i
-		$boards.get_child(counter).get_node("score").text = str(response[i])
+	for object in response.results:
+		print(object.username,object.rating)
+		if counter >= 3:
+			break
+		$boards.get_child(counter).get_node("name").text = object.username
+		$boards.get_child(counter).get_node("score").text = str(object.rating)
 		counter+=1
