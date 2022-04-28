@@ -1,6 +1,7 @@
 import uuid
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.contrib.auth.models import AnonymousUser
+from django.utils import timezone
 from asgiref.sync import async_to_sync
 import json
 
@@ -47,14 +48,16 @@ class LobbyConsumer(JsonWebsocketConsumer):
         print("User is authenticated!")
         self.lobby_group_name = f"lobby_{self.lobby_id}"
         self.user_id = self.scope["user"].id
+        self.ready = False
         
         # Add user to the player list in the database
-        lobby = Lobby.objects.get(id=self.lobby_id) # this lobby should already exist
-        lobby.players_inside.add(self.scope["user"])
-        lobby.save()
+        self.lobby = Lobby.objects.get(id=self.lobby_id) # this lobby should already exist
+        self.lobby.players_inside.add(self.scope["user"])
+        self.lobby.last_activity = timezone.now()
+        self.lobby.save()
         
         # Get updated player list
-        player_list = list(lobby.players_inside.all().values_list("username", flat=True))
+        player_list = list(self.lobby.players_inside.all().values_list("username", flat=True))
         print("Player successfully added to database log!")
         
         # Join this websocket up with the lobby group
@@ -84,12 +87,11 @@ class LobbyConsumer(JsonWebsocketConsumer):
             return
         
         # Remove user from the database listing
-        lobby = Lobby.objects.get(id=self.lobby_id) # this lobby should already exist
-        lobby.players_inside.remove(self.scope["user"])
-        lobby.save()
+        self.lobby.players_inside.remove(self.scope["user"])
+        self.lobby.save()
         
         # Get updated player list
-        player_list = list(lobby.players_inside.all().values_list("username", flat=True))
+        player_list = list(self.lobby.players_inside.all().values_list("username", flat=True))
         
         # Announce to group that user left
         async_to_sync(self.channel_layer.group_send)(
@@ -132,8 +134,38 @@ class LobbyConsumer(JsonWebsocketConsumer):
             )
             return
         
-        if content["type"] == "start":
-            # Count how many users there are in the lobby
+        if content["type"] == "start" and self.lobby.status == 4 and self.lobby.owner == self.scope["user"]: # all 4 players need to be ready and this is called by the owner
+            print("User called to start the game!")
+            return
+        
+        if content["type"] == "ready" and not self.ready:
+            print(f'{self.scope["user"].username} is ready!')
+            self.ready = True
+            self.lobby.status += 1
+            self.lobby.save()
+            
+            async_to_sync(self.channel_layer.group_send)(
+                self.lobby_group_name,
+                {
+                    "type": "user_ready",
+                    "user": self.scope["user"].username,
+                }
+            )
+            return
+        
+        if content["type"] == "unready" and self.ready:
+            print(f'{self.scope["user"].username} is not ready!')
+            self.ready = False
+            self.lobby.status -= 1
+            self.lobby.save()
+            
+            async_to_sync(self.channel_layer.group_send)(
+                self.lobby_group_name,
+                {
+                    "type": "user_unready",
+                    "user": self.scope["user"].username,
+                }
+            )
             return
         
         if content["type"] == "leave":
@@ -155,15 +187,27 @@ class LobbyConsumer(JsonWebsocketConsumer):
     def user_join(self, event):
         self.send(text_data=json.dumps({
             'type': "join",
-            'message': f"User {event['username']} has joined the lobby!",
+            'user': event['username'],
             'list': event['list'],
         }))
     
     def user_leave(self, event):
         self.send(text_data=json.dumps({
             'type': "leave",
-            'message': f"User {event['username']} has left the lobby!",
+            'user': event['username'],
             'list': event['list'],
+        }))
+        
+    def user_ready(self, event):
+        self.send(text_data=json.dumps({
+            'type': "ready",
+            'user': event["username"],
+        }))
+    
+    def user_unready(self, event):
+        self.send(text_data=json.dumps({
+            'type': "leave",
+            'user': event["username"],
         }))
         
     

@@ -1,10 +1,11 @@
 import uuid
 
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django_countries.fields import CountryField
-from random import choices
+from random import choices, randint
 
 def generate_shorthand():
     return "".join(choices("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", k=5))
@@ -16,14 +17,29 @@ class Lobby(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     shorthand = models.CharField(max_length=5, default=generate_shorthand, unique=True)
-    websocket = models.CharField(max_length=128, default="", blank=True) # websocket will only be populated if a game is running from this lobby
+    # websocket = models.CharField(max_length=128, default="", blank=True) # websocket will only be populated if a game is running from this lobby
+    game = models.ForeignKey("Game", blank=True, on_delete=models.SET_NULL, null=True) # this will only be populated if there is a game running from this lobby, this replaces the role of the field.
     owner = models.UUIDField(null=True)
     creation_date = models.DateTimeField(default=timezone.now)
     last_activity = models.DateTimeField(default=timezone.now)
-    status = models.IntegerField(default=True) # status is if it's waiting or about to start a game
+    status = models.IntegerField(default=0) # status = amount of players ready
     players_inside = models.ManyToManyField("User", blank=True) # players currently inside the lobby
     class Meta:
         verbose_name_plural = "lobbies"
+        
+    def save(self, *args,**kwargs):
+        self.last_activity = timezone.now() # keep the last activity updated
+        return super().save(*args, **kwargs)
+        
+class Game(models.Model):
+    """
+    Game information
+    Should contain information on players, hands, and current game state
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    seed = models.IntegerField(default=randint(1,2**31-1))
+    current_round = models.IntegerField(default=0) # 1 round = 1 successful play made (either cards are played or its a skip)
+    hands = ArrayField(base_field=ArrayField(base_field=models.CharField(name="Card", max_length=3), size=13), size=4)
 
 class User(AbstractUser):
     """
@@ -50,6 +66,10 @@ class User(AbstractUser):
     def get_short_name(self):
         # Override the AbstractUser function for this just in case it's used elsewhere
         return self.username
+    
+    def save(self, *args,**kwargs):
+        self.last_activity = timezone.now() # keep the last activity updated
+        return super().save(*args, **kwargs)
     
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(User, related_name="from_user", on_delete=models.CASCADE)

@@ -219,6 +219,8 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         Will be used by clients to get their lobbies
         """
         lobby = get_object_or_404(self.queryset, shorthand=pk)
+        if len(get_user_model().objects.filter(current_lobby=lobby)) > 4: # don't allow a join if there's too many people registered to join the lobby
+            return Http404()
         self.request.user.current_lobby = lobby
         self.request.user.save()
         serializer = CasualLobbySerializer(lobby)
