@@ -1,7 +1,10 @@
+import uuid
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.contrib.auth.models import AnonymousUser
 from asgiref.sync import async_to_sync
 import json
+
+from .models import Lobby
 
 class LobbyConsumer(JsonWebsocketConsumer):
     """
@@ -45,32 +48,56 @@ class LobbyConsumer(JsonWebsocketConsumer):
         self.lobby_group_name = f"lobby_{self.lobby_id}"
         self.user_id = self.scope["user"].id
         
+        # Add user to the player list in the database
+        lobby = Lobby.objects.get(id=self.lobby_id) # this lobby should already exist
+        lobby.players_inside.add(self.scope["user"])
+        lobby.save()
+        
+        # Get updated player list
+        player_list = list(lobby.players_inside.all().values_list("username", flat=True))
+        print("Player successfully added to database log!")
+        
         # Join this websocket up with the lobby group
         async_to_sync(self.channel_layer.group_add)(
             self.lobby_group_name,
             self.channel_name
         )
+        print("Consumer successfully added to group!")
         
+        # Send the player_join event to everyone in the group to notify them that someone has joined
         async_to_sync(self.channel_layer.group_send)(
             self.lobby_group_name,
             {
                 "type": "user_join",
-                "username": self.scope["user"].username
+                "username": self.scope["user"].username,
+                "list": player_list,
             }
         )
+        
+        # Finally accept the connection
+        self.accept()
     
     def disconnect(self, code):
         # If this is a case of an unauthenticated user or a user
         # not belonging to this lobby, don't do anything special
-        if not self._is_authenticated() or self.scope["user"].current_lobby == None:
+        if not self._is_authenticated() or self.scope["user"].current_lobby == None or str(self.scope["user"].current_lobby.id) != self.lobby_id:
             return
+        
+        # Remove user from the database listing
+        lobby = Lobby.objects.get(id=self.lobby_id) # this lobby should already exist
+        lobby.players_inside.remove(self.scope["user"])
+        lobby.save()
+        
+        # Get updated player list
+        player_list = list(lobby.players_inside.all().values_list("username", flat=True))
         
         # Announce to group that user left
         async_to_sync(self.channel_layer.group_send)(
             self.lobby_group_name,
             {
                 "type": "user_leave",
-                "username": self.scope["user"].username
+                "username": self.scope["user"].username,
+                "list": player_list,
             }
         )
         
@@ -100,8 +127,13 @@ class LobbyConsumer(JsonWebsocketConsumer):
                 {
                     "type": "chat_received",
                     "message": content["message"],
+                    "from": self.scope["user"].username,
                 }
             )
+            return
+        
+        if content["type"] == "start":
+            # Count how many users there are in the lobby
             return
         
         if content["type"] == "leave":
@@ -117,18 +149,21 @@ class LobbyConsumer(JsonWebsocketConsumer):
         self.send(text_data=json.dumps({
             'type': "chat",
             'message': event["message"],
+            'from': event["from"],
         }))
     
     def user_join(self, event):
         self.send(text_data=json.dumps({
             'type': "join",
             'message': f"User {event['username']} has joined the lobby!",
+            'list': event['list'],
         }))
     
     def user_leave(self, event):
         self.send(text_data=json.dumps({
             'type': "leave",
             'message': f"User {event['username']} has left the lobby!",
+            'list': event['list'],
         }))
         
     
