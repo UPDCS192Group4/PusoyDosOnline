@@ -39,7 +39,10 @@ class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     seed = models.IntegerField(default=randint(1,2**31-1))
     current_round = models.IntegerField(default=0) # 1 round = 1 successful play made (either cards are played or its a skip)
-    hands = ArrayField(base_field=ArrayField(base_field=models.CharField(name="Card", max_length=3), size=13), size=4)
+    hands = ArrayField(base_field=ArrayField(base_field=models.CharField(name="Card", max_length=3, default=""), size=13), size=4)
+    players = models.ManyToManyField("User", blank=True)
+    # A card is essentially [Suit][Number Value]. Aces are 01s, Jacks are 11, Queens are 12, Kings are 13. Numbers are prepended with 0 if less than 10
+    # Suits are represented using the first letter of each suit: C = Clubs, D = Diamonds, H = Hearts, S = Spades
 
 class User(AbstractUser):
     """
