@@ -60,5 +60,5 @@ In order to create a new superuser (for testing purposes, and for using `/admin/
 6. Automate Godot client deployment
 7. ~~Setup Redis for caching game and lobby states~~ **Done!**
 8. Turn Websocket code from sync to async
-9. Proper authorization for lobby websocket code
+9. ~~Proper authorization for lobby websocket code~~ **Done!**
 10. Integrate Celery to clean up dangling lobbies and games

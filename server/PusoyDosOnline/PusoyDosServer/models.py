@@ -21,6 +21,7 @@ class Lobby(models.Model):
     creation_date = models.DateTimeField(default=timezone.now)
     last_activity = models.DateTimeField(default=timezone.now)
     status = models.IntegerField(default=True) # status is if it's waiting or about to start a game
+    players_inside = models.ManyToManyField("User", blank=True) # players currently inside the lobby
     class Meta:
         verbose_name_plural = "lobbies"
 
