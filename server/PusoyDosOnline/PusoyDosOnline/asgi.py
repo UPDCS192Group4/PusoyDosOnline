@@ -33,5 +33,6 @@ application = ProtocolTypeRouter({
     #       using the runworker command in manage.py!
     "channels": ChannelNameRouter({
         "lobby-clean": LobbyCleaner.as_asgi(),
+        "game-manager": GameManager.as_asgi(),
     })
 })
