@@ -4,6 +4,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 from asgiref.sync import async_to_sync
 import json
+from django.conf import settings
 
 from .models import Lobby
 
@@ -137,7 +138,10 @@ class LobbyConsumer(JsonWebsocketConsumer):
             )
             return
         
-        if content["type"] == "start" and self.lobby.status == 4:
+        if content["type"] == "start":
+            if not settings.DEBUG: # Only check the amount of players when not in Debug Mode
+                if self.lobby.status < 4:
+                    return
             if self.lobby.owner == self.scope["user"]: # all 4 players need to be ready and this is called by the owner
                 print("Owner called to start the game!")
                 # Call the game manager to create the game
