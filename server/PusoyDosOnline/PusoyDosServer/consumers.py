@@ -137,9 +137,11 @@ class LobbyConsumer(JsonWebsocketConsumer):
             )
             return
         
-        if content["type"] == "start" and self.lobby.status == 4 and self.lobby.owner == self.scope["user"]: # all 4 players need to be ready and this is called by the owner
-            print("User called to start the game!")
-            
+        if content["type"] == "start" and self.lobby.status == 4:
+            if self.lobby.owner == self.scope["user"]: # all 4 players need to be ready and this is called by the owner
+                print("User called to start the game!")
+            else:
+                print("Non-owner tried starting the game!")
             return
         
         if content["type"] == "ready" and not self.ready:
