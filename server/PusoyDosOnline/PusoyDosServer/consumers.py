@@ -233,3 +233,6 @@ class LobbyConsumer(JsonWebsocketConsumer):
         self.send(text_data=json.dumps({
             'type': 'game_start'
         }))
+        self.game = self.lobby.game
+        if self.game == None:
+            print("Game has not updated for consumer!")

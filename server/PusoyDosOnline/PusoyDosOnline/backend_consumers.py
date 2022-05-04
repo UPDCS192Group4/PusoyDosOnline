@@ -48,7 +48,7 @@ class GameManager(SyncConsumer):
         async_to_sync(self.channel_layer.group_send)(
             f"lobby_{lobby_id}",
             {
-                "type": "game_ready",
+                "type": "game_start",
                 "game_id": game.id,
             }
         )
