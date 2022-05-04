@@ -157,7 +157,7 @@ class FriendRequestViewSet(mixins.CreateModelMixin,
             serializer.save(from_user_name=from_user_name)
     
     def list(self, request):
-        queryset = self.filter_queryset(self.get_queryset().filter(from_user=self.request.user))
+        queryset = self.filter_queryset(self.get_queryset().filter(to_user=self.request.user))
 
         page = self.paginate_queryset(queryset)
         if page is not None:

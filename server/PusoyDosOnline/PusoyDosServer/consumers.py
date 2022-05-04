@@ -56,6 +56,9 @@ class LobbyConsumer(JsonWebsocketConsumer):
         self.lobby.last_activity = timezone.now()
         self.lobby.save()
         
+        # Save game to consumer (if this is set, then a game is ongoing for the current lobby)
+        self.game = self.lobby.game
+        
         # Get updated player list
         player_list = list(self.lobby.players_inside.all().values_list("username", flat=True))
         print("Player successfully added to database log!")
@@ -136,6 +139,7 @@ class LobbyConsumer(JsonWebsocketConsumer):
         
         if content["type"] == "start" and self.lobby.status == 4 and self.lobby.owner == self.scope["user"]: # all 4 players need to be ready and this is called by the owner
             print("User called to start the game!")
+            
             return
         
         if content["type"] == "ready" and not self.ready:
@@ -176,7 +180,7 @@ class LobbyConsumer(JsonWebsocketConsumer):
             self.close()
             return
             
-    
+    # This event is called when a user chats to other users in the lobby
     def chat_received(self, event):
         self.send(text_data=json.dumps({
             'type': "chat",
@@ -184,6 +188,7 @@ class LobbyConsumer(JsonWebsocketConsumer):
             'from': event["from"],
         }))
     
+    # This event is called when a user joins the lobby (only authenticated users)
     def user_join(self, event):
         self.send(text_data=json.dumps({
             'type': "join",
@@ -191,6 +196,7 @@ class LobbyConsumer(JsonWebsocketConsumer):
             'list': event['list'],
         }))
     
+    # This event is called when a user leaves the lobby (either through loss of connection or intentional disconnection)
     def user_leave(self, event):
         self.send(text_data=json.dumps({
             'type': "leave",
@@ -198,29 +204,22 @@ class LobbyConsumer(JsonWebsocketConsumer):
             'list': event['list'],
         }))
         
+    # This event is called when a user sets themselves as ready
     def user_ready(self, event):
         self.send(text_data=json.dumps({
             'type': "ready",
             'user': event["username"],
         }))
     
+    # This event is called when a user sets themselves to no longer be ready
     def user_unready(self, event):
         self.send(text_data=json.dumps({
-            'type': "leave",
+            'type': "unready",
             'user': event["username"],
         }))
         
-    
-class GameConsumer(JsonWebsocketConsumer):
-    """
-    Consumer responsible for game websockets
-    This consumer should handle game logic and passing info to everyone else in the game
-    """
-    def connect(self, event):
-        pass
-    
-    def disconnect(self, code):
-        return super().disconnect(code)
-    
-    def receive_json(self, content, **kwargs):
-        return super().receive_json(content, **kwargs)
+    # This event is called by the GameManager consumer when it has finished setting up the game in the DB
+    def game_start(self, event):
+        self.send(text_data=json.dumps({
+            'type': 'game_start'
+        }))

@@ -1,4 +1,4 @@
-from random import shuffle
+import random
 from channels.consumer import SyncConsumer
 from PusoyDosServer.models import * # import the database models from our project
 
@@ -19,14 +19,19 @@ class GameManager(SyncConsumer):
         Called using the event type "game.create"
         Expects a lobby_id value (string, uuid4 format) to link the created game to
         """
+        # Set game seed
+        seed = random.randrange(1, 2**31)
+        random.seed(seed, version=2)
+        
         full_deck = [f"C{i:02}" for i in range(1, 14)] + [f"D{i:02}" for i in range(1, 14)] + [f"H{i:02}" for i in range(1, 14)] + [f"S{i:02}" for i in range(1, 14)]
-        shuffle(full_deck)
+        random.shuffle(full_deck)
         # A card is essentially [Suit][Number Value]. Aces are 01s, Jacks are 11, Queens are 12, Kings are 13. Numbers are prepended with 0 if less than 10
         # Suits are represented using the first letter of each suit: C = Clubs, D = Diamonds, H = Hearts, S = Spades
         lobby = Lobby.objects.get(id=lobby_id)
         game = Game.objects.create()
         
         # Set the game parameters
+        game.seed = seed # set game seed
         for player in User.objects.filter(current_lobby=lobby): # find all players in the current lobby
             game.players.add(player) # add the players to the database, to ensure that everyone knows the order
         for i in range(4):

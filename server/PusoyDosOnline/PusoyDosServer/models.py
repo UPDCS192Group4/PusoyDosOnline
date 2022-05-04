@@ -37,7 +37,7 @@ class Game(models.Model):
     Should contain information on players, hands, and current game state
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    seed = models.IntegerField(default=randint(1,2**31-1))
+    seed = models.IntegerField(default=0)
     current_round = models.IntegerField(default=0) # 1 round = 1 successful play made (either cards are played or its a skip)
     hands = ArrayField(base_field=ArrayField(base_field=models.CharField(name="Card", max_length=3, default=""), size=13), size=4)
     players = models.ManyToManyField("User", blank=True)

@@ -27,6 +27,7 @@ services:
       - .env
     depends_on:
       - redis
+      - db
   web:
     restart: on-failure
     image: server_web
