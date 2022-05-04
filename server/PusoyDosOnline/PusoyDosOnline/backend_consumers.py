@@ -1,5 +1,6 @@
 import random
 from channels.consumer import SyncConsumer
+from asgiref.sync import async_to_sync
 from PusoyDosServer.models import * # import the database models from our project
 
 class LobbyCleaner(SyncConsumer):
@@ -42,3 +43,12 @@ class GameManager(SyncConsumer):
         # Set lobby parameters to be in line with the game
         lobby.game = game # set the lobby's game to the game just created
         lobby.save() # save the lobby
+        
+        # Tell the consumers in the lobby that the game is ready
+        async_to_sync(self.channel_layer.group_send)(
+            f"lobby_{lobby_id}",
+            {
+                "type": "game_ready",
+                "game_id": game.id,
+            }
+        )

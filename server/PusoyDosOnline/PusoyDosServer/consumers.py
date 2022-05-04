@@ -139,7 +139,15 @@ class LobbyConsumer(JsonWebsocketConsumer):
         
         if content["type"] == "start" and self.lobby.status == 4:
             if self.lobby.owner == self.scope["user"]: # all 4 players need to be ready and this is called by the owner
-                print("User called to start the game!")
+                print("Owner called to start the game!")
+                # Call the game manager to create the game
+                async_to_sync(self.channel_layer.group_send)(
+                    "game-manager",
+                    {
+                        "type": "game_create",
+                        "lobby_id": self.lobby_id,
+                    }
+                )
             else:
                 print("Non-owner tried starting the game!")
             return
