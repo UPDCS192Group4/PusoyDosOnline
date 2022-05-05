@@ -13,7 +13,7 @@ func _on_Button_pressed():
 	showLeaderboards()
 	
 func startNewGame():
-	get_tree().change_scene("res://Game.tscn")
+	get_tree().change_scene("res://Game/Game.tscn")
 
 func showLeaderboards():
-	get_tree().change_scene("res://Leaderboards.tscn")
+	get_tree().change_scene("res://Leaderboards/Leaderboards.tscn")

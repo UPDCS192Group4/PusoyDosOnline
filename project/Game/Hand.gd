@@ -2,7 +2,7 @@ extends Container
 
 var deck = Array()
 var cards = Array()
-var cardScene = load("res://Card.tscn")
+var cardScene = load("res://Game/Card.tscn")
 var NUM_CARDS = 13
 var index
 

@@ -5,7 +5,7 @@ func _ready():
 
 func _on_YesButton_pressed():
 	yield(get_tree().create_timer(0.5), "timeout")
-	get_tree().change_scene("res://Home.tscn")	
+	get_tree().change_scene("res://Home/Home.tscn")	
 	pass # Replace with function body.
 
 func _on_NoButton_pressed():

@@ -1,6 +1,6 @@
 extends Control
 
-var home_scene = preload("res://Home.tscn")
+var home_scene = preload("res://Home/Home.tscn")
 
 var login_panel
 var userfield

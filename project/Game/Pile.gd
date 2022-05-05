@@ -1,7 +1,7 @@
 extends Container
 
 var pileCards = Array()
-var cardScene = load("res://Card.tscn")
+var cardScene = load("res://Game/Card.tscn")
 var index
 
 var OVAL_CENTRE = Vector2(512, 800)

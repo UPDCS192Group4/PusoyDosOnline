@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Card.gd" type="Script" id=1]
-[ext_resource path="res://CardButton.gd" type="Script" id=2]
+[ext_resource path="res://Game/Card.gd" type="Script" id=1]
+[ext_resource path="res://Game/CardButton.gd" type="Script" id=2]
 [ext_resource path="res://assets/cards/card_on_hover.png" type="Texture" id=3]
 [ext_resource path="res://assets/cards/card_on_pressed.png" type="Texture" id=4]
 

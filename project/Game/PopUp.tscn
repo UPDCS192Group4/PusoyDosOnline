@@ -2,7 +2,7 @@
 
 [ext_resource path="res://assets/fonts/uglybyte.woff" type="DynamicFontData" id=1]
 [ext_resource path="res://assets/fonts/home_dynamicfont.tres" type="DynamicFont" id=2]
-[ext_resource path="res://PopUp.gd" type="Script" id=3]
+[ext_resource path="res://Game/PopUp.gd" type="Script" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 60

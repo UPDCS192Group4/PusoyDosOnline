@@ -1,17 +1,17 @@
 extends Control
 var deck = Array()
-var cardScene = preload("res://Card.tscn")
+var cardScene = preload("res://Game/Card.tscn")
 var newCard
 var pressedArray = Array()
 
 func _ready():
-	var scene1 = load("res://Hand.tscn")
+	var scene1 = load("res://Game/Hand.tscn")
 	var child1 = scene1.instance()
 	add_child(child1)
-	var scene2 = load("res://Pile.tscn")
+	var scene2 = load("res://Game/Pile.tscn")
 	var child2 = scene2.instance()
 	add_child(child2)
-	var scene3 = load("res://Opponents.tscn")
+	var scene3 = load("res://Game/Opponents.tscn")
 	var child3 = scene3.instance()
 	child3.set_name("Opponents")
 	add_child(child3)
@@ -41,7 +41,7 @@ func _on_PlayButton_pressed():
 	pressedArray.clear()
 
 func _on_HomeButton_pressed():
-	var scene1 = load("res://PopUp.tscn")
+	var scene1 = load("res://Game/PopUp.tscn")
 	var child1 = scene1.instance()
 	get_parent().add_child(child1)
 	pass

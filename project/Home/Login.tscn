@@ -2,15 +2,12 @@
 
 [ext_resource path="res://assets/fonts/home_dynamicfont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://assets/fonts/nokia_cellphone.tres" type="DynamicFont" id=2]
-[ext_resource path="res://Login.gd" type="Script" id=3]
+[ext_resource path="res://Home/Login.gd" type="Script" id=3]
 
 [node name="Login" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
