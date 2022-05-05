@@ -125,6 +125,9 @@ func _on_LoginRequest_request_completed(result, response_code, headers, body):
 	var json = JSON.parse(body.get_string_from_utf8())
 	print("b", json.result)
 	print()
+	#might have to move this inside if response_code == 200
+	URLs.access = json.result["access"]
+	URLs.refresh = json.result["refresh"]
 	if(response_code == 200):
 		AccountInfo.setToken(json.result["access"])
 		get_tree().change_scene_to(home_scene)

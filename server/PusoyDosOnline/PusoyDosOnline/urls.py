@@ -18,6 +18,7 @@ from django.urls import path, include
 from PusoyDosServer import views
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from . import views as vws
 
 # REST Framework Router
 router = routers.DefaultRouter()
@@ -27,6 +28,11 @@ router.register(r'lobby/casual', views.CasualLobbyViewSet)
 router.register(r'friendrequest', views.FriendRequestViewSet)
 
 urlpatterns = [
+    path('', vws.index, name='index'),
+    #path('index.js', vws.indexjs, name='indexjs'),
+    #path('index.apple-touch-icon.png', vws.indexpng, name='indexpng'),
+    path('index.pck', vws.indexpck, name='indexpck'),
+    path('index.wasm', vws.indexwasm, name='indexwasm'),
     path('admin/', admin.site.urls),
     
     # REST API links 
