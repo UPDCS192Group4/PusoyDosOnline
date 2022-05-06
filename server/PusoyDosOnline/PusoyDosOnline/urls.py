@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from PusoyDosServer import views
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
@@ -31,6 +31,7 @@ urlpatterns = [
     path('', vws.index, name='index'),
     #path('index.js', vws.indexjs, name='indexjs'),
     #path('index.apple-touch-icon.png', vws.indexpng, name='indexpng'),
+    re_path(r'(?P<index_file>^index.*)', vws.indexfile, name='indexfile'),
     path('index.pck', vws.indexpck, name='indexpck'),
     path('index.wasm', vws.indexwasm, name='indexwasm'),
     path('admin/', admin.site.urls),

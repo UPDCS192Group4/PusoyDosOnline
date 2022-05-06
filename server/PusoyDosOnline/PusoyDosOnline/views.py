@@ -48,3 +48,10 @@ def indexpck(request):
 # 	return response
 def indexwasm(request):
 	return redirect('/static/index.wasm')
+
+def prac(request, practice="default"):
+	print('heyy is me', practice)
+
+def indexfile(request, index_file='/'):
+	print("LOADING: "+'/static/'+index_file)
+	return redirect('/static/'+index_file)
