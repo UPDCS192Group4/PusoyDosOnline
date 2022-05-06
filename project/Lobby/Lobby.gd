@@ -7,6 +7,7 @@ func _ready():
 	ws.connect("connection_closed", self, "_connection_failed")
 	ws.connect("connection_error", self, "_connection_failed")
 	ws.connect("connection_established", self, "_connection_success")
+	ws.connect("data_received", self, "_on_data_received")
 	pass
 
 func _process(_delta):
@@ -14,7 +15,6 @@ func _process(_delta):
 	
 func _connection_failed(_was_clean = false):
 	print("Connection failed")
-	get_node("LobbyChoices").queue_free()
 
 func _connection_success(_proto = ""):
 	print("Connection Established")
@@ -38,10 +38,16 @@ func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	var json = JSON.parse(body.get_string_from_utf8())
 	print(json.result)
 	var ws_url = URLs.ws_url + json.result["id"] + "/"
-	var ws_headers = ['Authorization: Bearer ' + URLs.access]
+	var ws_headers = ["Bearer "+URLs.access]
 	print(ws_url, ws_headers)
 	var err = ws.connect_to_url(ws_url, ws_headers)
 	ws.poll()
 	if err != OK:
 		print("ERROR: ", err)
 		_connection_failed()
+		
+func _on_data_received():
+	print("receiving data...")
+	var data = ws.get_peer(1).get_packet().get_string_from_utf8()
+	var msg = data.split(" ")
+	print(msg)

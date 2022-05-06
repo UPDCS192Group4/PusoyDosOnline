@@ -12,11 +12,14 @@ class UserAuthMiddleware:
         for name, value in headers:
             if name == b'authorization':
                 return value
+            elif name == b'sec-websocket-protocol':
+                return value
         return None
         
     async def __call__(self, scope, receive, send):
         token = None
         headers = scope["headers"]
+        print(headers)
         header = self.filter_headers(headers)
         if header:
             raw_token = self.JWTAuth.get_raw_token(header)
