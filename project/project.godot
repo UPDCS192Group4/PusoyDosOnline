@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "MarginContainer",
 "class": "Card",
 "language": "GDScript",
-"path": "res://Card.gd"
+"path": "res://Game/Card.gd"
 } ]
 _global_script_class_icons={
 "Card": ""
@@ -21,8 +21,13 @@ _global_script_class_icons={
 [application]
 
 config/name="Project"
-run/main_scene="res://Home.tscn"
+run/main_scene="res://Home/Login.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+URLs="*res://singletons/URLs.gd"
+AccountInfo="*res://singletons/Account.gd"
 
 [display]
 

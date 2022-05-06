@@ -1,0 +1,13 @@
+# Development server starting scripts
+server/start.bat
+
+# Environment variables
+server/PusoyDosOnline/.env
+server/.env
+
+# Migrations
+server/PusoyDosOnline/PusoyDosServer/migrations/*
+server/PusoyDosOnline/PusoyDosServer/migrations/
+
+# Node Modules
+node-server/node_modules
