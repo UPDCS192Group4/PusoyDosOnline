@@ -43,7 +43,7 @@ func _on_PlayButton_pressed():
 func _on_HomeButton_pressed():
 	var scene1 = load("res://Game/PopUp.tscn")
 	var child1 = scene1.instance()
-	get_parent().add_child(child1)
+	get_node('CanvasLayer').add_child(child1)
 	pass
 
 func addPressedCard(newRank, newSuit):

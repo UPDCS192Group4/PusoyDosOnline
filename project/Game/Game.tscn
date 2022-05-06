@@ -13,9 +13,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="GreenBackground" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -32,9 +29,6 @@ margin_right = 492.0
 margin_bottom = 770.0
 custom_fonts/font = SubResource( 1 )
 text = "PLAY"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="PassButton" type="Button" parent="."]
 margin_left = 532.0
@@ -54,10 +48,9 @@ margin_right = 141.0
 margin_bottom = 78.0
 custom_fonts/font = ExtResource( 3 )
 text = "Home"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 15
 
 [connection signal="pressed" from="PlayButton" to="." method="_on_PlayButton_pressed"]
-[connection signal="pressed" from="HomeButton" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="HomeButton" to="." method="_on_HomeButton_pressed"]

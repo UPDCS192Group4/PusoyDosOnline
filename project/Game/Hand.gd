@@ -20,7 +20,6 @@ func _ready():
 	
 	ANGLE = deg2rad(90) - ANG_DIST * (NUM_CARDS - 1) / 2
 	for i in range(NUM_CARDS):
-		yield(get_tree().create_timer(0.1), "timeout")
 		cards.append(deck[i])
 		cards[i].isCurrentPlayer = 1
 		cards[i].changeFace()

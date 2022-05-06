@@ -115,7 +115,7 @@ func _register(username, email, password, confirm):
 	var url = URLs.register
 	var headers = ['Content-Type: application/json']
 	var body = {"username": username, "email": email, "password": password, "password_check": confirm}
-	print("Attempting Register with url ", url, " with credentials: ", body)
+	print("Attempting Register	 with url ", url, " with credentials: ", body)
 	var err = $RegisterRequest.request(url, headers, false, HTTPClient.METHOD_POST, to_json(body))
 	print("Err code", err)
 
@@ -126,9 +126,9 @@ func _on_LoginRequest_request_completed(result, response_code, headers, body):
 	print("b", json.result)
 	print()
 	#might have to move this inside if response_code == 200
-	URLs.access = json.result["access"]
-	URLs.refresh = json.result["refresh"]
 	if(response_code == 200):
+		URLs.access = json.result["access"]
+		URLs.refresh = json.result["refresh"]
 		AccountInfo.setToken(json.result["access"])
 		get_tree().change_scene_to(home_scene)
 	if(response_code == 400):
