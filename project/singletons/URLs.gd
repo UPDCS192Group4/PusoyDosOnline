@@ -1,6 +1,6 @@
 extends Node
 
-var url = "http://localhost:8000" # modify upon deployment
+var url = "https://17cd-136-158-0-18.ngrok.io" # modify upon deployment
 var register = url + "/api/register/"
 var login = url + "/api/token/"
 var leaderboards = url + "/api/users/leaderboard"
