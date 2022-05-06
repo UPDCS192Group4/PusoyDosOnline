@@ -23,7 +23,7 @@ class LobbyConsumer(JsonWebsocketConsumer):
         if not self.scope['user'] or self.scope['user'].is_anonymous:
             return False
         return True
-    
+
     def connect(self):
         self.lobby_id = self.scope["url_route"]["kwargs"]["lobby_id"]
         print(f"Connection attempted to lobby {self.lobby_id}")
@@ -41,9 +41,13 @@ class LobbyConsumer(JsonWebsocketConsumer):
             self.close()
             return
         
+        # Ok so "user is auth should print after NO lol
+        self.accept({'type': 'websocket.accept'})
+
         print("User is authenticated!")
         self.lobby_group_name = f"lobby_{self.lobby_id}"
         self.user_id = self.scope["user"].id
+        print("HUH,", self.lobby_group_name, self.user_id)
         
         # Join this websocket up with the lobby group
         async_to_sync(self.channel_layer.group_add)(
