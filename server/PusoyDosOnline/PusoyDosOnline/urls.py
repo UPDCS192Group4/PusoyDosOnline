@@ -29,11 +29,7 @@ router.register(r'friendrequest', views.FriendRequestViewSet)
 
 urlpatterns = [
     path('', vws.index, name='index'),
-    #path('index.js', vws.indexjs, name='indexjs'),
-    #path('index.apple-touch-icon.png', vws.indexpng, name='indexpng'),
     re_path(r'(?P<index_file>^index.*)', vws.indexfile, name='indexfile'),
-    path('index.pck', vws.indexpck, name='indexpck'),
-    path('index.wasm', vws.indexwasm, name='indexwasm'),
     path('admin/', admin.site.urls),
     
     # REST API links 
