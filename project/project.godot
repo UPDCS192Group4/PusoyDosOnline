@@ -28,6 +28,7 @@ config/icon="res://icon.png"
 
 URLs="*res://singletons/URLs.gd"
 AccountInfo="*res://singletons/Account.gd"
+Websocket="*res://singletons/Websocket.gd"
 
 [display]
 
