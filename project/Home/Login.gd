@@ -107,24 +107,24 @@ func _login(username, password):
 	var url = URLs.login
 	var headers = ['Content-Type: application/json']
 	var body = {"username": username, "password": password}
-	print("Attempting Login with url ", url, " with credentials: ", body)
+	#print("Attempting Login with url ", url, " with credentials: ", body)
 	var err = $LoginRequest.request(url, headers, false, HTTPClient.METHOD_POST, to_json(body))
-	print("Err code", err)
+	#print("Err code", err)
 	
 func _register(username, email, password, confirm):
 	var url = URLs.register
 	var headers = ['Content-Type: application/json']
 	var body = {"username": username, "email": email, "password": password, "password_check": confirm}
-	print("Attempting Register	 with url ", url, " with credentials: ", body)
+	#print("Attempting Register	 with url ", url, " with credentials: ", body)
 	var err = $RegisterRequest.request(url, headers, false, HTTPClient.METHOD_POST, to_json(body))
-	print("Err code", err)
+	#print("Err code", err)
 
 func _on_LoginRequest_request_completed(result, response_code, headers, body):
-	print("RESPONSE:")
-	print("r", result, " c", response_code, " h", headers)
+	#print("RESPONSE:")
+	#print("r", result, " c", response_code, " h", headers)
 	var json = JSON.parse(body.get_string_from_utf8())
-	print("b", json.result)
-	print()
+	#print("b", json.result)
+	#print()
 	#might have to move this inside if response_code == 200
 	if(response_code == 200):
 		URLs.access = json.result["access"]

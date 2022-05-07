@@ -18,13 +18,14 @@ class LobbyConsumer(JsonWebsocketConsumer):
         
         Function taken from https://stackoverflow.com/questions/50901411/django-jwt-middleware-for-channels-websocket-authentication
         """
-        if hasattr(self.scope, 'auth_error'):
-            return False
-        if not self.scope['user'] or self.scope['user'].is_anonymous:
-            return False
+        #if hasattr(self.scope, 'auth_error'):
+        #    return False
+        #if not self.scope['user'] or self.scope['user'].is_anonymous:
+        #    return False
         return True
 
     def connect(self):
+        print("SCOPE: ", self.scope["url_route"]["kwargs"])
         self.lobby_id = self.scope["url_route"]["kwargs"]["lobby_id"]
         print(f"Connection attempted to lobby {self.lobby_id}")
         
@@ -33,21 +34,16 @@ class LobbyConsumer(JsonWebsocketConsumer):
         # then we must deny access to it.
         if not self._is_authenticated():
             print("User is not authenticated!")
-            self.close()
-            return
+            #self.close()
+            #return
         
-        if self.scope["user"].current_lobby == None or str(self.scope["user"].current_lobby.id) != self.lobby_id:
-            print("User is not allowed to be in this lobby!")
-            self.close()
-            return
-        
-        # Ok so "user is auth should print after NO lol
-        self.accept({'type': 'websocket.accept'})
+        #if self.scope["user"].current_lobby == None or str(self.scope["user"].current_lobby.id) != self.lobby_id:
+         #   print("User is not allowed to be in this lobby!")
+            #self.close()
+            #return
 
         print("User is authenticated!")
         self.lobby_group_name = f"lobby_{self.lobby_id}"
-        self.user_id = self.scope["user"].id
-        print("HUH,", self.lobby_group_name, self.user_id)
         
         # Join this websocket up with the lobby group
         async_to_sync(self.channel_layer.group_add)(
@@ -59,9 +55,9 @@ class LobbyConsumer(JsonWebsocketConsumer):
             self.lobby_group_name,
             {
                 "type": "user_join",
-                "username": self.scope["user"].username
             }
         )
+        self.accept({"type":'websocket.accept'})
     
     def disconnect(self, code):
         # If this is a case of an unauthenticated user or a user
@@ -126,13 +122,13 @@ class LobbyConsumer(JsonWebsocketConsumer):
     def user_join(self, event):
         self.send(text_data=json.dumps({
             'type': "join",
-            'message': f"User {event['username']} has joined the lobby!",
+            'message': f"User has joined the lobby!",
         }))
     
     def user_leave(self, event):
         self.send(text_data=json.dumps({
             'type': "leave",
-            'message': f"User {event['username']} has left the lobby!",
+            'message': f"User has left the lobby!",
         }))
         
     
