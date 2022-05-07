@@ -202,7 +202,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
     serializer_class = CasualLobbySerializer
     permission_classes = [UserPermissions]
     perms = {
-        permissions.IsAuthenticated: ["create", "retrieve"],
+        permissions.IsAuthenticated: ["create", "retrieve", "leave"],
         permissions.IsAdminUser: ["list"],
     }
     
@@ -224,11 +224,12 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         lobby = get_object_or_404(self.queryset, shorthand=pk)
         if len(get_user_model().objects.filter(current_lobby=lobby)) > 4: # don't allow a join if there's too many people registered to join the lobby
             return Http404()
-        if self.request.user.current_lobby != None: # don't allow a join if a user is still in a lobby
-            return HttpResponseForbidden()
-        lobby.players_inside.add(self.request.user) # add the user to the list when joining via shorthand
-        self.request.user.current_lobby = lobby
-        self.request.user.save()
+        if self.request.user.current_lobby != None and self.request.user.current_lobby != lobby: # don't allow a join if a user is still in a lobby
+            return Response({"error": "You are already in a lobby"}, status=status.HTTP_403_FORBIDDEN)
+        if self.request.user.current_lobby == None:
+            lobby.players_inside.add(self.request.user) # add the user to the list when joining via shorthand
+            self.request.user.current_lobby = lobby # set the user's lobby to be this one
+            self.request.user.save()
         serializer = CasualLobbySerializer(lobby)
         return Response(serializer.data)
     
