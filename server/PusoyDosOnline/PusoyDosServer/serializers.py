@@ -11,6 +11,11 @@ class FriendSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = ['username', 'rating', 'country_code']
         
+class PlayerListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ['username', 'rating', 'country_code', 'played_games', 'won_games', 'lost_games']
+        
 class PasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password_check = serializers.CharField(write_only=True, required=True) # make sure that the user knows what password they're inputting
@@ -74,10 +79,11 @@ class CasualLobbySerializer(serializers.ModelSerializer):
     shorthand = serializers.CharField(read_only=True)
     id = serializers.UUIDField(read_only=True)
     owner = serializers.UUIDField(read_only=True)
+    players_inside = PlayerListSerializer(many=True, read_only=True)
     
     class Meta:
         model = Lobby
-        fields = ['id', 'shorthand', 'owner']
+        fields = ['id', 'shorthand', 'owner', 'players_inside']
         
     def to_representation(self, instance):
         ret = super().to_representation(instance)

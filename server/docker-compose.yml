@@ -17,17 +17,6 @@ services:
       - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-  workers:
-    restart: on-failure
-    build: .
-    command: "python /web/PusoyDosOnline/manage.py runworker game-manager lobby-clean"
-    volumes:
-      - .:/web
-    env_file:
-      - .env
-    depends_on:
-      - redis
-      - db
   web:
     restart: on-failure
     image: server_web
@@ -43,7 +32,6 @@ services:
     depends_on:
       - db
       - redis
-      - workers
     env_file:
       - .env
 

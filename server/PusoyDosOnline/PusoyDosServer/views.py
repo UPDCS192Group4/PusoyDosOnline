@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import (Http404, HttpResponseRedirect, JsonResponse, HttpRequest, HttpResponseBadRequest)
+from django.http import (Http404, HttpResponseForbidden, HttpResponseRedirect, JsonResponse, HttpRequest, HttpResponseBadRequest)
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -210,7 +210,10 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         if self.request.user.current_lobby != None:
             raise serializers.ValidationError("User in a lobby not allowed to create a new one")
         new_lobby = serializer.save(owner=self.request.user.id)
-        self.request.user.current_lobby = self.queryset.get(shorthand=new_lobby.shorthand)
+        lobby = self.queryset.get(shorthand=new_lobby.shorthand)
+        lobby.players_inside.add(self.request.user)
+        self.request.user.current_lobby = lobby
+        lobby.save()
         self.request.user.save()
     
     def retrieve(self, request, pk=None):
@@ -221,7 +224,19 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         lobby = get_object_or_404(self.queryset, shorthand=pk)
         if len(get_user_model().objects.filter(current_lobby=lobby)) > 4: # don't allow a join if there's too many people registered to join the lobby
             return Http404()
+        if self.request.user.current_lobby != None: # don't allow a join if a user is still in a lobby
+            return HttpResponseForbidden()
         self.request.user.current_lobby = lobby
         self.request.user.save()
         serializer = CasualLobbySerializer(lobby)
         return Response(serializer.data)
+    
+    @action(detail=True, methods=["GET", "POST"])
+    def leave(self, request, pk=None):
+        lobby = get_object_or_404(Lobby, id=pk)
+        if lobby == request.user.lobby:
+            request.user.lobby = None
+            request.user.save()
+            return Response({"detail": "Successfully left the lobby"})
+        else:
+            return Response({"error": "Invalid lobby"})
