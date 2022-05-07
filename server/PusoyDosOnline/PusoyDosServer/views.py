@@ -236,10 +236,10 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
     @action(detail=True, methods=["GET", "POST"])
     def leave(self, request, pk=None): # for leaving the lobby via HTTP request (pk = actual lobby id)
         lobby = get_object_or_404(Lobby, id=pk)
-        if lobby == request.user.lobby:
-            request.user.lobby.players_inside.remove(request.user)
-            request.user.lobby.save()
-            request.user.lobby = None
+        if lobby == request.user.current_lobby:
+            request.user.current_lobby.players_inside.remove(request.user)
+            request.user.current_lobby.save()
+            request.user.current_lobby = None
             request.user.save()
             return Response({"detail": "Successfully left the lobby"})
         else:
