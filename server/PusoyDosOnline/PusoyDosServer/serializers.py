@@ -121,6 +121,7 @@ class HandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hand
         fields = ['id', 'user', 'hand']
+        read_only_fields = ['id', 'user']
 
 class GameSerializer(serializers.ModelSerializer):
     hands = HandSerializer(many=True)
