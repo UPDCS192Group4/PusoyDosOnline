@@ -82,10 +82,11 @@ class CasualLobbySerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     owner = serializers.UUIDField(read_only=True)
     players_inside = PlayerListSerializer(many=True, read_only=True)
+    game_id = serializers.UUIDField(read_only=True, source="game.id", allow_null=True)
     
     class Meta:
         model = Lobby
-        fields = ['id', 'shorthand', 'owner', 'players_inside']
+        fields = ['id', 'shorthand', 'owner', 'players_inside', 'game_id']
         
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -114,3 +115,9 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         )
         
         return friend_request
+    
+class GameSerializer(serializers.ModelSerializer):
+    player_deck = serializers.ListField(child=serializers.IntegerField())
+    class Meta:
+        model = Game
+        fields = ["id", "player_deck"]

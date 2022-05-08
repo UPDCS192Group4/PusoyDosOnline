@@ -12,6 +12,8 @@ from django_countries import countries
 from .models import *
 from .serializers import *
 
+import random
+
 # Permissions class for UserViewSet
 class UserPermissions(permissions.AllowAny):
     def has_permission(self, request, view):
@@ -202,7 +204,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
     serializer_class = CasualLobbySerializer
     permission_classes = [UserPermissions]
     perms = {
-        permissions.IsAuthenticated: ["create", "retrieve", "leave"],
+        permissions.IsAuthenticated: ["create", "retrieve", "leave", "ready"],
         permissions.IsAdminUser: ["list"],
     }
     
@@ -222,7 +224,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         Will be used by clients to get their lobbies
         """
         lobby = get_object_or_404(self.queryset, shorthand=pk)
-        if len(get_user_model().objects.filter(current_lobby=lobby)) > 4: # don't allow a join if there's too many people registered to join the lobby
+        if len(get_user_model().objects.filter(current_lobby=lobby)) > 4 and lobby.game == None: # don't allow a join if there's too many people registered to join the lobby, and there is no game running already
             return Http404()
         if self.request.user.current_lobby != None and self.request.user.current_lobby != lobby: # don't allow a join if a user is still in a lobby
             return Response({"error": "You are already in a lobby"}, status=status.HTTP_403_FORBIDDEN)
@@ -235,7 +237,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
     
     @action(detail=True, methods=["GET", "POST"])
     def leave(self, request, pk=None): # for leaving the lobby via HTTP request (pk = actual lobby id)
-        lobby = get_object_or_404(Lobby, id=pk)
+        lobby = get_object_or_404(self.queryset, id=pk)
         if lobby == request.user.current_lobby:
             request.user.current_lobby.players_inside.remove(request.user)
             request.user.current_lobby.save()
@@ -244,3 +246,58 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
             return Response({"detail": "Successfully left the lobby"})
         else:
             return Response({"error": "Invalid lobby"})
+        
+    @action(detail=True, methods=["GET", "POST"])
+    def ready(self, request, pk=None): # pk = lobby ID!
+        # Endpoint for starting a game for this lobby
+        lobby = get_object_or_404(self.queryset, id=pk)
+        # TODO: Check if lobby has enough players before starting!
+        if lobby.owner != request.user.id:
+            return Response({"error": "You are not allowed to start this lobby."}, status=status.HTTP_403_FORBIDDEN)
+        if lobby.game != None:
+            return Response({"error": "This lobby already has an associated game!"}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate deck
+        full_deck = []
+        for j in range(3):
+            full_deck += [(100 * j) + i for i in range(1, 14)]
+        
+        # Generate randomness
+        seed = random.randint(1, 2**31-1)
+        rng = random.Random()
+        rng.seed(seed)
+        
+        # Shuffle deck
+        rng.shuffle(full_deck)
+            
+        # Make game with the shuffled deck and seed used
+        game = Game.objects.create(seed=seed)
+        print(f"Attempting to generate game {game.id} with seed {seed}")
+        i = 0
+        for player in lobby.players_inside.all():
+            hand = Hand.objects.create(user=player, hand=list(sorted(full_deck[i*13:(i*13)+13])))
+            game.players.add(player)
+            game.hands.add(hand)
+            i += 1
+        game.save()
+        
+        # Set the game's lobby to the game just generated
+        lobby.game = game
+        lobby.save()
+        return Response({"detail": "Game successfully created", "game": game.id})
+        
+class GameViewSet(mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
+                  mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
+    """
+    API endpoint for manipulating games currently running
+    """
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
+    permission_classes = [UserPermissions]
+    perms = {
+        permissions.IsAuthenticated: ["retrieve", "update"],
+        permissions.IsAdminUser: ["list"],
+    }
+        

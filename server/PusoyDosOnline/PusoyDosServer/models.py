@@ -37,12 +37,23 @@ class Game(models.Model):
     Should contain information on players, hands, and current game state
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    last_activity = models.DateTimeField(default=timezone.now)
     seed = models.IntegerField(default=0)
     current_round = models.IntegerField(default=0) # 1 round = 1 successful play made (either cards are played or its a skip)
-    hands = ArrayField(base_field=ArrayField(base_field=models.CharField(name="Card", max_length=3, default=""), size=13), size=4)
+    hands = models.ManyToManyField("Hand", blank=True)
     players = models.ManyToManyField("User", blank=True)
-    # A card is essentially [Suit][Number Value]. Aces are 01s, Jacks are 11, Queens are 12, Kings are 13. Numbers are prepended with 0 if less than 10
-    # Suits are represented using the first letter of each suit: C = Clubs, D = Diamonds, H = Hearts, S = Spades
+    # A card is essentially [Suit][Number Value]. 3s are 1, Kings are 11, Aces are 12, 2s are 13. Numbers are prepended with 0 if less than 10
+    # Suits are represented using the first digit of each suit: 0 = Clubs, 1 = Spades, 2 = Hearts, 3 = Diamonds
+    # So a 3 of Clubs would be internally represented as 001, a 2 of Diamonds would be 313, etc etc
+    
+    def save(self, *args,**kwargs):
+        self.last_activity = timezone.now() # keep the last activity updated
+        return super().save(*args, **kwargs)
+    
+class Hand(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    user = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
+    hand = ArrayField(base_field=models.IntegerField(name="Card", default=0), size=13)
 
 class User(AbstractUser):
     """

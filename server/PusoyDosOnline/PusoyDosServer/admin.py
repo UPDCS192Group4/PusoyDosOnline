@@ -5,3 +5,5 @@ from .models import *
 admin.site.register(User)
 admin.site.register(Lobby)
 admin.site.register(FriendRequest)
+admin.site.register(Game)
+admin.site.register(Hand)
