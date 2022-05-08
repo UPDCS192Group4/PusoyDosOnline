@@ -1,12 +1,20 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/fonts/home_dynamicfont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Home/Home.gd" type="Script" id=2]
+[ext_resource path="res://assets/fonts/nokiafc22.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 64
+font_data = ExtResource( 3 )
 
 [node name="Home" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -121,6 +129,29 @@ margin_right = 1024.0
 margin_bottom = 1024.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="ClearRequest" type="HTTPRequest" parent="."]
+
+[node name="ErrorMessage" type="CanvasLayer" parent="."]
+layer = 15
+
+[node name="Label" type="Label" parent="ErrorMessage"]
+visible = false
+margin_left = 11.0
+margin_top = 27.0
+margin_right = 1017.0
+margin_bottom = 179.0
+custom_fonts/font = SubResource( 1 )
+text = "! Cannot be loaded !"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeaveRequest" type="HTTPRequest" parent="."]
+
+[node name="PingRequest" type="HTTPRequest" parent="."]
 
 [connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/Play/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/LeaderBoards/Button" to="." method="_on_LeaderboardsButton_pressed"]
