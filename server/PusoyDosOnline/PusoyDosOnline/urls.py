@@ -25,6 +25,7 @@ router.register(r'users', views.UserViewSet)
 router.register(r'register', views.RegisterViewSet)
 router.register(r'lobby/casual', views.CasualLobbyViewSet)
 router.register(r'friendrequest', views.FriendRequestViewSet)
+router.register(r'games', views.GameViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

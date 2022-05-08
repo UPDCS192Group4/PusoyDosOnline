@@ -115,9 +115,15 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         )
         
         return friend_request
-    
+
+class HandSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source="user.username")
+    class Meta:
+        model = Hand
+        fields = ['id', 'user', 'hand']
+
 class GameSerializer(serializers.ModelSerializer):
-    player_deck = serializers.ListField(child=serializers.IntegerField())
+    hands = HandSerializer(many=True)
     class Meta:
         model = Game
-        fields = ["id", "player_deck"]
+        fields = ["id", "hands"]
