@@ -120,12 +120,7 @@ func _register(username, email, password, confirm):
 	#print("Err code", err)
 
 func _on_LoginRequest_request_completed(result, response_code, headers, body):
-	#print("RESPONSE:")
-	#print("r", result, " c", response_code, " h", headers)
 	var json = JSON.parse(body.get_string_from_utf8())
-	#print("b", json.result)
-	#print()
-	#might have to move this inside if response_code == 200
 	if(response_code == 200):
 		URLs.access = json.result["access"]
 		URLs.refresh = json.result["refresh"]
@@ -141,11 +136,7 @@ func _on_LoginRequest_request_completed(result, response_code, headers, body):
 	_enable_buttons()
 	
 func _on_RegisterRequest_request_completed(result, response_code, headers, body):
-	#print("RESPONSE:")
-	#print("r", result, " c", response_code, " h", headers)
 	var json = JSON.parse(body.get_string_from_utf8())
-	#print("b", json.result)
-	#print()
 	if(response_code in [200, 201]):
 		_clear_reg_err()
 		var username = json.result["username"]
@@ -162,7 +153,6 @@ func _on_RegisterRequest_request_completed(result, response_code, headers, body)
 	_enable_buttons()
 	
 func _on_ToReg_pressed():
-	# Test
 	_clear_login_err()
 	reg_userfield.text = userfield.text
 	reg_emailfield.text = ""
@@ -177,9 +167,3 @@ func _on_ToLogin_pressed():
 	passfield.text = ""
 	reg_panel.hide()
 	login_panel.show()
-
-# REFERENCES
-### Godot HTTPRequest and HTTPClient Documentation
-### Godot Control Documentation
-### Basta Godot Documentation
-### Some godot forum explaining how to do POST request

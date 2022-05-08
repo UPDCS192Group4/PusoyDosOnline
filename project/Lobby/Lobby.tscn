@@ -55,6 +55,9 @@ margin_left = 115.0
 margin_top = 159.0
 margin_right = 915.0
 margin_bottom = 872.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CreateLobby" type="Button" parent="LobbyChoices"]
 margin_right = 800.0
