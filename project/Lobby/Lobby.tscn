@@ -50,6 +50,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="HomeBtnLayer" type="CanvasLayer" parent="."]
+
 [node name="LobbyChoices" type="VBoxContainer" parent="."]
 margin_left = 115.0
 margin_top = 159.0
@@ -90,6 +92,8 @@ text = "join rated lobby"
 [node name="JoinRequest" type="HTTPRequest" parent="."]
 
 [node name="PingRequest" type="HTTPRequest" parent="."]
+
+[node name="LeaveRequest" type="HTTPRequest" parent="."]
 
 [connection signal="pressed" from="HomeButton" to="." method="_on_HomeButton_pressed"]
 [connection signal="pressed" from="LobbyChoices/CreateLobby" to="." method="_on_CreateLobby_pressed"]

@@ -8,6 +8,7 @@ func _ready():
 	$CreateRequest.connect("request_completed", self, "_on_CreateRequest_request_completed")
 	$JoinRequest.connect("request_completed", self, "_on_JoinRequest_request_completed")
 	$PingRequest.connect("request_completed", self, "_on_PingRequest_request_completed")
+	$LeaveRequest.connect("request_completed", self, "_on_LeaveRequest_request_completed")
 	pass
 
 func _process(_delta):
@@ -20,10 +21,35 @@ func _process(_delta):
 	
 func _on_HomeButton_pressed():
 	var scene1 = load("res://Game/PopUp.tscn")
-	var child1 = scene1.instance()
-	child1.changeText("Go home?")
-	get_node('CanvasLayer').add_child(child1)
+	var new_child = scene1.instance()
+	#CenterContainer/Panel/VBoxContainer/HBoxContainer2/YesButton
+	new_child.changeText("Go home?")
+	if LobbyDetails.in_waiting:
+		new_child.disable_auto_Home()
+		new_child.get_node("A").get_node("B").get_node("C").get_node("D").get_node("YesButton").connect("pressed", self, "_go_home")
+	get_node("HomeBtnLayer").add_child(new_child)
 
+func _go_home():
+	print("going home!")
+	var url = URLs.lobby_init + LobbyDetails.id + "/leave/"
+	print(url)
+	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
+	var err = $LeaveRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	
+func _on_LeaveRequest_request_completed(result, response_code, headers, body):
+	print(response_code)
+	if (response_code != 200 and response_code != 201): 
+		$ErrorMessage/Label.text = "Leave failed, LOL!..."
+		$ErrorMessage/Label.show()
+		yield(get_tree().create_timer(2), "timeout")
+		$ErrorMessage/Label.text = "Redirecting..."
+		yield(get_tree().create_timer(1), "timeout")
+		get_tree().change_scene("res://Home/Home.tscn")	
+		return
+	print("has left")
+	get_tree().change_scene("res://Home/Home.tscn")	
+	
+	
 # The following contain functions for when a user creates a lobby
 func _on_CreateLobby_pressed():
 	var url = URLs.lobby_init
@@ -79,22 +105,21 @@ func _on_JoinRequest_request_completed(result, response_code, headers, body):
 		LobbyDetails.player_names.append(player["username"])
 	get_node("JoinInput").queue_free()
 	_start_waiting_room()
-	LobbyDetails.in_waiting = 1
 
 func _start_waiting_room():
+	LobbyDetails.in_waiting = 1
 	var newRoom = LobbyDetails.roomScene.instance()
 	newRoom.set_name("WaitingRoom")
 	newRoom.get_node("Container").get_node("Shorthand").text = "Lobby Code: " + LobbyDetails.shorthand
 	for i in range(len(LobbyDetails.player_names)):
 		newRoom.get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]
 	add_child(newRoom)
-	LobbyDetails.in_waiting = 1
 	
 # The following contains updates to the lobby by sending pings to the server
 func _ping_server():
-	var url = URLs.lobby_init + "?" + LobbyDetails.shorthand + "/"
+	var url = URLs.lobby_init + LobbyDetails.shorthand + "/"
 	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
-	#print("Pinging ", url)
+	print("Pinging ", url)
 	var err = $PingRequest.request(url, headers, false, HTTPClient.METHOD_GET)
 
 func _on_PingRequest_request_completed(result, response_code, headers, body):
@@ -107,17 +132,20 @@ func _on_PingRequest_request_completed(result, response_code, headers, body):
 		yield(get_tree().create_timer(1), "timeout")
 		get_tree().change_scene("res://Home/Home.tscn")	
 		return
-	#for i in json.result:
-	#	print(i, " : ", json.result[i])
+	for i in json.result:
+		print(i, " : ", json.result[i])
 	#print(json.result["results"])
 	#print(json.result["results"][0])
 	var returned_list = Array()
-	for player in json.result["results"][0]["players_inside"]:
+	#for player in json.result["results"][0]["players_inside"]:
+	for player in json.result["players_inside"]:
 		returned_list.append(player["username"])
 	if (LobbyDetails.player_names == returned_list):
 		print("no change")
 		return
 	LobbyDetails.player_names = returned_list
+	for i in range(4):
+		get_node("WaitingRoom").get_node("Container").get_child(i+1).text = ""
 	for i in range(len(LobbyDetails.player_names)):
 		get_node("WaitingRoom").get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]
 	#for player in json.result["results"][0]["players_inside"]:
