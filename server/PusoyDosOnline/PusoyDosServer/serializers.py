@@ -32,10 +32,11 @@ class PasswordSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     country_code = CountryField()
     friends = FriendSerializer(many=True)
+    lobby = serializers.CharField(source="current_lobby.shorthand", allow_null=True)
     class Meta:
         model = get_user_model()
-        fields = ['id', 'username', 'rating', 'country_code', 'played_games', 'won_games', 'lost_games', 'winstreak', 'friends']
-        read_only_fields = ['id', 'username', 'rating', 'played_games', 'won_games', 'lost_games', 'winstreak', 'friends']
+        fields = ['id', 'username', 'rating', 'country_code', 'played_games', 'won_games', 'lost_games', 'winstreak', 'friends', 'lobby']
+        read_only_fields = ['id', 'username', 'rating', 'played_games', 'won_games', 'lost_games', 'winstreak', 'friends', 'lobby']
         
     def to_representation(self, instance):
         """
@@ -44,9 +45,10 @@ class UserSerializer(serializers.ModelSerializer):
         """
         ret = super().to_representation(instance)
         
-        # Remove the ID if we're listing users or looking through the leaderboards
+        # Remove the user ID and lobby ID if we're listing users or looking through the leaderboards
         if self.context["view"].action in ["list", "leaderboard"]:
             ret.pop("id")
+            ret.pop("lobby")
         
         return ret
         
