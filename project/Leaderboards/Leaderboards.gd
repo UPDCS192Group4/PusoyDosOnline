@@ -1,5 +1,7 @@
 extends Control
 
+var err
+
 func _ready():
 	pass # Replace with function body.
 	$ErrorMessage.hide()
@@ -9,21 +11,24 @@ func _get_leaderboards():
 	var url = URLs.leaderboards
 	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
 	$LeaderboardsRequest.connect("request_completed", self, "_get_request_completed")
-	print("best")
-	var err = $LeaderboardsRequest.request(url,headers,false,HTTPClient.METHOD_GET)
-	print("eu")
-	if err != OK:
-		push_error("An  error occured when querying the leaderboards.")
-		$ErrorMessage.show()
+	err = $LeaderboardsRequest.request(url,headers,false,HTTPClient.METHOD_GET)
+	#if err != OK:
+	#	push_error("An  error occured when querying the leaderboards.")
+	#	$ErrorMessage.show()
 
 func _on_Button_pressed():	
 	yield(get_tree().create_timer(0.5), "timeout")
 	get_tree().change_scene("res://Home/Home.tscn")
 
 func _get_request_completed(result,response_code,header,body):
+	print(err)
 	print("part")
 	var response = parse_json(body.get_string_from_utf8())
-	print(response)
+	print("Response code: ", response_code)
+	#print(response)
+	if (response_code != 200):
+		$ErrorMessage.show()
+		return
 	var counter = 0
 	for object in response.results:
 		print(object.username,object.rating)
