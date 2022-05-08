@@ -1,7 +1,7 @@
 extends Control
 
 var t = 0
-var t_rate = 120
+var t_rate = 200
 
 func _ready():
 	$ErrorMessage/Label.hide()
@@ -92,15 +92,40 @@ func _start_waiting_room():
 	
 # The following contains updates to the lobby by sending pings to the server
 func _ping_server():
-	var url = URLs.lobby_init + LobbyDetails.shorthand + "/"
+	var url = URLs.lobby_init + "?" + LobbyDetails.shorthand + "/"
 	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
-	print("Pinging ", url)
-	var err = $PingRequest.request(url, headers, false, HTTPClient.METHOD_POST)
+	#print("Pinging ", url)
+	var err = $PingRequest.request(url, headers, false, HTTPClient.METHOD_GET)
 
 func _on_PingRequest_request_completed(result, response_code, headers, body):
 	var json = JSON.parse(body.get_string_from_utf8())
-	print(response_code)
-	
+	if (response_code != 200 and response_code != 201): 
+		$ErrorMessage/Label.text = "Unexpected error in lobby..."
+		$ErrorMessage/Label.show()
+		yield(get_tree().create_timer(2), "timeout")
+		$ErrorMessage/Label.text = "Redirecting..."
+		yield(get_tree().create_timer(1), "timeout")
+		get_tree().change_scene("res://Home/Home.tscn")	
+		return
+	#for i in json.result:
+	#	print(i, " : ", json.result[i])
+	#print(json.result["results"])
+	#print(json.result["results"][0])
+	var returned_list = Array()
+	for player in json.result["results"][0]["players_inside"]:
+		returned_list.append(player["username"])
+	if (LobbyDetails.player_names == returned_list):
+		print("no change")
+		return
+	LobbyDetails.player_names = returned_list
+	for i in range(len(LobbyDetails.player_names)):
+		get_node("WaitingRoom").get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]
+	#for player in json.result["results"][0]["players_inside"]:
+	#	if not (player in LobbyDetails.player_names):
+	#		LobbyDetails.player_names.append(player["username"])
+	#		print("update with ", player["username"])
+	#		for i in range(len(LobbyDetails.player_names)):
+	#			get_node("WaitingRoom").get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]
 	
 func _update_waiting_room():
 	pass
