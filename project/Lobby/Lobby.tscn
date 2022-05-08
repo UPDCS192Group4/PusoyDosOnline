@@ -1,17 +1,25 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Lobby/Lobby.gd" type="Script" id=1]
 [ext_resource path="res://assets/fonts/home_dynamicfont.tres" type="DynamicFont" id=2]
 [ext_resource path="res://assets/fonts/uglybyte.woff" type="DynamicFontData" id=3]
+[ext_resource path="res://assets/fonts/nokiafc22.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="DynamicFont" id=2]
+size = 64
+font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=1]
 size = 80
 font_data = ExtResource( 3 )
 
-[node name="Control" type="Control"]
+[node name="Lobby" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -26,7 +34,21 @@ margin_bottom = 78.0
 custom_fonts/font = ExtResource( 2 )
 text = "HOME"
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="ErrorMessage" type="CanvasLayer" parent="."]
+layer = 15
+
+[node name="Label" type="Label" parent="ErrorMessage"]
+margin_left = 11.0
+margin_top = 50.0
+margin_right = 1014.0
+margin_bottom = 202.0
+custom_fonts/font = SubResource( 2 )
+text = "! Cannot be loaded !"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="LobbyChoices" type="VBoxContainer" parent="."]
 margin_left = 115.0
@@ -60,8 +82,7 @@ size_flags_vertical = 3
 custom_fonts/font = SubResource( 1 )
 text = "join rated lobby"
 
-[node name="HTTPRequest" type="HTTPRequest" parent="."]
+[node name="CreateRequest" type="HTTPRequest" parent="."]
 
 [connection signal="pressed" from="HomeButton" to="." method="_on_HomeButton_pressed"]
 [connection signal="pressed" from="LobbyChoices/CreateLobby" to="." method="_on_CreateLobby_pressed"]
-[connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
