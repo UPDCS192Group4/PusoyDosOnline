@@ -1,16 +1,30 @@
 extends Control
 
+var t = 0
+var t_rate = 120
+
 func _ready():
 	$ErrorMessage/Label.hide()
 	$CreateRequest.connect("request_completed", self, "_on_CreateRequest_request_completed")
+	$JoinRequest.connect("request_completed", self, "_on_JoinRequest_request_completed")
+	$PingRequest.connect("request_completed", self, "_on_PingRequest_request_completed")
 	pass
 
+func _process(_delta):
+	if LobbyDetails.in_waiting != 1:
+		return
+	t += 1
+	if (t >= t_rate):
+		t = t - t_rate
+		_ping_server()
+	
 func _on_HomeButton_pressed():
 	var scene1 = load("res://Game/PopUp.tscn")
 	var child1 = scene1.instance()
 	child1.changeText("Go home?")
 	get_node('CanvasLayer').add_child(child1)
 
+# The following contain functions for when a user creates a lobby
 func _on_CreateLobby_pressed():
 	var url = URLs.lobby_init
 	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
@@ -18,7 +32,6 @@ func _on_CreateLobby_pressed():
 
 func _on_CreateRequest_request_completed(result, response_code, headers, body):
 	var json = JSON.parse(body.get_string_from_utf8())
-	print("Response code: ", response_code)
 	if (response_code != 200 and response_code != 201): 
 		$ErrorMessage/Label.text = "Error creating lobby..."
 		$ErrorMessage/Label.show()
@@ -29,13 +42,45 @@ func _on_CreateRequest_request_completed(result, response_code, headers, body):
 		return
 	LobbyDetails.id = json.result["id"]
 	LobbyDetails.shorthand = json.result["shorthand"]
-	#for i in json.result:
-	#	print(i, " : ", json.result[i])
 	for player in json.result["players_inside"]:
 		LobbyDetails.player_names.append(player["username"])
 	get_node("LobbyChoices").queue_free()
 	_start_waiting_room()
+
+# The following are functions for when a user joins a lobby
+func _on_JoinLobby_pressed():
+	get_node("LobbyChoices").queue_free()
+	var join = load("res://Lobby/JoinLobby.tscn")
+	var joinScene = join.instance()
+	joinScene.set_name("JoinInput")
+	joinScene.get_node("Container").get_node("EnterButton").connect("pressed", self, "_code_entered")
+	add_child(joinScene)
 	
+func _code_entered():
+	var code = get_node("JoinInput").get_node("Container").get_node("Code").text
+	var url = URLs.lobby_init + code + "/"
+	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
+	var err = $JoinRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+
+func _on_JoinRequest_request_completed(result, response_code, headers, body):
+	var json = JSON.parse(body.get_string_from_utf8())
+	print(response_code)
+	if (response_code != 200 and response_code != 201): 
+		$ErrorMessage/Label.text = "Error joining lobby..."
+		$ErrorMessage/Label.show()
+		yield(get_tree().create_timer(2), "timeout")
+		$ErrorMessage/Label.text = "Redirecting..."
+		yield(get_tree().create_timer(1), "timeout")
+		get_tree().change_scene("res://Home/Home.tscn")	
+		return
+	LobbyDetails.id = json.result["id"]
+	LobbyDetails.shorthand = json.result["shorthand"]
+	for player in json.result["players_inside"]:
+		LobbyDetails.player_names.append(player["username"])
+	get_node("JoinInput").queue_free()
+	_start_waiting_room()
+	LobbyDetails.in_waiting = 1
+
 func _start_waiting_room():
 	var newRoom = LobbyDetails.roomScene.instance()
 	newRoom.set_name("WaitingRoom")
@@ -43,3 +88,22 @@ func _start_waiting_room():
 	for i in range(len(LobbyDetails.player_names)):
 		newRoom.get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]
 	add_child(newRoom)
+	LobbyDetails.in_waiting = 1
+	
+# The following contains updates to the lobby by sending pings to the server
+func _ping_server():
+	var url = URLs.lobby_init + LobbyDetails.shorthand + "/"
+	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
+	print("Pinging ", url)
+	var err = $PingRequest.request(url, headers, false, HTTPClient.METHOD_POST)
+
+func _on_PingRequest_request_completed(result, response_code, headers, body):
+	var json = JSON.parse(body.get_string_from_utf8())
+	print(response_code)
+	
+	
+func _update_waiting_room():
+	pass
+	
+func _start_game():
+	pass
