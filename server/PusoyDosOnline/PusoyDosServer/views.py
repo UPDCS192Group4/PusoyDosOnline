@@ -230,6 +230,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
             return Response({"error": "You are already in a lobby"}, status=status.HTTP_403_FORBIDDEN)
         if self.request.user.current_lobby == None:
             lobby.players_inside.add(self.request.user) # add the user to the list when joining via shorthand
+            lobby.save()
             self.request.user.current_lobby = lobby # set the user's lobby to be this one
             self.request.user.save()
         serializer = CasualLobbySerializer(lobby)
@@ -259,7 +260,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         
         # Generate deck
         full_deck = []
-        for j in range(3):
+        for j in range(4):
             full_deck += [(100 * j) + i for i in range(1, 14)]
         
         # Generate randomness
@@ -300,4 +301,3 @@ class GameViewSet(mixins.RetrieveModelMixin,
         permissions.IsAuthenticated: ["retrieve", "update"],
         permissions.IsAdminUser: ["list"],
     }
-        

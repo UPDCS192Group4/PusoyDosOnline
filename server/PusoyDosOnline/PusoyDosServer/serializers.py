@@ -83,10 +83,11 @@ class CasualLobbySerializer(serializers.ModelSerializer):
     owner = serializers.UUIDField(read_only=True)
     players_inside = PlayerListSerializer(many=True, read_only=True)
     game_id = serializers.UUIDField(read_only=True, source="game.id", allow_null=True)
+    last_activity = serializers.DateTimeField(read_only=True)
     
     class Meta:
         model = Lobby
-        fields = ['id', 'shorthand', 'owner', 'players_inside', 'game_id']
+        fields = ['id', 'shorthand', 'owner', 'players_inside', 'game_id', 'last_activity']
         
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -125,6 +126,17 @@ class HandSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
     hands = HandSerializer(many=True)
+    last_activity = serializers.DateTimeField(read_only=True)
     class Meta:
         model = Game
-        fields = ["id", "hands"]
+        fields = ["id", "hands", "last_activity"]
+        
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        if self.context["view"].action != "list" and "hands" in ret:
+            hands = ret["hands"].copy()
+            for hand in hands:
+                if hand["user"] != self.context["view"].request.user.username:
+                    print(hand)
+                    ret["hands"].remove(hand)
+        return ret
