@@ -140,23 +140,26 @@ func _on_PingRequest_request_completed(result, response_code, headers, body):
 	#for player in json.result["results"][0]["players_inside"]:
 	for player in json.result["players_inside"]:
 		returned_list.append(player["username"])
-	if (LobbyDetails.player_names == returned_list):
+	if (LobbyDetails.player_names == returned_list) and (len(LobbyDetails.player_names) < 4):
 		print("no change")
 		return
 	LobbyDetails.player_names = returned_list
 	for i in range(4):
 		get_node("WaitingRoom").get_node("Container").get_child(i+1).text = ""
 	for i in range(len(LobbyDetails.player_names)):
-		get_node("WaitingRoom").get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]
+		get_node("WaitingRoom").get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]	
+	print(len(LobbyDetails.player_names))
+	if len(LobbyDetails.player_names) == 4:
+		$ErrorMessage/Label.text = "Game starting..."
+		$ErrorMessage/Label.show()
+		yield(get_tree().create_timer(2), "timeout")
+		_start_game()
 	#for player in json.result["results"][0]["players_inside"]:
 	#	if not (player in LobbyDetails.player_names):
 	#		LobbyDetails.player_names.append(player["username"])
 	#		print("update with ", player["username"])
 	#		for i in range(len(LobbyDetails.player_names)):
 	#			get_node("WaitingRoom").get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]
-	
-func _update_waiting_room():
-	pass
-	
+
 func _start_game():
-	pass
+	get_tree().change_scene("res://Game/Game.tscn")

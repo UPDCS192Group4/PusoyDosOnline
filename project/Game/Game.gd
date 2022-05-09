@@ -17,6 +17,8 @@ func _ready():
 	add_child(child3)
 	shuffleDeck()
 	disablePlayButton()
+	
+	#$HandRequest.connect("request_completed", self, "_on_HandRequest_request_completed")
 
 func shuffleDeck():
 	for i in range(1,5):

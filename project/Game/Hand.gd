@@ -13,6 +13,8 @@ var ANGLE
 var ANG_DIST = 0.07
 var OVAL_VECT = Vector2()
 
+var z_layer = 0
+
 func _ready():	
 	yield(get_parent(), "ready")
 	#shuffleDeck()
@@ -20,6 +22,7 @@ func _ready():
 	
 	ANGLE = deg2rad(90) - ANG_DIST * (NUM_CARDS - 1) / 2
 	for i in range(NUM_CARDS):
+		yield(get_tree().create_timer(0.1), "timeout")
 		cards.append(deck[i])
 		cards[i].isCurrentPlayer = 1
 		cards[i].changeFace()
@@ -31,6 +34,7 @@ func _ready():
 		#print(OVAL_VECT, cards[i].rect_position)
 		cards[i].rect_rotation = (90 - rad2deg(ANGLE)) / 4
 		ANGLE += ANG_DIST
+	enableZ()
 
 func shuffleDeck():
 #	for i in range(1,5):
@@ -91,6 +95,8 @@ func updateHand():
 		#cards[i].rect_position.x=(1024-NUM_CARDS*40)/2+i*40-70+20
 
 func changeZ(top):
+	if (!z_layer):
+		return
 	index = cards.find(top)
 	cards[index].get_node('Container').z_index = NUM_CARDS
 	for i in range(index-1, -1, -1):
@@ -105,3 +111,8 @@ func checkArray():
 	var pileNode =  get_parent().get_node('Pile')
 	var currentPile = pileNode.getTopOfPile()
 	pass
+
+func enableZ():
+	z_layer = 1
+func disableZ():
+	z_layer = 0

@@ -13,6 +13,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="GreenBackground" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -51,6 +54,8 @@ text = "Home"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 15
+
+[node name="HandRequest" type="HTTPRequest" parent="."]
 
 [connection signal="pressed" from="PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="HomeButton" to="." method="_on_HomeButton_pressed"]

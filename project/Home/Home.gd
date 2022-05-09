@@ -7,6 +7,7 @@ func _ready():
 	$ErrorMessage/Label.hide()
 
 func _on_PlayButton_pressed():
+	LobbyDetails.player_names.clear()
 	yield(get_tree().create_timer(0.5), "timeout")
 	clearLobby()
 		
