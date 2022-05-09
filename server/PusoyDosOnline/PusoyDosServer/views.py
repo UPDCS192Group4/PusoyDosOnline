@@ -288,7 +288,6 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         return Response({"detail": "Game successfully created", "game": game.id})
         
 class GameViewSet(mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
                   mixins.ListModelMixin,
                   viewsets.GenericViewSet):
     """
@@ -298,6 +297,30 @@ class GameViewSet(mixins.RetrieveModelMixin,
     serializer_class = GameSerializer
     permission_classes = [UserPermissions]
     perms = {
-        permissions.IsAuthenticated: ["retrieve", "update"],
+        permissions.IsAuthenticated: ["retrieve"],
         permissions.IsAdminUser: ["list"],
     }
+    
+    @action(detail=True, methods=["POST"])
+    def play_cards(self, request, pk=None):
+        # Validate if request.data *can* be valid
+        
+        # request.data should ideally only consist of {"play": [<list_of_card_ints>]}
+        # Any other fields in there must be ignored.
+        if request.data.get("play") == None:
+            return Response({"error": "No play field in data received"}, status=status.HTTP_403_FORBIDDEN)
+        
+        # The length of a play can only be a maximum 5 cards, and there are no moves with only 4 cards.
+        # A play of length 0 is a pass.
+        plays = request.data.get("play")
+        if len(plays) > 5 or len(plays) == 4:
+            return Response({"error": "No play field length exceeded expected value"}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Check if each card in the plays is an actual card int
+        for card in plays:
+            if card < 0 or card // 100 > 3 or card % 100 > 13:
+                return Response({"error": "Invalid play field data"}, status=status.HTTP_403_FORBIDDEN)
+            
+        # pk = game ID
+        game = get_object_or_404(self.queryset, id=pk)
+        pass

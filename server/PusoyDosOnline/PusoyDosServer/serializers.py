@@ -136,7 +136,7 @@ class GameSerializer(serializers.ModelSerializer):
         if self.context["view"].action != "list" and "hands" in ret:
             hands = ret["hands"].copy()
             for hand in hands:
+                # Remove hand from returned value if it doesn't match the current user's username
                 if hand["user"] != self.context["view"].request.user.username:
-                    print(hand)
                     ret["hands"].remove(hand)
         return ret
