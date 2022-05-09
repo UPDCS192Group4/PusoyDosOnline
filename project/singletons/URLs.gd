@@ -8,6 +8,7 @@ var login = url + "/api/token/"
 var profile = url + "/api/users/profile/"
 var leaderboards = url + "/api/users/leaderboard"
 var lobby_init = url + "/api/lobby/casual/"
+var friends = url + "/api/friends/"
 
 var access
 var refresh

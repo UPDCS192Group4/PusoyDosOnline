@@ -1,5 +1,8 @@
 extends Control
 
+var sidepanel = null
+var leaderboards_scene = preload("res://Leaderboards/Leaderboards.tscn")
+
 func _ready():
 	$ClearRequest.connect("request_completed", self, "_on_ClearRequest_request_completed")
 	$LeaveRequest.connect("request_completed", self, "_on_LeaveRequest_request_completed")
@@ -82,4 +85,11 @@ func startNewGame():
 	get_tree().change_scene("res://Game/Game.tscn")
 
 func showLeaderboards():
-	get_tree().change_scene("res://Leaderboards/Leaderboards.tscn")
+	#get_tree().change_scene("res://Leaderboards/Leaderboards.tscn")
+	sidepanel = leaderboards_scene.instance()
+	$ContainerBox/ContainerBox/Sidepanel.add_child(sidepanel)
+
+
+func _on_LogoutButton_pressed():
+	AccountInfo.logout()
+	get_tree().change_scene("res://Home/Login.tscn")

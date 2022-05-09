@@ -8,6 +8,8 @@ func _ready():
 	_get_leaderboards()
 	
 func _get_leaderboards():
+	if AccountInfo.logged_in == false:
+		return 0
 	var url = URLs.leaderboards
 	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
 	err = $LeaderboardsRequest.request(url,headers,false,HTTPClient.METHOD_GET)
