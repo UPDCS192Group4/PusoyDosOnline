@@ -45,6 +45,8 @@ class Game(models.Model):
     # A card is essentially [Suit][Number Value]. 3s are 1, Kings are 11, Aces are 12, 2s are 13. Numbers are prepended with 0 if less than 10
     # Suits are represented using the first digit of each suit: 0 = Clubs, 1 = Spades, 2 = Hearts, 3 = Diamonds
     # So a 3 of Clubs would be internally represented as 001, a 2 of Diamonds would be 313, etc etc
+    last_play = ArrayField(base_field=models.IntegerField(name="Card", default=0), size=5) # contains the last play
+    control = models.IntegerField(default=0) # if control == 4, then the current player has control
     
     def save(self, *args,**kwargs):
         self.last_activity = timezone.now() # keep the last activity updated
@@ -52,6 +54,8 @@ class Game(models.Model):
     
 class Hand(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    move_order = models.IntegerField(default=0) # a move is allowed if game.current_round % 4 == move_order
+    card_count = models.IntegerField(default=13) # how many cards does this hand still have?
     user = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
     hand = ArrayField(base_field=models.IntegerField(name="Card", default=0), size=13)
 

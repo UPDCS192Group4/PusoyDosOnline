@@ -276,6 +276,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         print(f"Attempting to generate game {game.id} with seed {seed}")
         i = 0
         for player in lobby.players_inside.all():
+            # TODO: Set the move_orders for each hand
             hand = Hand.objects.create(user=player, hand=list(sorted(full_deck[i*13:(i*13)+13])))
             game.players.add(player)
             game.hands.add(hand)
@@ -297,12 +298,15 @@ class GameViewSet(mixins.RetrieveModelMixin,
     serializer_class = GameSerializer
     permission_classes = [UserPermissions]
     perms = {
-        permissions.IsAuthenticated: ["retrieve"],
+        permissions.IsAuthenticated: ["retrieve", "play_card"],
         permissions.IsAdminUser: ["list"],
     }
     
     @action(detail=True, methods=["POST"])
     def play_cards(self, request, pk=None):
+        # pk = game ID
+        game = get_object_or_404(self.queryset, id=pk)
+        
         # Validate if request.data *can* be valid
         
         # request.data should ideally only consist of {"play": [<list_of_card_ints>]}
@@ -320,7 +324,9 @@ class GameViewSet(mixins.RetrieveModelMixin,
         for card in plays:
             if card < 0 or card // 100 > 3 or card % 100 > 13:
                 return Response({"error": "Invalid play field data"}, status=status.HTTP_403_FORBIDDEN)
-            
-        # pk = game ID
-        game = get_object_or_404(self.queryset, id=pk)
+        
+        # Perform validations with database calls
+        # Query if user can actually make a move right now
+        # Check if the user has all of the cards
+        # Check if the move is a valid move given the cards and previously played cards
         pass

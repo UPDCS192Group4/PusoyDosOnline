@@ -126,17 +126,18 @@ class HandSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
     hands = HandSerializer(many=True)
-    last_activity = serializers.DateTimeField(read_only=True)
+    last_activity = serializers.DateTimeField()
     class Meta:
         model = Game
-        fields = ["id", "hands", "last_activity"]
+        fields = ["id", "hands", "last_activity", "last_play", "control"]
+        read_only_fields = ["id", "last_activity", "last_play", "control"]
         
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         if self.context["view"].action != "list" and "hands" in ret:
             hands = ret["hands"].copy()
-            for hand in hands:
+            for i, hand in enumerate(hands):
                 # Remove hand from returned value if it doesn't match the current user's username
                 if hand["user"] != self.context["view"].request.user.username:
-                    ret["hands"].remove(hand)
+                    del ret["hands"][i]["hand"]
         return ret
