@@ -220,8 +220,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
 [connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/NameBox/Name/ProfileButton" to="." method="_on_ProfileButton_pressed"]
 [connection signal="pressed" from="HBoxContainer/FriendRequest/ColorRect3/Accept" to="." method="_on_Accept_pressed"]
 [connection signal="pressed" from="HBoxContainer/FriendRequest/Label/Accept" to="." method="_on_Accept_pressed"]
 [connection signal="pressed" from="HBoxContainer/FriendRequest/ColorRect2/Reject" to="." method="_on_Reject_pressed"]
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]

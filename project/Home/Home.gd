@@ -89,9 +89,7 @@ func startNewGame():
 
 func showLeaderboards():
 	#get_tree().change_scene("res://Leaderboards/Leaderboards.tscn")
-	close_sidepanel()
-	sidepanel = leaderboards_scene.instance()
-	$ContainerBox/ContainerBox/Sidepanel.add_child(sidepanel)
+	change_sidepanel(leaderboards_scene)
 
 func close_sidepanel():
 	if sidepanel == null:
@@ -100,15 +98,19 @@ func close_sidepanel():
 	sidepanel.queue_free()
 	sidepanel = null
 
+func change_sidepanel(sidepanel_scene):
+	close_sidepanel()
+	sidepanel = sidepanel_scene.instance()
+	sidepanel.in_home = true
+	$ContainerBox/ContainerBox/Sidepanel.add_child(sidepanel)
+	sidepanel.get_node("Button").connect("pressed", self, "close_sidepanel")
+
 func _on_LogoutButton_pressed():
 	AccountInfo.logout()
 	get_tree().change_scene("res://Home/Login.tscn")
 	
 func _on_FriendsButton_pressed():
-	close_sidepanel()
-	sidepanel = friends_scene.instance()
-	$ContainerBox/ContainerBox/Sidepanel.add_child(sidepanel)
-	sidepanel.get_node("Button").connect("pressed", self, "close_sidepanel")
-	
-func show_profile():
-	pass
+	change_sidepanel(friends_scene)
+
+func _on_Donate_pressed():
+	AccountInfo.fetchProfile()

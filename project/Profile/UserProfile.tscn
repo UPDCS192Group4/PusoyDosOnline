@@ -56,6 +56,8 @@ __meta__ = {
 
 [node name="RequestsRequest" type="HTTPRequest" parent="."]
 
+[node name="AddRequest" type="HTTPRequest" parent="."]
+
 [node name="ErrorMessage" type="CanvasLayer" parent="."]
 layer = 15
 
@@ -469,3 +471,7 @@ text = "00000000000000"
 valign = 1
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Profile/Friend/Add/AddButton" to="." method="_on_AddButton_pressed"]
+[connection signal="pressed" from="Profile/Friend/Remove/RemoveButton" to="." method="_on_RemoveButton_pressed"]
+[connection signal="pressed" from="Profile/FriendRequest/Accept/AcceptButton" to="." method="_on_AcceptButton_pressed"]
+[connection signal="pressed" from="Profile/FriendRequest/Reject/RejectButton" to="." method="_on_RejectButton_pressed"]

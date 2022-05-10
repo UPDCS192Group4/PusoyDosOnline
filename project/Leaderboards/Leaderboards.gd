@@ -1,6 +1,7 @@
 extends Control
 
 var err
+var in_home = false
 
 func _ready():
 	$ErrorMessage/Label.hide()
@@ -14,7 +15,9 @@ func _get_leaderboards():
 	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
 	err = $LeaderboardsRequest.request(url,headers,false,HTTPClient.METHOD_GET)
 
-func _on_Button_pressed():	
+func _on_Button_pressed():
+	if in_home:
+		return
 	yield(get_tree().create_timer(0.5), "timeout")
 	get_tree().change_scene("res://Home/Home.tscn")
 

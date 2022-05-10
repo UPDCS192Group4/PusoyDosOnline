@@ -11,10 +11,16 @@ func _ready():
 		for i in range(25):
 			$ScrollContainer/VBoxContainer.add_child(panel_scene.instance())
 		return
-	$ErrorMessage/Label.hide()
+	AccountInfo.connect("refreshedInfo", self, "refreshAll")
+	#AccountInfo.connect("profileRequestDone", self, "profileUpdate")
+	#AccountInfo.connect("requestsRequestDone", self, "requestUpdate")
+	$ErrorMessage/Label.text = "Loading..."
 	$ProfileRequest.connect("request_completed", self, "_get_profile_request_completed")
+	populateFriends()
+	populateRequests()
+	
 	#$RequestsRequest.connect("request_complete", self, "_get_requests_request_completed")
-	_get_list()	
+	# _get_list()	
 	
 func _get_list():
 	if not AccountInfo.logged_in:
@@ -54,15 +60,40 @@ func _get_requests_request_completed(result,response_code,header,body):
 		yield(get_tree().create_timer(1), "timeout")
 		get_tree().change_scene("res://Home/Home.tscn")	
 		return
-	AccountInfo.updateInfo(response.result)
+	print("???", response)
 	pass
 	
 func populateFriends():
+	$ErrorMessage/Label.hide()
 	var friends = AccountInfo.friends
 	for friend in friends:
+		if friend.username == AccountInfo.username:
+			continue
 		var panel = panel_scene.instance()
 		panel.setName(friend.username)
 		panel.setRating(str(friend.rating))
 		panel.is_friend = true
 		$ScrollContainer/VBoxContainer.add_child(panel)
 		panel.removeButtons()
+
+func populateRequests():
+	var requests = AccountInfo.requests
+	for request in requests:
+		var username = request.from_user_name
+		if username in AccountInfo.friend_names or username == AccountInfo.username:
+			continue
+		var panel = panel_scene.instance()
+		panel.setName(username)
+		panel.is_friend = false
+		panel.is_request = true
+		$ScrollContainer/VBoxContainer.add_child(panel)
+		panel.removeRating()
+
+func clearEntries(friends=true, requests=true):
+	for child in $ScrollContainer/VBoxContainer.get_children():
+		child.queue_free()
+		
+func refreshAll():
+	clearEntries()
+	populateFriends()
+	populateRequests()
