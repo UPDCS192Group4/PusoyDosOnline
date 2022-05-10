@@ -2,8 +2,6 @@ extends Control
 
 var err
 var panel_scene = preload("res://Friends/PlayerPanel.tscn")
-var friendslist = []
-var requestslist = []
 var in_home = false
 
 func _ready():

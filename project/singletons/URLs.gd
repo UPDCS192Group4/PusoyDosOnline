@@ -28,3 +28,6 @@ func getRejectURL(username):
 	
 func getRemoveFriendURL(username):
 	return removefriend + username + "/"
+
+func getAddFriendURL(username = ""):
+	return friendrequests

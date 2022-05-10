@@ -113,4 +113,5 @@ func _on_FriendsButton_pressed():
 	change_sidepanel(friends_scene)
 
 func _on_Donate_pressed():
-	AccountInfo.fetchProfile()
+	print("Thank you for your support!")
+	# AccountInfo.fetchProfile()

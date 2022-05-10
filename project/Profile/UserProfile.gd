@@ -22,7 +22,7 @@ func _ready():
 	$Profile.hide()
 	$ProfileRequest.connect("request_completed", self, "_get_profile_request_completed")
 	$RequestsRequest.connect("request_completed", self, "_get_requests_request_completed")
-	#$AddRequest.connect("request_complete", self, "_get_add_request_completed")
+	$AddRequest.connect("request_completed", self, "_get_add_request_completed")
 	# _get_list()	
 
 # DEFUNCT
@@ -69,11 +69,22 @@ func _get_profile_request_completed(result,response_code,header,body):
 	populateProfile(json.result)
 	
 func _get_requests_request_completed(result,response_code,header,body):
-	print("RC: ", response_code)
+	print("Requests RC: ", response_code)
 	if response_code != 200:
 		print("Requests Request failed with response code ", response_code)
 		return
 	AccountInfo.fetchInfo()
+	
+func _get_add_request_completed(result,response_code,header,body):
+	print("Add RC: ", response_code)
+	if not response_code in [200, 201]:
+		print("Requests Request failed with response code ", response_code)
+		if response_code == 400:
+			$Profile/Friend/Add.text = parse_json(body.get_string_from_utf8()).detail
+			$Profile/Friend/Add/AddButton.disabled = true
+		return
+	$Profile/Friend/Add.text = "Friend request sent!"
+	$Profile/Friend/Add/AddButton.disabled = true
 
 func populateProfile(profile_json):
 	var json = profile_json
@@ -99,7 +110,18 @@ func updateFriendButtons():
 
 
 func _on_AddButton_pressed():
+	print("Add")
+	if not AccountInfo.logged_in:
+		return
+	var username = getUsername()
+	var url = URLs.getAddFriendURL()
+	var headers = URLs.defaultHeader()
+	var body = {"to_user_name": username}
+	var err = $AddRequest.request(url, headers, false, HTTPClient.METHOD_POST, to_json(body))
+	if err != OK:
+		print("Add Friend request to ", url, " not okay: ", err)
 	pass # Replace with function body.
+	
 
 func _on_RemoveButton_pressed():
 	print("Remove")
