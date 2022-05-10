@@ -4,8 +4,6 @@ def compare(play, pile):
 	for i in range(len(play)):
 		if play[i] < pile[i]:
 			return False
-		elif play[i] == pile[i]:
-			pass
 		elif play[i] > pile[i]:
 			return True
 	# If this stage is reached,
@@ -17,8 +15,7 @@ def process(arr):
 
 	# Empty arrays are invalid
 	if len(arr) == 0:
-		ret.append(0)
-		return ret
+		return [0]
 
 	# Format of Single-element arrays
 	# 1st value = length (1)

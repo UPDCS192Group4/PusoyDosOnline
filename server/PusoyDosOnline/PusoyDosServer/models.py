@@ -10,6 +10,9 @@ from random import choices, randint
 def generate_shorthand():
     return "".join(choices("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", k=5))
 
+def get_default_last_play():
+    return [0] * 5
+
 # Create your models here.
 class Lobby(models.Model):
     """
@@ -45,8 +48,8 @@ class Game(models.Model):
     # A card is essentially [Suit][Number Value]. 3s are 1, Kings are 11, Aces are 12, 2s are 13. Numbers are prepended with 0 if less than 10
     # Suits are represented using the first digit of each suit: 0 = Clubs, 1 = Spades, 2 = Hearts, 3 = Diamonds
     # So a 3 of Clubs would be internally represented as 001, a 2 of Diamonds would be 313, etc etc
-    last_play = ArrayField(base_field=models.IntegerField(name="Card", default=0), size=5) # contains the last play
-    control = models.IntegerField(default=0) # if control == 4, then the current player has control
+    last_play = ArrayField(base_field=models.IntegerField(name="LastCard", default=0), size=5, default=get_default_last_play) # contains the last play
+    control = models.IntegerField(default=4) # if control == 4, then the current player has control
     
     def save(self, *args,**kwargs):
         self.last_activity = timezone.now() # keep the last activity updated

@@ -11,6 +11,7 @@ from django_countries import countries
 
 from .models import *
 from .serializers import *
+from .playchecker import *
 
 import random
 
@@ -175,13 +176,16 @@ class FriendRequestViewSet(mixins.CreateModelMixin,
         to_user = get_object_or_404(User, username=pk)
         try:
             count, frs = FriendRequest.objects.filter(from_user=from_user, to_user=to_user).delete()
-            from_user.friends.add(to_user)
-            to_user.friends.add(from_user)
-            from_user.save()
-            to_user.save()
-            return Response({"detail": f"Accepted"})
+            if count > 0:
+                from_user.friends.add(to_user)
+                to_user.friends.add(from_user)
+                from_user.save()
+                to_user.save()
+                return Response({"detail": f"Accepted"})
+            else:
+                return Response({"error": "Cannot find friend request"}, status=status.HTTP_404_NOT_FOUND)
         except FriendRequest.DoesNotExist:
-            return Response({"error": "Cannot find friend request"})
+            return Response({"error": "Cannot find friend request"}, status=status.HTTP_404_NOT_FOUND)
     
     @action(detail=True, methods=["POST"])
     def reject(self, request, pk=None):
@@ -275,9 +279,14 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         game = Game.objects.create(seed=seed)
         print(f"Attempting to generate game {game.id} with seed {seed}")
         i = 0
+        order = 1
         for player in lobby.players_inside.all():
-            # TODO: Set the move_orders for each hand
-            hand = Hand.objects.create(user=player, hand=list(sorted(full_deck[i*13:(i*13)+13])))
+            hand_to_give = list(sorted(full_deck[i*13:(i*13)+13]))
+            player_order = 0
+            if hand_to_give[0] != 1:
+                player_order = order
+                order += 1
+            hand = Hand.objects.create(user=player, hand=hand_to_give, move_order=player_order)
             game.players.add(player)
             game.hands.add(hand)
             i += 1
@@ -298,7 +307,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
     serializer_class = GameSerializer
     permission_classes = [UserPermissions]
     perms = {
-        permissions.IsAuthenticated: ["retrieve", "play_card"],
+        permissions.IsAuthenticated: ["retrieve", "play_cards", "test"],
         permissions.IsAdminUser: ["list"],
     }
     
@@ -320,13 +329,50 @@ class GameViewSet(mixins.RetrieveModelMixin,
         if len(plays) > 5 or len(plays) == 4:
             return Response({"error": "No play field length exceeded expected value"}, status=status.HTTP_403_FORBIDDEN)
         
+        # Check if cards are unique
+        if len(plays) != len(set(plays)):
+            return Response({"error": "Invalid play field data"}, status=status.HTTP_403_FORBIDDEN)
+        
         # Check if each card in the plays is an actual card int
         for card in plays:
-            if card < 0 or card // 100 > 3 or card % 100 > 13:
+            if card < 0 or card // 100 > 3 or card % 100 > 13 or (card > 0 and card % 100 == 0):
                 return Response({"error": "Invalid play field data"}, status=status.HTTP_403_FORBIDDEN)
         
         # Perform validations with database calls
+        # Get player hand
+        player_hand = None
+        for hand in game.hands.all():
+            if hand.user.username == request.user.username:
+                player_hand = hand
+                break
+        if player_hand == None:
+            return Response({"error": "Cannot find player's hand!"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
         # Query if user can actually make a move right now
+        if game.current_round % 4 != player_hand.move_order:
+            return Response({"error": "Not allowed to make a move for this round"}, status=status.HTTP_403_FORBIDDEN)
+        
         # Check if the user has all of the cards
+        for card in plays:
+            if not card in player_hand.hand:
+                return Response({"error": "Card played not found in hand"}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Check if it's a skip
+        if len(plays) == 0:
+            pass
+        
         # Check if the move is a valid move given the cards and previously played cards
+        if game.control == 4:
+            # Control:
+            # No need to check the previous play. Just set it.
+            if game.current_round == 0 and not 1 in plays:
+                # First move *must* always contain the 3 of clubs (001)
+                return Response({"error": "Invalid play: First move must contain the 3 of clubs"}, status=status.HTTP_403_FORBIDDEN)
+            pass
+        else:
+            # Not control, check the previous play
+            pass
+        
+        # Since it passed all the checks, actually remove the card from hand and set it as the previous.
         pass
+    

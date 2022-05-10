@@ -48,6 +48,7 @@ class UserSerializer(serializers.ModelSerializer):
         # Remove the user ID and lobby ID if we're listing users or looking through the leaderboards
         if self.context["view"].action in ["list", "leaderboard"]:
             ret.pop("id")
+        if self.context["view"].action in ["profile", "list", "leaderboard"]:
             ret.pop("lobby")
         
         return ret
@@ -121,8 +122,8 @@ class HandSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source="user.username")
     class Meta:
         model = Hand
-        fields = ['id', 'user', 'hand']
-        read_only_fields = ['id', 'user']
+        fields = ['id', 'user', 'hand', 'move_order', 'card_count']
+        read_only_fields = ['id', 'user', 'move_order', 'card_count']
 
 class GameSerializer(serializers.ModelSerializer):
     hands = HandSerializer(many=True)
