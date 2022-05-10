@@ -109,3 +109,6 @@ func _on_FriendsButton_pressed():
 	sidepanel = friends_scene.instance()
 	$ContainerBox/ContainerBox/Sidepanel.add_child(sidepanel)
 	sidepanel.get_node("Button").connect("pressed", self, "close_sidepanel")
+	
+func show_profile():
+	pass

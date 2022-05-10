@@ -1,0 +1,471 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/fonts/lobby_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://assets/fonts/home_dynamicfont.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Profile/UserProfile.gd" type="Script" id=3]
+[ext_resource path="res://assets/fonts/nokia_cellphone.tres" type="DynamicFont" id=4]
+
+[node name="UserProfile" type="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -343.5
+margin_top = -456.5
+margin_right = 343.5
+margin_bottom = 342.5
+size_flags_horizontal = 7
+size_flags_vertical = 7
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.639216, 0.639216, 0.639216, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+anchor_right = 1.0
+margin_bottom = 103.0
+custom_fonts/font = ExtResource( 2 )
+text = "Profile"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="."]
+self_modulate = Color( 1, 0.368627, 0.368627, 1 )
+margin_left = 37.0
+margin_top = 25.0
+margin_right = 105.0
+margin_bottom = 89.0
+custom_fonts/font = ExtResource( 2 )
+text = "X"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProfileRequest" type="HTTPRequest" parent="."]
+
+[node name="RequestsRequest" type="HTTPRequest" parent="."]
+
+[node name="ErrorMessage" type="CanvasLayer" parent="."]
+layer = 15
+
+[node name="Label" type="Label" parent="ErrorMessage"]
+margin_left = 148.0
+margin_top = 234.0
+margin_right = 924.0
+margin_bottom = 324.0
+custom_fonts/font = ExtResource( 1 )
+text = "! Cannot be loaded !"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Profile" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 45.0
+margin_top = 118.0
+margin_right = -45.0
+margin_bottom = 1.0
+custom_constants/separation = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Username" type="HBoxContainer" parent="Profile"]
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Profile/Username"]
+margin_right = 200.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+size_flags_stretch_ratio = 0.54
+custom_fonts/font = ExtResource( 2 )
+text = "USERNAME"
+align = 2
+valign = 1
+
+[node name="Dummy" type="VBoxContainer" parent="Profile/Username"]
+margin_left = 204.0
+margin_right = 222.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.05
+
+[node name="Value" type="Label" parent="Profile/Username"]
+margin_left = 226.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "Username"
+valign = 1
+
+[node name="Dummy" type="VBoxContainer" parent="Profile"]
+visible = false
+margin_top = 62.0
+margin_right = 597.0
+margin_bottom = 67.0
+rect_min_size = Vector2( 0, 5 )
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.05
+
+[node name="Rating" type="HBoxContainer" parent="Profile"]
+margin_top = 68.0
+margin_right = 597.0
+margin_bottom = 126.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Profile/Rating"]
+margin_right = 200.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+size_flags_stretch_ratio = 0.54
+custom_fonts/font = ExtResource( 2 )
+text = "Rating"
+align = 2
+valign = 1
+
+[node name="Dummy" type="VBoxContainer" parent="Profile/Rating"]
+margin_left = 204.0
+margin_right = 222.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.05
+
+[node name="Value" type="Label" parent="Profile/Rating"]
+margin_left = 226.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "0000000000"
+valign = 1
+
+[node name="Games" type="HBoxContainer" parent="Profile"]
+margin_top = 136.0
+margin_right = 597.0
+margin_bottom = 194.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Profile/Games"]
+margin_right = 200.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+size_flags_stretch_ratio = 0.54
+custom_fonts/font = ExtResource( 2 )
+text = "Games"
+align = 2
+valign = 1
+
+[node name="Dummy" type="VBoxContainer" parent="Profile/Games"]
+margin_left = 204.0
+margin_right = 222.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.05
+
+[node name="Value" type="Label" parent="Profile/Games"]
+margin_left = 226.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "00000000000000"
+valign = 1
+
+[node name="Wins" type="HBoxContainer" parent="Profile"]
+margin_top = 204.0
+margin_right = 597.0
+margin_bottom = 262.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Profile/Wins"]
+margin_right = 200.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+size_flags_stretch_ratio = 0.54
+custom_fonts/font = ExtResource( 2 )
+text = "Wins"
+align = 2
+valign = 1
+
+[node name="Dummy" type="VBoxContainer" parent="Profile/Wins"]
+margin_left = 204.0
+margin_right = 222.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.05
+
+[node name="Value" type="Label" parent="Profile/Wins"]
+margin_left = 226.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "00000000000000"
+valign = 1
+
+[node name="Loses" type="HBoxContainer" parent="Profile"]
+margin_top = 272.0
+margin_right = 597.0
+margin_bottom = 330.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Profile/Loses"]
+margin_right = 200.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+size_flags_stretch_ratio = 0.54
+custom_fonts/font = ExtResource( 2 )
+text = "Loses"
+align = 2
+valign = 1
+
+[node name="Dummy" type="VBoxContainer" parent="Profile/Loses"]
+margin_left = 204.0
+margin_right = 222.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.05
+
+[node name="Value" type="Label" parent="Profile/Loses"]
+margin_left = 226.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "00000000000000"
+valign = 1
+
+[node name="Winstreak" type="HBoxContainer" parent="Profile"]
+margin_top = 340.0
+margin_right = 597.0
+margin_bottom = 398.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Profile/Winstreak"]
+margin_right = 200.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+size_flags_stretch_ratio = 0.54
+custom_fonts/font = ExtResource( 2 )
+text = "winstreak"
+align = 2
+valign = 1
+
+[node name="Dummy" type="VBoxContainer" parent="Profile/Winstreak"]
+margin_left = 204.0
+margin_right = 222.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.05
+
+[node name="Value" type="Label" parent="Profile/Winstreak"]
+margin_left = 226.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "00000000000000"
+valign = 1
+
+[node name="Friend" type="HBoxContainer" parent="Profile"]
+margin_top = 408.0
+margin_right = 597.0
+margin_bottom = 466.0
+size_flags_horizontal = 3
+
+[node name="Add" type="Label" parent="Profile/Friend"]
+margin_right = 296.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+size_flags_stretch_ratio = 0.54
+custom_fonts/font = ExtResource( 2 )
+text = "Add friend"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Profile/Friend/Add"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0.623529, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AddButton" type="TextureButton" parent="Profile/Friend/Add"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Remove" type="Label" parent="Profile/Friend"]
+margin_left = 300.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+size_flags_stretch_ratio = 0.54
+custom_fonts/font = ExtResource( 2 )
+text = "Remove Friend"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Profile/Friend/Remove"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.827451, 0.0352941, 0.0352941, 0.623529 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RemoveButton" type="TextureButton" parent="Profile/Friend/Remove"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dummy" type="VBoxContainer" parent="Profile/Friend"]
+visible = false
+margin_left = 546.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.05
+
+[node name="Rating" type="Label" parent="Profile/Friend"]
+visible = false
+margin_left = 211.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "00000000000000"
+valign = 1
+
+[node name="FriendRequest" type="HBoxContainer" parent="Profile"]
+margin_top = 476.0
+margin_right = 597.0
+margin_bottom = 534.0
+size_flags_horizontal = 3
+
+[node name="Accept" type="Label" parent="Profile/FriendRequest"]
+margin_right = 296.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+size_flags_stretch_ratio = 0.54
+custom_fonts/font = ExtResource( 2 )
+text = "accept request"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Profile/FriendRequest/Accept"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 1, 0.180392, 0.623529 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AcceptButton" type="TextureButton" parent="Profile/FriendRequest/Accept"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Reject" type="Label" parent="Profile/FriendRequest"]
+margin_left = 300.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+size_flags_stretch_ratio = 0.54
+custom_fonts/font = ExtResource( 2 )
+text = "reject request"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Profile/FriendRequest/Reject"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.827451, 0.0352941, 0.0352941, 0.623529 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RejectButton" type="TextureButton" parent="Profile/FriendRequest/Reject"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dummy" type="VBoxContainer" parent="Profile/FriendRequest"]
+visible = false
+margin_left = 546.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.05
+
+[node name="Rating" type="Label" parent="Profile/FriendRequest"]
+visible = false
+margin_left = 211.0
+margin_right = 597.0
+margin_bottom = 58.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = ExtResource( 4 )
+text = "00000000000000"
+valign = 1
+
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

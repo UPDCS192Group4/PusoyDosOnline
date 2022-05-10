@@ -1,20 +1,18 @@
 extends Control
 
 var err
-var panel_scene = preload("res://Friends/PlayerPanel.tscn")
 var friendslist = []
 var requestslist = []
-var in_home = false
+var is_child = false
+var is_friend = false
+var is_request = false
 
 func _ready():
-	if not AccountInfo.logged_in:
-		for i in range(25):
-			$ScrollContainer/VBoxContainer.add_child(panel_scene.instance())
-		return
-	$ErrorMessage/Label.hide()
+	$ErrorMessage/Label.text = "Loading..."
+	$Profile.hide()
 	$ProfileRequest.connect("request_completed", self, "_get_profile_request_completed")
 	#$RequestsRequest.connect("request_complete", self, "_get_requests_request_completed")
-	_get_list()	
+	# _get_list()	
 	
 func _get_list():
 	if not AccountInfo.logged_in:
@@ -25,10 +23,18 @@ func _get_list():
 	var err1 = $ProfileRequest.request(profile_url,headers,false,HTTPClient.METHOD_GET)
 	var err2 = $RequestsRequest.request(requests_url, headers, false, HTTPClient.METHOD_GET)
 
+func get_profile(username):
+	if not AccountInfo.logged_in:
+		return 0
+	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
+	var err1 = $ProfileRequest.request(URLs.profile + str(username) + "/",headers,false,HTTPClient.METHOD_GET)
+	
+
 func _on_Button_pressed():	
-	if in_home:
+	if not is_child:
+		print("This is the main scene!")
 		return
-	get_tree().change_scene("res://Home/Home.tscn")
+	queue_free()
 	
 func _get_profile_request_completed(result,response_code,header,body):
 	var json = JSON.parse(body.get_string_from_utf8())
@@ -41,8 +47,7 @@ func _get_profile_request_completed(result,response_code,header,body):
 		get_tree().change_scene("res://Home/Home.tscn")	
 		return
 	print("Player info: ", json.result)
-	AccountInfo.updateInfo(json.result)
-	populateFriends()
+	populateProfile(json.result)
 
 func _get_requests_request_completed(result,response_code,header,body):
 	var response = parse_json(body.get_string_from_utf8())
@@ -57,12 +62,17 @@ func _get_requests_request_completed(result,response_code,header,body):
 	AccountInfo.updateInfo(response.result)
 	pass
 	
-func populateFriends():
-	var friends = AccountInfo.friends
-	for friend in friends:
-		var panel = panel_scene.instance()
-		panel.setName(friend.username)
-		panel.setRating(str(friend.rating))
-		panel.is_friend = true
-		$ScrollContainer/VBoxContainer.add_child(panel)
-		panel.removeButtons()
+func populateProfile(profile_json):
+	var json = profile_json
+	$Profile/Username/Value.text = json.username
+	$Profile/Rating/Value.text = str(json.rating)
+	$Profile/Games/Value.text = str(json.played_games)
+	$Profile/Wins/Value.text = str(json.won_games)
+	$Profile/Loses/Value.text = str(json.lost_games)
+	$Profile/Winstreak/Value.text = str(json.winstreak)
+	$Profile.show()
+	$Profile/Friend.visible = not is_request
+	$Profile/FriendRequest.visible = is_request
+	$Profile/Friend/Add.visible = not is_friend
+	$Profile/Friend/Remove.visible = is_friend
+	$ErrorMessage/Label.hide()
