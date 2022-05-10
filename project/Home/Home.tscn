@@ -104,20 +104,20 @@ size_flags_vertical = 3
 custom_fonts/font = ExtResource( 1 )
 text = "Rules"
 
-[node name="Donate" type="VBoxContainer" parent="ContainerBox/ContainerBox/ContainerBox"]
+[node name="Profile" type="VBoxContainer" parent="ContainerBox/ContainerBox/ContainerBox"]
 margin_top = 582.0
 margin_right = 296.0
 margin_bottom = 772.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="ContainerBox/ContainerBox/ContainerBox/Donate"]
+[node name="Button" type="Button" parent="ContainerBox/ContainerBox/ContainerBox/Profile"]
 margin_right = 296.0
 margin_bottom = 190.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 1 )
-text = "Donate"
+text = "Profile"
 
 [node name="DummyBox3" type="VBoxContainer" parent="ContainerBox/ContainerBox"]
 margin_left = 363.0
@@ -257,6 +257,6 @@ __meta__ = {
 
 [connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/Play/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/LeaderBoards/Button" to="." method="_on_LeaderboardsButton_pressed"]
-[connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/Donate/Button" to="." method="_on_Donate_pressed"]
+[connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/Profile/Button" to="." method="_on_Profile_pressed"]
 [connection signal="pressed" from="ContainerBox/BottomBox/Buttons/Logout/LogoutButton" to="." method="_on_LogoutButton_pressed"]
 [connection signal="pressed" from="ContainerBox/BottomBox/Buttons/Friends/FriendsButton" to="." method="_on_FriendsButton_pressed"]

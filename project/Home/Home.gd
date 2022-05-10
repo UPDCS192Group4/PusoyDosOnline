@@ -3,6 +3,7 @@ extends Control
 var sidepanel = null
 var leaderboards_scene = preload("res://Leaderboards/Leaderboards.tscn")
 var friends_scene = preload("res://Friends/Friendslist.tscn")
+var profile_scene = preload("res://Profile/UserProfile.tscn")
 
 func _ready():
 	$ClearRequest.connect("request_completed", self, "_on_ClearRequest_request_completed")
@@ -112,6 +113,12 @@ func _on_LogoutButton_pressed():
 func _on_FriendsButton_pressed():
 	change_sidepanel(friends_scene)
 
-func _on_Donate_pressed():
-	print("Thank you for your support!")
-	# AccountInfo.fetchProfile()
+func _on_Profile_pressed():
+	if not AccountInfo.logged_in:
+		return
+	var root = get_tree().get_root()
+	var profile_panel = profile_scene.instance()
+	root.add_child(profile_panel)
+	profile_panel.get_profile(AccountInfo.username)
+	profile_panel.is_child = true
+	
