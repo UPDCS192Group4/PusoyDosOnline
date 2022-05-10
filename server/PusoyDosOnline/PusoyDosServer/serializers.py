@@ -130,8 +130,8 @@ class GameSerializer(serializers.ModelSerializer):
     last_activity = serializers.DateTimeField()
     class Meta:
         model = Game
-        fields = ["id", "hands", "last_activity", "last_play", "control"]
-        read_only_fields = ["id", "last_activity", "last_play", "control"]
+        fields = ["id", "hands", "last_activity", "last_play", "control", "last_activity", "current_round"]
+        read_only_fields = ["id", "last_activity", "last_play", "control", "last_activity", "current_round"]
         
     def to_representation(self, instance):
         ret = super().to_representation(instance)

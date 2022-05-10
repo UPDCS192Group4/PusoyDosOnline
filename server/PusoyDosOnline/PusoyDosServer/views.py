@@ -14,6 +14,7 @@ from .serializers import *
 from .playchecker import *
 
 import random
+import datetime
 
 # Permissions class for UserViewSet
 class UserPermissions(permissions.AllowAny):
@@ -307,9 +308,18 @@ class GameViewSet(mixins.RetrieveModelMixin,
     serializer_class = GameSerializer
     permission_classes = [UserPermissions]
     perms = {
-        permissions.IsAuthenticated: ["retrieve", "play_cards", "test"],
+        permissions.IsAuthenticated: ["retrieve", "play_cards"],
         permissions.IsAdminUser: ["list"],
     }
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # Check for time skips
+        if timezone.now() > instance.last_activity + datetime.timedelta(seconds=60):
+            instance.current_round += 1
+            instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
     
     @action(detail=True, methods=["POST"])
     def play_cards(self, request, pk=None):
@@ -352,14 +362,19 @@ class GameViewSet(mixins.RetrieveModelMixin,
         if game.current_round % 4 != player_hand.move_order:
             return Response({"error": "Not allowed to make a move for this round"}, status=status.HTTP_403_FORBIDDEN)
         
+        # Check if it's a skip
+        if len(plays) == 0 and game.current_round > 0 and game.control < 4:
+            game.current_round += 1
+            game.control += 1
+            game.save()
+            return Response({"detail": "Skipped successfully"})
+        
         # Check if the user has all of the cards
         for card in plays:
             if not card in player_hand.hand:
                 return Response({"error": "Card played not found in hand"}, status=status.HTTP_403_FORBIDDEN)
         
-        # Check if it's a skip
-        if len(plays) == 0:
-            pass
+        # Check if it's an invalid play
         
         # Check if the move is a valid move given the cards and previously played cards
         if game.control == 4:
@@ -374,5 +389,11 @@ class GameViewSet(mixins.RetrieveModelMixin,
             pass
         
         # Since it passed all the checks, actually remove the card from hand and set it as the previous.
-        pass
+        for card in plays:
+            player_hand.hand.remove(card)
+        player_hand.card_count -= len(plays)
+        player_hand.save()
+        game.current_round += 1
+        game.save()
+        return Response({"detail": "Success", "hand": player_hand.hand})
     
