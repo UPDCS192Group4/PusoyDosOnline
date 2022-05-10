@@ -21,6 +21,10 @@ func getToken():
 
 func setToken(token):
 	_token = token
+	
+func login(token):
+	setToken(token)
+	logged_in = true
 
 func logout():
 	logged_in = false
