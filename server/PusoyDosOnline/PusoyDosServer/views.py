@@ -362,7 +362,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
         if game.current_round % 4 != player_hand.move_order:
             return Response({"error": "Not allowed to make a move for this round"}, status=status.HTTP_403_FORBIDDEN)
         
-        # Check if it's a skip
+        # Check if it's a skip (game should not skip if it's the first round)
         if len(plays) == 0 and game.current_round > 0 and game.control < 4:
             game.current_round += 1
             game.control += 1
@@ -375,25 +375,31 @@ class GameViewSet(mixins.RetrieveModelMixin,
                 return Response({"error": "Card played not found in hand"}, status=status.HTTP_403_FORBIDDEN)
         
         # Check if it's an invalid play
+        play_info = process(plays)
+        if play_info[0] == 0:
+            return Response({"error": "Invalid play: Invalid card ordering"}, status=status.HTTP_403_FORBIDDEN)
         
         # Check if the move is a valid move given the cards and previously played cards
-        if game.control == 4:
+        if game.control >= 4:
             # Control:
             # No need to check the previous play. Just set it.
             if game.current_round == 0 and not 1 in plays:
                 # First move *must* always contain the 3 of clubs (001)
                 return Response({"error": "Invalid play: First move must contain the 3 of clubs"}, status=status.HTTP_403_FORBIDDEN)
-            pass
         else:
             # Not control, check the previous play
-            pass
+            if not compare(plays, game.last_play):
+                # If comparison fails, deny play
+                return Response({"error": "Invalid play: Play lower than current pile"}, status=status.HTTP_403_FORBIDDEN)
         
         # Since it passed all the checks, actually remove the card from hand and set it as the previous.
         for card in plays:
             player_hand.hand.remove(card)
         player_hand.card_count -= len(plays)
-        player_hand.save()
-        game.current_round += 1
-        game.save()
+        player_hand.save() # Save player hand
+        game.last_play = plays # Set the current play to the pile
+        game.current_round += 1 # Add 1 to the round counter
+        game.control = 0 # Reset control since we just played a card
+        game.save() # Save game state
         return Response({"detail": "Success", "hand": player_hand.hand})
     
