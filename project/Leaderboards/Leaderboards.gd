@@ -59,4 +59,6 @@ func populateLeaderboards(leaderboards_json):
 		panel.setRating(str(object.rating))
 		$ScrollContainer/VBoxContainer.add_child(panel)
 		panel.removeButtons()
+		if object.username == AccountInfo.username:
+			panel.get_node("ColorRect").show()
 		counter += 1
