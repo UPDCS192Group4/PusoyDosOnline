@@ -19,3 +19,9 @@ func _ready():
 func _on_TextureButton_pressed():
 	print("Yes")
 	pass # Replace with function body.
+
+func setUsername(username):
+	$TextureButton/HBoxContainer/Name.text = username
+
+func setName(username):
+	setUsername(username)

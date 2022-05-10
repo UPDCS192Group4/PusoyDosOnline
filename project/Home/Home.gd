@@ -2,12 +2,15 @@ extends Control
 
 var sidepanel = null
 var leaderboards_scene = preload("res://Leaderboards/Leaderboards.tscn")
+var friends_scene = preload("res://Friends/Friendslist.tscn")
 
 func _ready():
 	$ClearRequest.connect("request_completed", self, "_on_ClearRequest_request_completed")
 	$LeaveRequest.connect("request_completed", self, "_on_LeaveRequest_request_completed")
 	$PingRequest.connect("request_completed", self, "_on_PingRequest_request_completed")
 	$ErrorMessage/Label.hide()
+	print("Player Info:")
+	print(AccountInfo._profile_json)
 
 func _on_PlayButton_pressed():
 	LobbyDetails.player_names.clear()
@@ -93,3 +96,9 @@ func showLeaderboards():
 func _on_LogoutButton_pressed():
 	AccountInfo.logout()
 	get_tree().change_scene("res://Home/Login.tscn")
+	
+func _on_FriendsButton_pressed():
+	if sidepanel != null:
+		sidepanel.queue_free()
+	sidepanel = friends_scene.instance()
+	$ContainerBox/ContainerBox/Sidepanel.add_child(sidepanel)

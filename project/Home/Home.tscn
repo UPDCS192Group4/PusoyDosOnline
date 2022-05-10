@@ -258,3 +258,4 @@ __meta__ = {
 [connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/Play/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/LeaderBoards/Button" to="." method="_on_LeaderboardsButton_pressed"]
 [connection signal="pressed" from="ContainerBox/BottomBox/Buttons/Logout/LogoutButton" to="." method="_on_LogoutButton_pressed"]
+[connection signal="pressed" from="ContainerBox/BottomBox/Buttons/Friends/FriendsButton" to="." method="_on_FriendsButton_pressed"]

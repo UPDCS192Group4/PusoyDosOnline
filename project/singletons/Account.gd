@@ -1,6 +1,7 @@
 extends Node
 
 var logged_in = false
+var _profile_json = {}
 var id = -1
 var username = ""
 var rating = -1
@@ -31,6 +32,7 @@ func logout():
 	
 func updateInfo(profile_json):
 	# should be the json result already
+	_profile_json = profile_json
 	id = profile_json.id
 	username = profile_json.username
 	rating = profile_json.rating

@@ -48,7 +48,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Login" type="VBoxContainer" parent="A/B"]
-visible = false
 margin_left = 105.0
 margin_right = 918.0
 margin_bottom = 897.0
@@ -119,7 +118,7 @@ margin_bottom = 71.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 2 )
-text = "admin"
+text = "user1"
 
 [node name="UserError" type="VBoxContainer" parent="A/B/Login/UserBox"]
 margin_top = 75.0
@@ -177,7 +176,7 @@ margin_bottom = 71.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 2 )
-text = "admin"
+text = "samplepass1word"
 secret = true
 
 [node name="PassError" type="VBoxContainer" parent="A/B/Login/PassBox"]
@@ -238,6 +237,7 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 0.2
 
 [node name="Register" type="VBoxContainer" parent="A/B"]
+visible = false
 margin_left = 105.0
 margin_right = 918.0
 margin_bottom = 897.0
