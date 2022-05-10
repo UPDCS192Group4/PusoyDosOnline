@@ -17,11 +17,27 @@ func _ready():
 
 
 func _on_TextureButton_pressed():
-	print("Yes")
+	# print("Yes")
 	pass # Replace with function body.
 
 func setUsername(username):
-	$TextureButton/HBoxContainer/Name.text = username
+	$HBoxContainer/NameBox/Name.text = username
 
 func setName(username):
 	setUsername(username)
+
+func setRating(rating):
+	$HBoxContainer/RatingBox/Rating.text = rating
+
+func _on_TextureButton_pressed2():
+	print("username")
+
+
+func _on_Accept_pressed():
+	print("Accept")
+	pass # Replace with function body.
+
+
+func _on_Reject_pressed():
+	print("Reject")
+	pass # Replace with function body.

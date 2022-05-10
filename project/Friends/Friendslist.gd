@@ -4,6 +4,7 @@ var err
 var panel_scene = preload("res://Friends/PlayerPanel.tscn")
 var friendslist = []
 var requestslist = []
+var in_home = false
 
 func _ready():
 	if not AccountInfo.logged_in:
@@ -25,7 +26,8 @@ func _get_list():
 	var err2 = $RequestsRequest.request(requests_url, headers, false, HTTPClient.METHOD_GET)
 
 func _on_Button_pressed():	
-	yield(get_tree().create_timer(0.5), "timeout")
+	if in_home:
+		return
 	get_tree().change_scene("res://Home/Home.tscn")
 	
 func _get_profile_request_completed(result,response_code,header,body):
@@ -59,5 +61,6 @@ func populateFriends():
 	var friends = AccountInfo.friends
 	for friend in friends:
 		var panel = panel_scene.instance()
-		panel.setName(friend.username + "     " + str(friend.rating))
+		panel.setName(friend.username)
+		panel.setRating(str(friend.rating))
 		$ScrollContainer/VBoxContainer.add_child(panel)

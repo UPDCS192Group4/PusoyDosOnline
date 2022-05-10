@@ -89,16 +89,23 @@ func startNewGame():
 
 func showLeaderboards():
 	#get_tree().change_scene("res://Leaderboards/Leaderboards.tscn")
+	close_sidepanel()
 	sidepanel = leaderboards_scene.instance()
 	$ContainerBox/ContainerBox/Sidepanel.add_child(sidepanel)
 
+func close_sidepanel():
+	if sidepanel == null:
+		print("Sidepanel is already closed")
+		return
+	sidepanel.queue_free()
+	sidepanel = null
 
 func _on_LogoutButton_pressed():
 	AccountInfo.logout()
 	get_tree().change_scene("res://Home/Login.tscn")
 	
 func _on_FriendsButton_pressed():
-	if sidepanel != null:
-		sidepanel.queue_free()
+	close_sidepanel()
 	sidepanel = friends_scene.instance()
 	$ContainerBox/ContainerBox/Sidepanel.add_child(sidepanel)
+	sidepanel.get_node("Button").connect("pressed", self, "close_sidepanel")
