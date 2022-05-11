@@ -1,46 +1,109 @@
 extends Control
 var deck = Array()
 var cardScene = preload("res://Game/Card.tscn")
+var scene1 = preload("res://Game/Hand.tscn")
+var scene2 = preload("res://Game/Pile.tscn")
+var scene3 = preload("res://Game/Opponents.tscn")
 var newCard
 var pressedArray = Array()
 
+var url
+var headers
+
+var t = 0
+var t_rate = 1000
+
+var temprank
+var tempsuit
+
 func _ready():
-	var scene1 = load("res://Game/Hand.tscn")
-	var child1 = scene1.instance()
-	add_child(child1)
-	var scene2 = load("res://Game/Pile.tscn")
+	$HandRequest.connect("request_completed", self, "_on_HandRequest_request_completed")
+	$PingRequest.connect("request_completed", self, "_on_PingRequest_request_completed")
+	$PlayRequest.connect("request_completed", self, "_on_PlayRequest_request_completed")
+	request_hand()
 	var child2 = scene2.instance()
 	add_child(child2)
-	var scene3 = load("res://Game/Opponents.tscn")
-	var child3 = scene3.instance()
-	child3.set_name("Opponents")
-	add_child(child3)
-	shuffleDeck()
+	#var child3 = scene3.instance()
+	#child3.set_name("Opponents")
+	#add_child(child3)
 	disablePlayButton()
-	
-	#$HandRequest.connect("request_completed", self, "_on_HandRequest_request_completed")
 
-func shuffleDeck():
-	for i in range(1,5):
-		for j in range(1,14):
-			newCard = cardScene.instance()
-			newCard.init(i,j,0)
-			deck.append(newCard)
+func _process(_delta):
+	t += 1
+	if t > t_rate:
+		_ping_server()	
+		t -= t_rate
+
+func request_hand():
+	url = URLs.game_ping + GameDetails.game_id
+	headers = URLs.defaultHeader()
+	$HandRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	pass
+
+func _on_HandRequest_request_completed(result, response_code, headers, body):
+	var json = JSON.parse(body.get_string_from_utf8())
+	print("RESULT FROM Game")
+	for i in json.result:
+		print(i, " : ", json.result[i])
+	for i in range(len(json.result["hands"])):
+		var user = json.result["hands"][i]
+		GameDetails.gamers[user["move_order"]] = user["user"]
+		if user["user"] == AccountInfo.username:
+			GameDetails.my_move_order = user["move_order"]
+			for j in user["hand"]:
+				if j == 1:
+					GameDetails.needs_3_of_clubs = 1
+				GameDetails.hand.append(j)
+	var child1 = scene1.instance()
+	add_child(child1)
+	print("Move details:")
+	for key in GameDetails.gamers:
+		print(key, " : ", GameDetails.gamers[key])
+	pass
 	
-	# Uncomment to show that straight works:
-#	for i in range(1,14):
-#		for j in range(1,5):
-#			newCard = cardScene.instance()
-#			newCard.init(i,j,0)
-#			deck.append(newCard)
-			
-	randomize()	
-	# Uncomment to show that flush works:
-	deck.shuffle()
+func _ping_server():
+	print("Pinging")
+	url = URLs.game_ping + GameDetails.game_id
+	headers = URLs.defaultHeader()
+	$PingRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	
+func _on_PingRequest_request_completed(result, response_code, headers, body):
+	var json = JSON.parse(body.get_string_from_utf8())	
+	for i in json.result:
+		print(i, " : ", json.result[i])
+	GameDetails.current_player = json.result["current_round"]
+	#GameDetails.topOfPile = json.result["last_play"]
+	$Pile.updatePile(json.result["last_play"])
+	if GameDetails.current_player == GameDetails.my_move_order:
+		GameDetails.is_current_player = 1
+		print('yey')
+		if int(json.result["control"]) >= 4:
+			GameDetails.is_control = 1
+		else:
+			GameDetails.is_control = 0
+		ready_to_move()
+		return
+	GameDetails.is_current_player = 0
+	pass
+	
+func ready_to_move():
+	pass
 	
 func _on_PlayButton_pressed():
-	get_node('Hand').updateHand()
+	get_node('Hand').playHand()
 	pressedArray.clear()
+	
+func playCards(url,headers,postArray):
+	print('---------------------')
+	$PlayRequest.request(url,headers,false, HTTPClient.METHOD_POST, to_json({"play":postArray}))
+	
+func _on_PlayRequest_request_completed(result, response_code, headers, body):
+	print('---------------------, r: ', response_code)
+	if response_code == 200 or response_code == 201:
+		$Hand.updateHand()
+		if GameDetails.needs_3_of_clubs:
+			GameDetails.needs_3_of_clubs = 0
+	pass
 
 func _on_HomeButton_pressed():
 	var scene1 = load("res://Game/PopUp.tscn")
@@ -53,6 +116,7 @@ func addPressedCard(newRank, newSuit):
 	temp.append(newRank)
 	temp.append(newSuit)
 	pressedArray.append(temp)
+	print('hmph')
 	checkArray(pressedArray)
 	
 func removePressedCard(newRank, newSuit):
@@ -72,7 +136,30 @@ func disablePlayButton():
 	get_node("PlayButton").disabled = true
 
 func checkArray(inputArray):
-	var topOfPile = get_node('Pile').getTopOfPile()
+	GameDetails.needs_3_of_clubs = 0
+	print('a')
+	if GameDetails.needs_3_of_clubs:
+		if !([1,1] in inputArray):
+			disablePlayButton()
+			return
+		enablePlayButton()
+	print('b')
+	if GameDetails.is_control == 1:
+		enablePlayButton()
+		return
+	print('c')
+	if !GameDetails.is_current_player:
+		disablePlayButton()
+		return
+	print('d')
+			
+	var topOfPileRaw = GameDetails.last_pile
+	var topOfPile = Array()
+	for i in topOfPileRaw:
+		temprank = i % 100
+		tempsuit = i / 100 + 1
+		topOfPile.append([temprank,tempsuit])
+	print("TOP IS ", topOfPile)
 	topOfPile = classifyArray(topOfPile)
 	inputArray = classifyArray(inputArray)
 	#print('log ',topOfPile,inputArray)
@@ -96,6 +183,7 @@ func checkArray(inputArray):
 		return
 
 func classifyArray(array):
+	print("CHECKING ", array)
 	# If an array of selected cards is invalid, this function returns [0].
 	# Otherwise, this function returns [n,a1,a2,...] where n is the number of cards
 	# in the selection and a1,a2,.. are other quantifiers for the array.

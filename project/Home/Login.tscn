@@ -118,7 +118,7 @@ margin_bottom = 71.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 2 )
-text = "user1"
+text = "starbucks"
 
 [node name="UserError" type="VBoxContainer" parent="A/B/Login/UserBox"]
 margin_top = 75.0
@@ -176,7 +176,7 @@ margin_bottom = 71.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 2 )
-text = "samplepass1word"
+text = "starredbooks"
 secret = true
 
 [node name="PassError" type="VBoxContainer" parent="A/B/Login/PassBox"]

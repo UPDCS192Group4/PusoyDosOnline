@@ -23,6 +23,7 @@ func init(inputSuit, inputRank, pileCard):
 	
 func changeFace():
 	if isCurrentPlayer or isPile:
+		#print("suit, rank is ", suit, rank)
 		face = load("res://assets/cards/card-" + str(suit) + "-" + str(rank) + ".png")
 		$Container/CardTexture.texture = face
 	if isCurrentPlayer:

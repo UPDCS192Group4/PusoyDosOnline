@@ -29,6 +29,7 @@ config/icon="res://icon.png"
 URLs="*res://singletons/URLs.gd"
 AccountInfo="*res://singletons/Account.gd"
 LobbyDetails="*res://singletons/LobbyDetails.gd"
+GameDetails="*res://singletons/GameDetails.gd"
 
 [display]
 
