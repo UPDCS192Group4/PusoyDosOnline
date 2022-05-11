@@ -46,7 +46,7 @@ func _on_Accept_pressed():
 	var username = getUsername()
 	var url = URLs.getAcceptURL(username)
 	var headers = URLs.defaultHeader()
-	$HTTPRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	$HTTPRequest.request(url, headers, false, HTTPClient.METHOD_POST)
 
 func _on_Reject_pressed():
 	print("Reject")
@@ -55,7 +55,7 @@ func _on_Reject_pressed():
 	var username = getUsername()
 	var url = URLs.getRejectURL(username)
 	var headers = URLs.defaultHeader()
-	$HTTPRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	$HTTPRequest.request(url, headers, false, HTTPClient.METHOD_POST)
 
 func _on_ProfileButton_pressed():
 	if not AccountInfo.logged_in:
@@ -70,6 +70,9 @@ func _on_ProfileButton_pressed():
 
 
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
-	if response_code in [200]:
-		AccountInfo.fetchInfo()
+	print(body.get_string_from_utf8())
+	if not response_code in [200, 201]:
+		print("PlayerPanel response RC ", response_code)
+		return
+	AccountInfo.fetchInfo()
 	pass # Replace with function body.

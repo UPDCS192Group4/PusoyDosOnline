@@ -142,7 +142,7 @@ func _on_AcceptButton_pressed():
 	var username = getUsername()
 	var url = URLs.getAcceptURL(username)
 	var headers = URLs.defaultHeader()
-	$RequestsRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	$RequestsRequest.request(url, headers, false, HTTPClient.METHOD_POST)
 
 func _on_RejectButton_pressed():
 	print("Reject")
@@ -151,4 +151,4 @@ func _on_RejectButton_pressed():
 	var username = getUsername()
 	var url = URLs.getRejectURL(username)
 	var headers = URLs.defaultHeader()
-	$RequestsRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	$RequestsRequest.request(url, headers, false, HTTPClient.METHOD_POST)
