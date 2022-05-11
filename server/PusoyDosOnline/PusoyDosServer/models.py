@@ -13,6 +13,9 @@ def generate_shorthand():
 def get_default_last_play():
     return [0] * 5
 
+def get_default_skips():
+    return [-1] * 3
+
 # Create your models here.
 class Lobby(models.Model):
     """
@@ -51,7 +54,7 @@ class Game(models.Model):
     last_play = ArrayField(base_field=models.IntegerField(name="LastCard", default=0), size=5, default=get_default_last_play) # contains the last play
     control = models.IntegerField(default=4) # if control == 4, then the current player has control
     winners = models.IntegerField(default=0) # winner count: keep track of how many winners are assigned already
-    skips = ArrayField(base_field=models.IntegerField(name="SkipThis", default=-1), size=3) # skip these please!
+    skips = ArrayField(base_field=models.IntegerField(name="SkipThis", default=-1), size=3, default=get_default_skips) # skip these please!
     
     def save(self, *args,**kwargs):
         self.last_activity = timezone.now() # keep the last activity updated
