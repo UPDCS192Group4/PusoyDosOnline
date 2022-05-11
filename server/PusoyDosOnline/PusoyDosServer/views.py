@@ -194,9 +194,12 @@ class FriendRequestViewSet(mixins.CreateModelMixin,
         to_user = get_object_or_404(User, username=pk)
         try:
             count, frs = FriendRequest.objects.filter(from_user=from_user, to_user=to_user).delete()
-            return Response({"detail": f"Rejected"})
+            if count > 0:
+                return Response({"detail": f"Rejected"})
+            else:
+                return Response({"error": "Cannot find friend request"}, status=status.HTTP_404_NOT_FOUND)
         except FriendRequest.DoesNotExist:
-            return Response({"error": "Cannot find friend request"})
+            return Response({"error": "Cannot find friend request"}, status=status.HTTP_404_NOT_FOUND)
     
 class CasualLobbyViewSet(mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,
@@ -376,6 +379,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
         
         # Check if it's an invalid play
         play_info = process(plays)
+        pile_info = process(game.last_play)
         if play_info[0] == 0:
             return Response({"error": "Invalid play: Invalid card ordering"}, status=status.HTTP_403_FORBIDDEN)
         
@@ -388,7 +392,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
                 return Response({"error": "Invalid play: First move must contain the 3 of clubs"}, status=status.HTTP_403_FORBIDDEN)
         else:
             # Not control, check the previous play
-            if not compare(plays, game.last_play):
+            if not compare(play_info, pile_info):
                 # If comparison fails, deny play
                 return Response({"error": "Invalid play: Play lower than current pile"}, status=status.HTTP_403_FORBIDDEN)
         
