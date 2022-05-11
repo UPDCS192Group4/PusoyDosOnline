@@ -173,8 +173,8 @@ class FriendRequestViewSet(mixins.CreateModelMixin,
         
     @action(detail=True, methods=["GET", "POST"])
     def accept(self, request, pk=None):
-        from_user = self.request.user
-        to_user = get_object_or_404(User, username=pk)
+        from_user = get_object_or_404(User, username=pk)
+        to_user = self.request.user
         try:
             count, frs = FriendRequest.objects.filter(from_user=from_user, to_user=to_user).delete()
             if count > 0:
@@ -190,8 +190,8 @@ class FriendRequestViewSet(mixins.CreateModelMixin,
     
     @action(detail=True, methods=["POST"])
     def reject(self, request, pk=None):
-        from_user = self.request.user
-        to_user = get_object_or_404(User, username=pk)
+        from_user = get_object_or_404(User, username=pk)
+        to_user = self.request.user
         try:
             count, frs = FriendRequest.objects.filter(from_user=from_user, to_user=to_user).delete()
             if count > 0:
