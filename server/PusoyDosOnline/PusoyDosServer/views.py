@@ -318,7 +318,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         # Check for time skips
-        if timezone.now() > instance.last_activity + datetime.timedelta(seconds=60):
+        if timezone.now() > instance.last_activity + datetime.timedelta(seconds=60) and instance.current_round > 0:
             instance.current_round += 1
             instance.save()
         serializer = self.get_serializer(instance)
