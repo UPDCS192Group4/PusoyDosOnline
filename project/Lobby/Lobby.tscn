@@ -95,6 +95,8 @@ text = "join rated lobby"
 
 [node name="LeaveRequest" type="HTTPRequest" parent="."]
 
+[node name="ReadyRequest" type="HTTPRequest" parent="."]
+
 [connection signal="pressed" from="HomeButton" to="." method="_on_HomeButton_pressed"]
 [connection signal="pressed" from="LobbyChoices/CreateLobby" to="." method="_on_CreateLobby_pressed"]
 [connection signal="pressed" from="LobbyChoices/JoinLobby" to="." method="_on_JoinLobby_pressed"]

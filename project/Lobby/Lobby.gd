@@ -9,7 +9,7 @@ func _ready():
 	$JoinRequest.connect("request_completed", self, "_on_JoinRequest_request_completed")
 	$PingRequest.connect("request_completed", self, "_on_PingRequest_request_completed")
 	$LeaveRequest.connect("request_completed", self, "_on_LeaveRequest_request_completed")
-	pass
+	$ReadyRequest.connect("request_completed", self, "_on_ReadyRequest_request_completed")
 
 func _process(_delta):
 	if LobbyDetails.in_waiting != 1:
@@ -70,6 +70,7 @@ func _on_CreateRequest_request_completed(result, response_code, headers, body):
 	LobbyDetails.shorthand = json.result["shorthand"]
 	for player in json.result["players_inside"]:
 		LobbyDetails.player_names.append(player["username"])
+	LobbyDetails.is_owner = 1
 	get_node("LobbyChoices").queue_free()
 	_start_waiting_room()
 
@@ -103,6 +104,7 @@ func _on_JoinRequest_request_completed(result, response_code, headers, body):
 	LobbyDetails.shorthand = json.result["shorthand"]
 	for player in json.result["players_inside"]:
 		LobbyDetails.player_names.append(player["username"])
+	LobbyDetails.is_owner = 0
 	get_node("JoinInput").queue_free()
 	_start_waiting_room()
 
@@ -149,10 +151,17 @@ func _on_PingRequest_request_completed(result, response_code, headers, body):
 	for i in range(len(LobbyDetails.player_names)):
 		get_node("WaitingRoom").get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]	
 	print(len(LobbyDetails.player_names))
-	if len(LobbyDetails.player_names) == 4:
-		$ErrorMessage/Label.text = "Game starting..."
-		$ErrorMessage/Label.show()
-		yield(get_tree().create_timer(2), "timeout")
+	if len(LobbyDetails.player_names) != 4:
+		return
+	if LobbyDetails.is_owner:
+		#start game
+		var url = URLs.lobby_init + LobbyDetails.id + "/ready/"
+		headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
+		$ReadyRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+		return
+	if json.result["game_id"]:
+		LobbyDetails.in_waiting = 0
+		GameDetails.game_id = json.result["game_id"]
 		_start_game()
 	#for player in json.result["results"][0]["players_inside"]:
 	#	if not (player in LobbyDetails.player_names):
@@ -162,4 +171,19 @@ func _on_PingRequest_request_completed(result, response_code, headers, body):
 	#			get_node("WaitingRoom").get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]
 
 func _start_game():
+	$ErrorMessage/Label.text = "Game starting..."
+	$ErrorMessage/Label.show()
+	yield(get_tree().create_timer(2), "timeout")
 	get_tree().change_scene("res://Game/Game.tscn")
+
+func _on_ReadyRequest_request_completed(result, response_code, headers, body):
+	if (response_code != 200 and response_code != 201): 
+		print("Ready failed..")
+		return
+	LobbyDetails.in_waiting = 0
+	var json = JSON.parse(body.get_string_from_utf8())
+	print("RESULT FROM READY")
+	for i in json.result:
+		print(i, " : ", json.result[i])
+	GameDetails.game_id = json.result["game"]
+	_start_game()
