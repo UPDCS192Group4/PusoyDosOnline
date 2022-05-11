@@ -414,6 +414,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
         player_hand.card_count -= len(plays)
         player_hand.save() # Save player hand
         game.last_play = plays # Set the current play to the pile
+        game.current_round += 1 # Add 1 to the round counter
         while game.current_round % 4 in game.skips:
             game.current_round += 1 # Add 1 to the round counter if the next round should be skipped
         game.control = 0 # Reset control since we just played a card
