@@ -50,6 +50,8 @@ class Game(models.Model):
     # So a 3 of Clubs would be internally represented as 001, a 2 of Diamonds would be 313, etc etc
     last_play = ArrayField(base_field=models.IntegerField(name="LastCard", default=0), size=5, default=get_default_last_play) # contains the last play
     control = models.IntegerField(default=4) # if control == 4, then the current player has control
+    winners = models.IntegerField(default=0) # winner count: keep track of how many winners are assigned already
+    skips = ArrayField(base_field=models.IntegerField(name="SkipThis", default=-1), size=3) # skip these please!
     
     def save(self, *args,**kwargs):
         self.last_activity = timezone.now() # keep the last activity updated
@@ -61,6 +63,7 @@ class Hand(models.Model):
     card_count = models.IntegerField(default=13) # how many cards does this hand still have?
     user = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
     hand = ArrayField(base_field=models.IntegerField(name="Card", default=0), size=13)
+    placement = models.IntegerField(default=0) # did this user win yet? (if 0, user still playing) 
 
 class User(AbstractUser):
     """

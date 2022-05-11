@@ -329,6 +329,10 @@ class GameViewSet(mixins.RetrieveModelMixin,
         # pk = game ID
         game = get_object_or_404(self.queryset, id=pk)
         
+        # Check if the game is over or not
+        if game.winners == 3:
+            return Response({"error": "Game is already over"}, status=status.HTTP_410_GONE)
+        
         # Validate if request.data *can* be valid
         
         # request.data should ideally only consist of {"play": [<list_of_card_ints>]}
@@ -397,13 +401,22 @@ class GameViewSet(mixins.RetrieveModelMixin,
                 return Response({"error": "Invalid play: Play lower than current pile"}, status=status.HTTP_403_FORBIDDEN)
         
         # Since it passed all the checks, actually remove the card from hand and set it as the previous.
+        win = False
+        if player_hand.card_count - len(plays) == 0:
+            # Win condition: User has no more cards to play
+            player_hand.card_count = 0
+            player_hand.placement = game.winners + 1
+            game.skips[game.winners] = player_hand.move_order
+            game.winners += 1
+            win = True
         for card in plays:
             player_hand.hand.remove(card)
         player_hand.card_count -= len(plays)
         player_hand.save() # Save player hand
         game.last_play = plays # Set the current play to the pile
-        game.current_round += 1 # Add 1 to the round counter
+        while game.current_round % 4 in game.skips:
+            game.current_round += 1 # Add 1 to the round counter if the next round should be skipped
         game.control = 0 # Reset control since we just played a card
         game.save() # Save game state
-        return Response({"detail": "Success", "hand": player_hand.hand})
+        return Response({"detail": "Success", "hand": player_hand.hand, "win": win})
     
