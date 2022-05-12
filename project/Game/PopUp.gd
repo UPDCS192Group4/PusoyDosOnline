@@ -18,3 +18,9 @@ func changeText(newText):
 
 func disable_auto_Home():
 	autoHome = 0
+
+func changeYesText(newText):
+	get_node('A').get_node('B').get_node('C').get_node('D').get_node('YesButton').text = newText
+	
+func changeNoText(newText):
+	get_node('A').get_node('B').get_node('C').get_node('D').get_node('NoButton').text = newText

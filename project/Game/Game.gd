@@ -5,6 +5,7 @@ var cardScene = preload("res://Game/Card.tscn")
 var scene1 = preload("res://Game/Hand.tscn")
 var scene2 = preload("res://Game/Pile.tscn")
 var scene3 = preload("res://Game/Opponents.tscn")
+var popup = preload("res://Game/PopUp.tscn")
 
 var url
 var headers
@@ -29,6 +30,7 @@ func _ready():
 	$PingRequest.connect("request_completed", self, "_on_PingRequest_request_completed")
 	$PlayRequest.connect("request_completed", self, "_on_PlayRequest_request_completed")
 	$PassRequest.connect("request_completed", self, "_on_PlayRequest_request_completed")
+	$LeaveRequest.connect("request_completed", self, "_on_LeaveRequest_request_completed")
 	request_hand()
 	var child2 = scene2.instance()
 	add_child(child2)
@@ -122,9 +124,13 @@ func _on_PlayRequest_request_completed(result, response_code, headers, body):
 		playedArray.clear()
 
 func _on_HomeButton_pressed():
-	var scene1 = load("res://Game/PopUp.tscn")
-	var child1 = scene1.instance()
-	get_node('CanvasLayer').add_child(child1)
+	var message = popup.instance()
+	message.changeText("Leave Game?")
+	#message.changeYesText("Leave")
+	#message.changeNoText("Play")
+	message.disable_auto_Home()
+	message.get_node("A").get_node("B").get_node("C").get_node("D").get_node("YesButton").connect("pressed", self, "_go_home")
+	add_child(message)
 
 func addPressedCard(newRank, newSuit):
 	temp.clear()
@@ -322,3 +328,24 @@ func _on_PassButton_pressed():
 func _on_PassRequest_request_completed(result, response_code, headers, body):
 	if response_code != 200 or response_code != 201:
 		_on_PassButton_pressed()
+
+func winnermessage():
+	var message = popup.instance()
+	message.changeText("Congrats on winning! Keep watching or leave?")
+	message.changeYesText("Leave")
+	message.changeNoText("Spectate")
+	message.disable_auto_Home()
+	message.get_node("A").get_node("B").get_node("C").get_node("D").get_node("YesButton").connect("pressed", self, "_go_home")
+	add_child(message)
+
+func _go_home():
+	url = URLs.lobby_init + LobbyDetails.id + "/leave/"
+	headers = URLs.defaultHeader()
+	err = $LeaveRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	
+func _on_LeaveRequest_request_completed(result, response_code, headers, body):
+	if (response_code != 200 and response_code != 201): 
+		print("error leaving")
+		get_tree().change_scene("res://Home/Home.tscn")	
+		return
+	get_tree().change_scene("res://Home/Home.tscn")	

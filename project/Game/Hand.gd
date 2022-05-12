@@ -56,6 +56,9 @@ func updateHand(playedArrayRaw):
 		card.queue_free()
 		NUM_CARDS -= 1
 		print("got 1 card")
+	if len(NUM_CARDS) == 0:
+		get_parent().winnermessage()
+		return
 	#for card in pressedArray:	
 	#update Angle, change position and rotation
 	ANGLE = deg2rad(90) - ANG_DIST * (NUM_CARDS - 1) / 2.0
