@@ -395,7 +395,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
             return Response({"error": "Invalid play: Invalid card ordering"}, status=status.HTTP_403_FORBIDDEN)
         
         # Check if the move is a valid move given the cards and previously played cards
-        if game.control >= 4:
+        if game.control >= 4 - game.winners:
             # Control:
             # No need to check the previous play. Just set it.
             if game.current_round == 0 and not 1 in plays:
