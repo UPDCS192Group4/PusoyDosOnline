@@ -85,16 +85,11 @@ class CasualLobbySerializer(serializers.ModelSerializer):
     players_inside = PlayerListSerializer(many=True, read_only=True)
     game_id = serializers.UUIDField(read_only=True, source="game.id", allow_null=True)
     last_activity = serializers.DateTimeField(read_only=True)
+    owner = serializers.CharField(read_only=True)
     
     class Meta:
         model = Lobby
         fields = ['id', 'shorthand', 'owner', 'players_inside', 'game_id', 'last_activity']
-        
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        if "owner" in ret:
-            ret.pop("owner") # Don't show the owner IDs other people
-        return ret
     
 class FriendRequestSerializer(serializers.ModelSerializer):
     from_user_name = serializers.CharField(read_only=True, source="from_user.username")

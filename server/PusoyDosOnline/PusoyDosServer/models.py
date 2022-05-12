@@ -25,7 +25,7 @@ class Lobby(models.Model):
     shorthand = models.CharField(max_length=5, default=generate_shorthand, unique=True)
     # websocket = models.CharField(max_length=128, default="", blank=True) # websocket will only be populated if a game is running from this lobby
     game = models.ForeignKey("Game", blank=True, on_delete=models.SET_NULL, null=True) # this will only be populated if there is a game running from this lobby, this replaces the role of the field.
-    owner = models.UUIDField(null=True)
+    owner = models.CharField(max_length=150, blank=True, default="")
     creation_date = models.DateTimeField(default=timezone.now)
     last_activity = models.DateTimeField(default=timezone.now)
     status = models.IntegerField(default=0) # status = amount of players ready

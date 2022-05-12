@@ -219,7 +219,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
     def perform_create(self, serializer):
         if self.request.user.current_lobby != None:
             raise serializers.ValidationError("User in a lobby not allowed to create a new one")
-        new_lobby = serializer.save(owner=self.request.user.id)
+        new_lobby = serializer.save(owner=self.request.user.username)
         lobby = self.queryset.get(shorthand=new_lobby.shorthand)
         lobby.players_inside.add(self.request.user)
         self.request.user.current_lobby = lobby
@@ -248,10 +248,13 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
     def leave(self, request, pk=None): # for leaving the lobby via HTTP request (pk = actual lobby id)
         lobby = get_object_or_404(self.queryset, id=pk)
         if lobby == request.user.current_lobby:
-            request.user.current_lobby.players_inside.remove(request.user)
-            request.user.current_lobby.save()
+            lobby.players_inside.remove(request.user)
             request.user.current_lobby = None
             request.user.save()
+            if lobby.owner == request.user.username:
+                # Set the owner to a random user in the lobby
+                lobby.owner = lobby.players_inside.all().order_by("?")[0].username
+            lobby.save()
             return Response({"detail": "Successfully left the lobby"})
         else:
             return Response({"error": "Invalid lobby"})
@@ -419,5 +422,12 @@ class GameViewSet(mixins.RetrieveModelMixin,
             game.current_round += 1 # Add 1 to the round counter if the next round should be skipped
         game.control = 0 # Reset control since we just played a card
         game.save() # Save game state
-        return Response({"detail": "Success", "hand": player_hand.hand, "win": win})
+        
+        game_over = False
+        if game.winners == 3:
+            # End the game, disconnect everyone from the lobby by deleting the lobby.
+            request.user.lobby.delete()
+            game_over = True
+            
+        return Response({"detail": "Success", "hand": player_hand.hand, "win": win, "game_over": game_over})
     
