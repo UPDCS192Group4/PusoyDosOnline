@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Game/Opponents.gd" type="Script" id=1]
+[ext_resource path="res://assets/green.png" type="Texture" id=2]
+[ext_resource path="res://assets/fonts/Opponents.tres" type="DynamicFont" id=3]
 
-[node name="Oponents" type="Container"]
+[node name="Opponents" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -10,3 +12,90 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="A" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="A_Sprite" type="Sprite" parent="A"]
+position = Vector2( 221, 624 )
+scale = Vector2( 0.0568182, 0.0568182 )
+texture = ExtResource( 2 )
+
+[node name="A_Label" type="Label" parent="A"]
+margin_left = 20.0
+margin_top = 660.0
+margin_right = 252.0
+margin_bottom = 700.0
+rect_pivot_offset = Vector2( 207, 20 )
+custom_fonts/font = ExtResource( 3 )
+text = "placeholder"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="B" type="Control" parent="."]
+margin_left = 250.0
+margin_right = 308.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="B_Sprite" type="Sprite" parent="B"]
+position = Vector2( 335, 238 )
+scale = Vector2( 0.0568182, 0.0568182 )
+texture = ExtResource( 2 )
+
+[node name="B_Label" type="Label" parent="B"]
+margin_left = 59.0
+margin_top = 213.0
+margin_right = 291.0
+margin_bottom = 253.0
+rect_pivot_offset = Vector2( 207, 20 )
+custom_fonts/font = ExtResource( 3 )
+text = "placeholder"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="C" type="Control" parent="."]
+margin_left = 730.0
+margin_right = 770.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="C_Sprite" type="Sprite" parent="C"]
+position = Vector2( 114, 622 )
+scale = Vector2( 0.0568182, 0.0568182 )
+z_index = 10
+texture = ExtResource( 2 )
+offset = Vector2( -598.399, 0.000976563 )
+
+[node name="C_Label" type="Label" parent="C"]
+margin_left = 44.0
+margin_top = 660.0
+margin_right = 276.0
+margin_bottom = 700.0
+rect_pivot_offset = Vector2( 154, 40 )
+custom_fonts/font = ExtResource( 3 )
+text = "placeholder"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Self" type="Sprite" parent="."]
+position = Vector2( 308, 782 )
+scale = Vector2( 0.057, 0.057 )
+texture = ExtResource( 2 )

@@ -24,8 +24,9 @@ func updatePile(inputArray):
 		inputArray[i] = int(inputArray[i])
 	#print("new pile is ", inputArray, typeof(inputArray[0]))
 	#print("----------------")
+	#print("inputArray is ", inputArray)
 	if GameDetails.last_pile == inputArray:
-		print("returning")
+		#print("returning")
 		return
 	#print("----------------2")
 	GameDetails.last_pile = inputArray

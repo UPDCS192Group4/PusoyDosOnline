@@ -20,7 +20,6 @@ var tempsuit
 var newCard
 var pressedArray = Array()
 var playedArray = Array()
-var temp = Array()
 
 var is_ready = 0
 
@@ -34,10 +33,6 @@ func _ready():
 	request_hand()
 	var child2 = scene2.instance()
 	add_child(child2)
-	#var child3 = scene3.instance()
-	#child3.set_name("Opponents")
-	#add_child(child3)
-	disablePlayButton()
 	is_ready = 1
 
 func printdict(dict):
@@ -74,11 +69,17 @@ func _on_HandRequest_request_completed(result, response_code, headers, body):
 				GameDetails.hand.append(j)
 	var handscene = scene1.instance()
 	add_child(handscene)
+	print("why no opponents")
+	var child3 = scene3.instance()
+	child3.set_name("Opponents")
+	add_child(child3)
+	print("dispal")
+	disablePlayButton()
 	
 func _ping_server():
 	if not is_ready:
 		return
-	print("Pinging")
+	#print("Pinging")
 	url = URLs.game_ping + GameDetails.game_id
 	headers = URLs.defaultHeader()
 	err = $PingRequest.request(url, headers, false, HTTPClient.METHOD_GET)
@@ -88,9 +89,15 @@ func _on_PingRequest_request_completed(result, response_code, headers, body):
 		print("Ping errored")
 		return
 	json = JSON.parse(body.get_string_from_utf8())	
-	GameDetails.current_player = int(json.result["current_round"])
+	GameDetails.current_player = int(json.result["current_round"]) % 4
 	$Pile.updatePile(json.result["last_play"])
-	if GameDetails.my_move_order == GameDetails.current_player % 4:
+	var inputDict = {}
+	for  hand in json.result["hands"]:
+		if int(hand["move_order"]) == GameDetails.my_move_order:
+			continue
+		inputDict[int(hand["move_order"])] = int(hand["card_count"])
+	$Opponents.check_updates(inputDict,GameDetails.current_player)
+	if GameDetails.my_move_order == GameDetails.current_player:
 		if GameDetails.is_current_player:
 			return
 		GameDetails.is_current_player = 1
@@ -107,8 +114,11 @@ func ready_to_move():
 	pass
 	
 func _on_PlayButton_pressed():
+	print("playbutton pressed")
 	playedArray.clear()
-	playedArray = pressedArray
+	for i in pressedArray:
+		playedArray.append(i.duplicate())
+	print("played array is ",playedArray, " pressed array is ",pressedArray)
 	get_node('Hand').playHand()
 	
 func playCards(url,headers,postArray):
@@ -120,6 +130,7 @@ func _on_PlayRequest_request_completed(result, response_code, headers, body):
 		$Hand.updateHand(playedArray)
 		if GameDetails.needs_3_of_clubs:
 			GameDetails.needs_3_of_clubs = 0
+		print("Clearing pressedArray and playedArray")
 		pressedArray.clear()
 		playedArray.clear()
 
@@ -133,19 +144,21 @@ func _on_HomeButton_pressed():
 	add_child(message)
 
 func addPressedCard(newRank, newSuit):
-	temp.clear()
+	var temp = Array()
 	temp.append(newRank)
 	temp.append(newSuit)
 	pressedArray.append(temp)
+	print("Pressed array: ", pressedArray)
 	if GameDetails.is_current_player:
 		checkArray(pressedArray)
 	
 func removePressedCard(newRank, newSuit):
-	temp.clear()
+	var temp = Array()
 	temp.append(newRank)
 	temp.append(newSuit)
 	var k = pressedArray.find(temp)
 	pressedArray.remove(k)
+	print("Pressed array: ", pressedArray)
 	if GameDetails.is_current_player:
 		checkArray(pressedArray)
 
@@ -159,7 +172,9 @@ func disablePlayButton():
 
 func checkArray(inputArray):
 	if GameDetails.needs_3_of_clubs:
+		print('pressed', inputArray)
 		if !([1,1] in inputArray):
+			print("no 1 1")
 			disablePlayButton()
 			return
 		if classifyArray(inputArray):
@@ -331,9 +346,9 @@ func _on_PassRequest_request_completed(result, response_code, headers, body):
 
 func winnermessage():
 	var message = popup.instance()
-	message.changeText("Congrats on winning! Keep watching or leave?")
+	message.changeText("Game finished!\nKeep watching or leave?")
 	message.changeYesText("Leave")
-	message.changeNoText("Spectate")
+	message.changeNoText("Watch")
 	message.disable_auto_Home()
 	message.get_node("A").get_node("B").get_node("C").get_node("D").get_node("YesButton").connect("pressed", self, "_go_home")
 	add_child(message)

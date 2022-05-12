@@ -32,6 +32,9 @@ margin_right = 492.0
 margin_bottom = 770.0
 custom_fonts/font = SubResource( 1 )
 text = "PLAY"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="PassButton" type="Button" parent="."]
 margin_left = 532.0

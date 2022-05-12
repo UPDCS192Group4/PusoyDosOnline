@@ -44,6 +44,7 @@ func updateHand(playedArrayRaw):
 	var playedArray = Array()
 	for i in playedArrayRaw:
 		playedArray.append(i[0]+i[1]*100-100)
+	print("removing ", playedArray)
 	var pressedArray = Array()
 	for card in cards:
 		if card.cardval in playedArray:
@@ -56,7 +57,7 @@ func updateHand(playedArrayRaw):
 		card.queue_free()
 		NUM_CARDS -= 1
 		print("got 1 card")
-	if len(NUM_CARDS) == 0:
+	if NUM_CARDS == 0:
 		get_parent().winnermessage()
 		return
 	#for card in pressedArray:	
