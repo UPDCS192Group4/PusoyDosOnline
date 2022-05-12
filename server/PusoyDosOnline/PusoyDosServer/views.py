@@ -411,15 +411,13 @@ class GameViewSet(mixins.RetrieveModelMixin,
         win = False
         if player_hand.card_count - len(plays) == 0:
             # Win condition: User has no more cards to play
-            player_hand.card_count = 0
             player_hand.placement = game.winners + 1
             game.skips[game.winners] = player_hand.move_order
             game.winners += 1
             win = True
-        else:
-            player_hand.card_count -= len(plays)
         for card in plays:
             player_hand.hand.remove(card)
+        player_hand.card_count -= len(plays)
         player_hand.save() # Save player hand
         game.last_play = plays # Set the current play to the pile
         game.current_round += 1 # Add 1 to the round counter
