@@ -5,13 +5,16 @@ var leaderboards_scene = preload("res://Leaderboards/Leaderboards.tscn")
 var friends_scene = preload("res://Friends/Friendslist.tscn")
 var profile_scene = preload("res://Profile/UserProfile.tscn")
 
+var url
+var headers
+var err
+var json
+
 func _ready():
 	$ClearRequest.connect("request_completed", self, "_on_ClearRequest_request_completed")
 	$LeaveRequest.connect("request_completed", self, "_on_LeaveRequest_request_completed")
 	$PingRequest.connect("request_completed", self, "_on_PingRequest_request_completed")
 	$ErrorMessage/Label.hide()
-	print("Player Info:")
-	print(AccountInfo._profile_json)
 
 func _on_PlayButton_pressed():
 	LobbyDetails.player_names.clear()
@@ -23,9 +26,9 @@ func _on_LeaderboardsButton_pressed():
 	showLeaderboards()
 	
 func clearLobby():
-	var url = URLs.profile
-	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
-	var err = $ClearRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	url = URLs.profile
+	headers = URLs.defaultHeader()
+	err = $ClearRequest.request(url, headers, false, HTTPClient.METHOD_GET)
 	
 func _on_ClearRequest_request_completed(result, response_code, headers, body):
 	if (response_code != 200 and response_code != 201): 
@@ -35,9 +38,8 @@ func _on_ClearRequest_request_completed(result, response_code, headers, body):
 		$ErrorMessage/Label.text = "Please contact Big T.."
 		yield(get_tree().create_timer(2), "timeout")
 		get_tree().change_scene("res://Home/Home.tscn")	
-		return
-	
-	var json = JSON.parse(body.get_string_from_utf8())
+		return	
+	json = JSON.parse(body.get_string_from_utf8())
 	if json.result["lobby"] == null:
 		openLobbyHandler()
 		return
@@ -45,13 +47,11 @@ func _on_ClearRequest_request_completed(result, response_code, headers, body):
 	_query_lobby_id()
 	
 func _query_lobby_id():
-	var url = URLs.lobby_init + LobbyDetails.shorthand + "/"
-	var headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
-	print("Pinging ", url)
-	var err = $PingRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+	url = URLs.lobby_init + LobbyDetails.shorthand + "/"
+	headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
+	err = $PingRequest.request(url, headers, false, HTTPClient.METHOD_GET)
 
 func _on_PingRequest_request_completed(result, response_code, headers, body):
-	var json = JSON.parse(body.get_string_from_utf8())
 	if (response_code != 200 and response_code != 201): 
 		$ErrorMessage/Label.text = "Oh no..."
 		$ErrorMessage/Label.show()
@@ -60,16 +60,14 @@ func _on_PingRequest_request_completed(result, response_code, headers, body):
 		yield(get_tree().create_timer(2), "timeout")
 		get_tree().change_scene("res://Home/Home.tscn")	
 		return
-	print("Ping request results")
-	for i in json.result:
-		print(i, " : ", json.result[i])
+	json = JSON.parse(body.get_string_from_utf8())
 	LobbyDetails.id = json.result["id"]
 	_go_home()
 		
 func _go_home():
-	var url = URLs.lobby_init + LobbyDetails.id + "/leave/"
-	var new_headers = ['Content-Type: application/json', 'Authorization: Bearer ' + URLs.access]
-	var err = $LeaveRequest.request(url, new_headers, false, HTTPClient.METHOD_GET)
+	url = URLs.lobby_init + LobbyDetails.id + "/leave/"
+	headers = URLs.defaultHeader()
+	err = $LeaveRequest.request(url, headers, false, HTTPClient.METHOD_GET)
 	
 func _on_LeaveRequest_request_completed(result, response_code, headers, body):
 	if (response_code != 200 and response_code != 201): 
