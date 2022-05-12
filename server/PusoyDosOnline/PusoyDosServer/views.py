@@ -377,7 +377,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
             return Response({"error": "Not allowed to make a move for this round"}, status=status.HTTP_403_FORBIDDEN)
         
         # Check if it's a skip (game should not skip if it's the first round)
-        if len(plays) == 0 and game.current_round > 0 and game.control < 4:
+        if len(plays) == 0 and game.current_round > 0 and game.control < 3:
             game.current_round += 1
             game.control += 1
             game.save()

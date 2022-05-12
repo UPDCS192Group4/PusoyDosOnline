@@ -30,6 +30,7 @@ class Lobby(models.Model):
     last_activity = models.DateTimeField(default=timezone.now)
     status = models.IntegerField(default=0) # status = amount of players ready
     players_inside = models.ManyToManyField("User", blank=True) # players currently inside the lobby
+    is_ranked = models.BooleanField(default=False)
     class Meta:
         verbose_name_plural = "lobbies"
         
@@ -55,6 +56,7 @@ class Game(models.Model):
     control = models.IntegerField(default=4) # if control == 4, then the current player has control
     winners = models.IntegerField(default=0) # winner count: keep track of how many winners are assigned already
     skips = ArrayField(base_field=models.IntegerField(name="SkipThis", default=-1), size=3, default=get_default_skips) # skip these please!
+    is_rated = models.BooleanField(default=False) # state that it's a rated game or not
     
     def save(self, *args,**kwargs):
         self.last_activity = timezone.now() # keep the last activity updated
