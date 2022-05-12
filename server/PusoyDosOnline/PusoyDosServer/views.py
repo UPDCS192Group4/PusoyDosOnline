@@ -248,13 +248,17 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
     def leave(self, request, pk=None): # for leaving the lobby via HTTP request (pk = actual lobby id)
         lobby = get_object_or_404(self.queryset, id=pk)
         if lobby == request.user.current_lobby:
-            lobby.players_inside.remove(request.user)
+            if lobby.players_inside.count == 1:
+                lobby.delete() # delete the lobby since there would be no more users
+            else:
+                lobby.players_inside.remove(request.user)
+                if lobby.owner == request.user.username and lobby.players_inside.count > 0:
+                    # Set the owner to a random user in the lobby
+                    lobby.owner = lobby.players_inside.all().order_by("?")[0].username
+                lobby.save()
+            
             request.user.current_lobby = None
             request.user.save()
-            if lobby.owner == request.user.username:
-                # Set the owner to a random user in the lobby
-                lobby.owner = lobby.players_inside.all().order_by("?")[0].username
-            lobby.save()
             return Response({"detail": "Successfully left the lobby"})
         else:
             return Response({"error": "Invalid lobby"})
@@ -264,7 +268,7 @@ class CasualLobbyViewSet(mixins.CreateModelMixin,
         # Endpoint for starting a game for this lobby
         lobby = get_object_or_404(self.queryset, id=pk)
         # TODO: Check if lobby has enough players before starting!
-        if lobby.owner != request.user.id:
+        if lobby.owner != request.user.username:
             return Response({"error": "You are not allowed to start this lobby."}, status=status.HTTP_403_FORBIDDEN)
         if lobby.game != None:
             return Response({"error": "This lobby already has an associated game!"}, status=status.HTTP_403_FORBIDDEN)
