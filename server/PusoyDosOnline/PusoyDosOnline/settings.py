@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRETKEY", default='django-insecure-5r9a(zi(1)*!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", default="False") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.ngrok.io']
 
 
 # Application definition
@@ -64,7 +64,7 @@ ROOT_URLCONF = 'PusoyDosOnline.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -169,3 +169,5 @@ CHANNEL_LAYERS = {
         }
     }
 }
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static/"),)
