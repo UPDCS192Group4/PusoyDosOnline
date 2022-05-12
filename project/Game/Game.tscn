@@ -64,5 +64,8 @@ layer = 15
 
 [node name="PlayRequest" type="HTTPRequest" parent="."]
 
+[node name="PassRequest" type="HTTPRequest" parent="."]
+
 [connection signal="pressed" from="PlayButton" to="." method="_on_PlayButton_pressed"]
+[connection signal="pressed" from="PassButton" to="." method="_on_PassButton_pressed"]
 [connection signal="pressed" from="HomeButton" to="." method="_on_HomeButton_pressed"]

@@ -39,36 +39,23 @@ func setupCards():
 		ANGLE += ANG_DIST
 		add_child(cards[i])
 	enableZ()
-	
-func positionCards():	
-	ANGLE = deg2rad(90) - ANG_DIST * (NUM_CARDS - 1) / 2
-	for i in range(NUM_CARDS):
-		yield(get_tree().create_timer(0.1), "timeout")
-		cards.append(deck[i])
-		cards[i].isCurrentPlayer = 1
-		cards[i].changeFace()
-		add_child(cards[i])
-		#print(i, ' ', cards[i].rank, ' ', cards[i].suit)
-		OVAL_VECT = Vector2(H_RAD * cos(ANGLE), -V_RAD * sin(ANGLE))
-		cards[i].rect_position = OVAL_CENTRE + OVAL_VECT - cards[i].rect_size / 2
-		#cards[i].rect_position.x -= cards[i].rect_size.x
-		#print(OVAL_VECT, cards[i].rect_position)
-		cards[i].rect_rotation = (90 - rad2deg(ANGLE)) / 4
-		ANGLE += ANG_DIST
-	enableZ()
-	
-func updateHand(): 
-	print('---------------------s')
+		
+func updateHand(playedArrayRaw): 
+	var playedArray = Array()
+	for i in playedArrayRaw:
+		playedArray.append(i[0]+i[1]*100-100)
 	var pressedArray = Array()
 	for card in cards:
-		if card._is_pressed:
+		if card.cardval in playedArray:
 			pressedArray.append(card)
+	print("pressed array is ", pressedArray)
 	ANG_DIST += 0.0075 * len(pressedArray)
 	for card in pressedArray:			
 		var k = cards.find(card)
 		cards.remove(k)
 		card.queue_free()
 		NUM_CARDS -= 1
+		print("got 1 card")
 	#for card in pressedArray:	
 	#update Angle, change position and rotation
 	ANGLE = deg2rad(90) - ANG_DIST * (NUM_CARDS - 1) / 2.0
@@ -102,12 +89,8 @@ func changeZ(top):
 	for i in range(index+1, NUM_CARDS):
 		cards[i].get_node('Container').z_index = NUM_CARDS - i - 1
 
-func checkArray():
-	var pileNode =  get_parent().get_node('Pile')
-	var currentPile = pileNode.getTopOfPile()
-	pass
-
 func enableZ():
 	z_layer = 1
+	
 func disableZ():
 	z_layer = 0

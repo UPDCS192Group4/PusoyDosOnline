@@ -10,6 +10,7 @@ var json
 
 func _ready():
 	LobbyDetails.clear_data()
+	GameDetails.clear_data()
 	$ErrorMessage/Label.hide()
 	$CreateRequest.connect("request_completed", self, "_on_CreateRequest_request_completed")
 	$JoinRequest.connect("request_completed", self, "_on_JoinRequest_request_completed")
@@ -54,9 +55,11 @@ func _on_LeaveRequest_request_completed(result, response_code, headers, body):
 func _on_CreateLobby_pressed():
 	url = URLs.lobby_init
 	headers = URLs.defaultHeader()
+	print(url,headers)
 	err = $CreateRequest.request(url, headers, false, HTTPClient.METHOD_POST)
 
 func _on_CreateRequest_request_completed(result, response_code, headers, body):
+	print(response_code)
 	if (response_code != 200 and response_code != 201): 
 		$ErrorMessage/Label.text = "Error creating lobby..."
 		$ErrorMessage/Label.show()
@@ -147,14 +150,18 @@ func _on_PingRequest_request_completed(result, response_code, headers, body):
 			get_node("WaitingRoom").get_node("Container").get_child(i+1).text = ""
 		for i in range(len(LobbyDetails.player_names)):
 			get_node("WaitingRoom").get_node("Container").get_child(i+1).text = LobbyDetails.player_names[i]
+	print('waiting room updated')
 	if len(LobbyDetails.player_names) != 4:
 		return
+	print('reached here')
 	if LobbyDetails.is_owner:
+		print('starting')
 		#start game
 		url = URLs.lobby_init + LobbyDetails.id + "/ready/"
 		headers = URLs.defaultHeader()
-		$ReadyRequest.request(url, headers, false, HTTPClient.METHOD_GET)
+		$ReadyRequest.request(url, headers, false, HTTPClient.METHOD_POST)
 		return
+	print('no game id')
 	if json.result["game_id"]:
 		LobbyDetails.in_waiting = 0
 		GameDetails.game_id = json.result["game_id"]
@@ -167,6 +174,7 @@ func _start_game():
 	get_tree().change_scene("res://Game/Game.tscn")
 
 func _on_ReadyRequest_request_completed(result, response_code, headers, body):
+	print(response_code)
 	if (response_code != 200 and response_code != 201): 
 		print("Ready failed..")
 		return

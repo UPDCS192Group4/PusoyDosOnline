@@ -28,10 +28,10 @@ func updatePile(inputArray):
 		print("returning")
 		return
 	#print("----------------2")
+	GameDetails.last_pile = inputArray
 	ranks.clear()
 	suits.clear()
 	for cardval in inputArray:
-		cardval = int(cardval)
 		if !cardval:
 			pass
 		ranks.append(cardval % 100)
@@ -57,7 +57,6 @@ func updatePile(inputArray):
 		pileCards[i].rect_position = OVAL_CENTRE + OVAL_VECT - pileCards[i].rect_size / 2
 		pileCards[i].rect_rotation = (90 - rad2deg(ANGLE))/4
 		ANGLE += ANG_DIST
-	get_parent().disablePlayButton()
 	
 func changeZ(top):
 	print('--')

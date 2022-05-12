@@ -3,6 +3,7 @@ class_name Card
 var _is_pressed = 0
 var rank
 var suit
+var cardval
 var face
 var isCurrentPlayer = 0
 var isPile = 0
@@ -16,6 +17,7 @@ func _ready():
 func init(inputSuit, inputRank, pileCard):
 	rank = inputRank
 	suit = inputSuit
+	cardval = (suit-1) * 100 + rank
 	$Container/CardTexture.texture = cardBack
 	$Container/CardButton.texture_hover = null
 	$Container/CardButton.texture_pressed = null
