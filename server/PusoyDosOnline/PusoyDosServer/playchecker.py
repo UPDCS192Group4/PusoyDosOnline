@@ -1,6 +1,10 @@
 def compare(play, pile):
 	if len(play) != len(pile):
 		return False
+	if play[0] == 0:
+		return False
+	if play[0] != pile[0]:
+		return False
 	for i in range(len(play)):
 		if play[i] < pile[i]:
 			return False
