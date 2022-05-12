@@ -97,11 +97,20 @@ func _on_PingRequest_request_completed(result, response_code, headers, body):
 			continue
 		inputDict[int(hand["move_order"])] = int(hand["card_count"])
 	$Opponents.check_updates(inputDict,GameDetails.current_player)
+	
+	if GameDetails.has_won:
+		return
+		
 	if GameDetails.my_move_order == GameDetails.current_player:
 		if GameDetails.is_current_player:
 			return
 		GameDetails.is_current_player = 1
-		if int(json.result["control"]) >= 4:
+		var control_max = 0
+		for player in inputDict:
+			if inputDict[player] == 0:
+				continue
+			control_max += 1
+		if int(json.result["control"]) >= control_max:
 			GameDetails.is_control = 1
 		else:
 			GameDetails.is_control = 0
@@ -150,6 +159,7 @@ func addPressedCard(newRank, newSuit):
 	pressedArray.append(temp)
 	print("Pressed array: ", pressedArray)
 	if GameDetails.is_current_player:
+		print("checking, and control = ", GameDetails.is_control)
 		checkArray(pressedArray)
 	
 func removePressedCard(newRank, newSuit):
@@ -160,6 +170,7 @@ func removePressedCard(newRank, newSuit):
 	pressedArray.remove(k)
 	print("Pressed array: ", pressedArray)
 	if GameDetails.is_current_player:
+		print("checking, control = ", GameDetails.is_control)
 		checkArray(pressedArray)
 
 func enablePlayButton():
@@ -192,7 +203,9 @@ func checkArray(inputArray):
 	# Else no control, need to check against top of pile
 	inputArray = classifyArray(inputArray)	
 	if !inputArray:
+		disablePlayButton()
 		return
+	print("here")
 		
 	var topOfPileRaw = GameDetails.last_pile
 	var topOfPile = Array()
@@ -202,6 +215,8 @@ func checkArray(inputArray):
 		topOfPile.append([temprank,tempsuit])
 		
 	topOfPile = classifyArray(topOfPile)
+	
+	print(inputArray," -- ",topOfPile)
 			
 	# Compare arrays topOfPile and inputArray using customSort()
 	if customSort(inputArray, topOfPile):
@@ -345,6 +360,7 @@ func _on_PassRequest_request_completed(result, response_code, headers, body):
 		_on_PassButton_pressed()
 
 func winnermessage():
+	GameDetails.has_won = 1
 	var message = popup.instance()
 	message.changeText("Game finished!\nKeep watching or leave?")
 	message.changeYesText("Leave")

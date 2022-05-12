@@ -98,6 +98,8 @@ func _ready():
 			$C/C_Label.text = names[key]
 	
 func check_updates(inputDict, currentPlayer):
+	print('-',inputDict)
+	print('>',hand_counts)
 	for key in hand_counts:
 		if hand_counts[key] > inputDict[key]:
 			update_opponents(key,hand_counts[key]-inputDict[key])
@@ -117,18 +119,24 @@ func check_updates(inputDict, currentPlayer):
 		
 	
 func update_opponents(move_order, numRemoved):
+	print("update: ", move_order, " ", numRemoved, " ", names[move_order])
 	if map_players[move_order] == 'A':
+		print("A before is ", playerA, " | len = ", len(playerA))
 		A_updateHand(numRemoved)
 		return
 	if map_players[move_order] == 'B':
+		print("A before is ", playerB, " | len = ", len(playerB))
 		B_updateHand(numRemoved)
 		return
 	if map_players[move_order] == 'C':
+		print("A before is ", playerC, " | len = ", len(playerC))
 		C_updateHand(numRemoved)
 		return
 
 func A_updateHand(numRemoved):
+	print("updating player A, its array is ", playerA)
 	for i in range(numRemoved):			
+		print("removing ", i, " of ", playerA)
 		var k = playerA[0]
 		playerA.remove(0)
 		k.queue_free()
@@ -143,6 +151,7 @@ func A_updateHand(numRemoved):
 
 func B_updateHand(numRemoved):
 	for i in range(numRemoved):			
+		print("removing ", i, " of ", playerB)
 		var k = playerB[0]
 		playerB.remove(0)
 		k.queue_free()
@@ -157,6 +166,7 @@ func B_updateHand(numRemoved):
 
 func C_updateHand(numRemoved):
 	for i in range(numRemoved):			
+		print("removing ", i, " of ", playerC)
 		var k = playerC[0]
 		playerC.remove(0)
 		k.queue_free()
