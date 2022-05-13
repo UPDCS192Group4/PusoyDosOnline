@@ -20,7 +20,7 @@ var profileRequest = HTTPRequest.new()
 var requestsRequest = HTTPRequest.new()
 var refreshTimer = Timer.new()
 
-var refreshTime = 60
+var refreshTime = 5
 
 signal profileRequestDone(err_or_response_code)
 signal requestsRequestDone(err_or_response_code)
@@ -32,7 +32,7 @@ func _ready():
 	add_child(refreshTimer)
 	profileRequest.connect("request_completed", self, "_get_profile_request_completed")
 	requestsRequest.connect("request_completed", self, "_get_requests_request_completed")
-	# refreshTimer.connect("timeout", self, "fetchInfo")
+	refreshTimer.connect("timeout", self, "fetchInfo")
 	pass
 
 func getToken():
