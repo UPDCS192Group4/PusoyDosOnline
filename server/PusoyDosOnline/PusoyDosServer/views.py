@@ -329,6 +329,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
             instance.current_round += 1
             while instance.current_round % 4 in instance.skips:
                 instance.current_round += 1
+            instance.control += 1
             instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
@@ -419,7 +420,6 @@ class GameViewSet(mixins.RetrieveModelMixin,
             game.skips[game.winners] = player_hand.move_order
             game.winners += 1
             win = True
-            game.control = 3 - game.winners
         for card in plays:
             player_hand.hand.remove(card)
         player_hand.card_count -= len(plays)
@@ -428,7 +428,10 @@ class GameViewSet(mixins.RetrieveModelMixin,
         game.current_round += 1 # Add 1 to the round counter
         while game.current_round % 4 in game.skips:
             game.current_round += 1 # Add 1 to the round counter if the next round should be skipped
-        game.control = 0 # Reset control since we just played a card
+        if player_hand.card_count == 0:
+            game.control = 3 - game.winners # set control since a player just won
+        else:
+            game.control = 0 # Reset control since we just played a card
         game.save() # Save game state
         
         game_over = False
