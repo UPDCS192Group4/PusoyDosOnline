@@ -379,6 +379,8 @@ class GameViewSet(mixins.RetrieveModelMixin,
         # Check if it's a skip (game should not skip if it's the first round)
         if len(plays) == 0 and game.current_round > 0 and game.control < 3 - game.winners:
             game.current_round += 1
+            while game.current_round % 4 in game.skips:
+                game.current_round += 1 # Add 1 to the round counter if the next round should be skipped
             game.control += 1
             game.save()
             return Response({"detail": "Skipped successfully"})
@@ -415,6 +417,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
             game.skips[game.winners] = player_hand.move_order
             game.winners += 1
             win = True
+            game.control = 0
         for card in plays:
             player_hand.hand.remove(card)
         player_hand.card_count -= len(plays)
@@ -429,7 +432,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
         game_over = False
         if game.winners == 3:
             # End the game, disconnect everyone from the lobby by deleting the lobby.
-            request.user.lobby.delete()
+            request.user.current_lobby.delete()
             game_over = True
             
         return Response({"detail": "Success", "hand": player_hand.hand, "win": win, "game_over": game_over})
