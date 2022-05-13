@@ -391,8 +391,8 @@ func losemessage():
 	GameDetails.has_won = 1
 	var message = popup.instance()
 	message.changeText("LOSER")
-	message.changeYesText(":(")
-	message.changeNoText("):")
+	message.changeYesText("aw")
+	message.changeNoText("noob")
 	message.disable_auto_Home()
 	message.get_node("A").get_node("B").get_node("C").get_node("D").get_node("YesButton").connect("pressed", self, "_go_home")
 	$CanvasLayer.add_child(message)
@@ -400,8 +400,8 @@ func losemessage():
 func finishmessage():
 	var message = popup.instance()
 	message.changeText("Gamefinished")
-	message.changeYesText("tnx for")
-	message.changeNoText("playing")
+	message.changeYesText("tnx fr")
+	message.changeNoText("plyng")
 	message.disable_auto_Home()
 	message.get_node("A").get_node("B").get_node("C").get_node("D").get_node("YesButton").connect("pressed", self, "_go_home")
 	$CanvasLayer.add_child(message)
