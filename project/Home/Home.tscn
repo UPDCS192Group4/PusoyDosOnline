@@ -1,0 +1,262 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/fonts/home_dynamicfont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Home/Home.gd" type="Script" id=2]
+[ext_resource path="res://assets/fonts/nokiafc22.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 64
+font_data = ExtResource( 3 )
+
+[node name="Home" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0156863, 0.32549, 0.180392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ContainerBox" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DummyBox" type="HBoxContainer" parent="ContainerBox"]
+margin_right = 1024.0
+margin_bottom = 69.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+
+[node name="ContainerBox" type="HBoxContainer" parent="ContainerBox"]
+margin_top = 73.0
+margin_right = 1024.0
+margin_bottom = 845.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.42
+
+[node name="DummyBox" type="VBoxContainer" parent="ContainerBox/ContainerBox"]
+margin_right = 59.0
+margin_bottom = 772.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="ContainerBox" type="VBoxContainer" parent="ContainerBox/ContainerBox"]
+margin_left = 63.0
+margin_right = 359.0
+margin_bottom = 772.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Play" type="VBoxContainer" parent="ContainerBox/ContainerBox/ContainerBox"]
+margin_right = 296.0
+margin_bottom = 190.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PlayButton" type="Button" parent="ContainerBox/ContainerBox/ContainerBox/Play"]
+margin_right = 296.0
+margin_bottom = 190.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "PLAY"
+
+[node name="LeaderBoards" type="VBoxContainer" parent="ContainerBox/ContainerBox/ContainerBox"]
+margin_top = 194.0
+margin_right = 296.0
+margin_bottom = 384.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ContainerBox/ContainerBox/ContainerBox/LeaderBoards"]
+margin_right = 296.0
+margin_bottom = 190.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "LEADERBOARDS"
+
+[node name="Rules" type="VBoxContainer" parent="ContainerBox/ContainerBox/ContainerBox"]
+margin_top = 388.0
+margin_right = 296.0
+margin_bottom = 578.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ContainerBox/ContainerBox/ContainerBox/Rules"]
+margin_right = 296.0
+margin_bottom = 190.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "Rules"
+
+[node name="Profile" type="VBoxContainer" parent="ContainerBox/ContainerBox/ContainerBox"]
+margin_top = 582.0
+margin_right = 296.0
+margin_bottom = 772.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ContainerBox/ContainerBox/ContainerBox/Profile"]
+margin_right = 296.0
+margin_bottom = 190.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "Profile"
+
+[node name="DummyBox3" type="VBoxContainer" parent="ContainerBox/ContainerBox"]
+margin_left = 363.0
+margin_right = 393.0
+margin_bottom = 772.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="Sidepanel" type="VBoxContainer" parent="ContainerBox/ContainerBox"]
+margin_left = 397.0
+margin_right = 990.0
+margin_bottom = 772.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="DummyBox4" type="VBoxContainer" parent="ContainerBox/ContainerBox"]
+margin_left = 994.0
+margin_right = 1024.0
+margin_bottom = 772.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="BottomBox" type="VBoxContainer" parent="ContainerBox"]
+margin_top = 849.0
+margin_right = 1024.0
+margin_bottom = 1024.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DummyBox" type="VBoxContainer" parent="ContainerBox/BottomBox"]
+margin_right = 1024.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.3
+
+[node name="Buttons" type="HBoxContainer" parent="ContainerBox/BottomBox"]
+margin_top = 35.0
+margin_right = 1024.0
+margin_bottom = 139.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DummyBox" type="VBoxContainer" parent="ContainerBox/BottomBox/Buttons"]
+margin_right = 61.0
+margin_bottom = 104.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.27
+
+[node name="Logout" type="VBoxContainer" parent="ContainerBox/BottomBox/Buttons"]
+margin_left = 65.0
+margin_right = 292.0
+margin_bottom = 104.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LogoutButton" type="Button" parent="ContainerBox/BottomBox/Buttons/Logout"]
+modulate = Color( 0.992157, 0.372549, 0.372549, 1 )
+margin_right = 227.0
+margin_bottom = 104.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "LOGOUT"
+
+[node name="DummyBox2" type="VBoxContainer" parent="ContainerBox/BottomBox/Buttons"]
+margin_left = 296.0
+margin_right = 727.0
+margin_bottom = 104.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.89
+
+[node name="Friends" type="VBoxContainer" parent="ContainerBox/BottomBox/Buttons"]
+margin_left = 731.0
+margin_right = 958.0
+margin_bottom = 104.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FriendsButton" type="Button" parent="ContainerBox/BottomBox/Buttons/Friends"]
+margin_right = 227.0
+margin_bottom = 104.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 1 )
+text = "FRIENDS"
+
+[node name="DummyBox3" type="VBoxContainer" parent="ContainerBox/BottomBox/Buttons"]
+margin_left = 962.0
+margin_right = 1024.0
+margin_bottom = 104.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.27
+
+[node name="DummyBox2" type="VBoxContainer" parent="ContainerBox/BottomBox"]
+margin_top = 143.0
+margin_right = 1024.0
+margin_bottom = 175.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.3
+
+[node name="ClearRequest" type="HTTPRequest" parent="."]
+
+[node name="ErrorMessage" type="CanvasLayer" parent="."]
+layer = 15
+
+[node name="Label" type="Label" parent="ErrorMessage"]
+visible = false
+margin_left = 11.0
+margin_top = 27.0
+margin_right = 1017.0
+margin_bottom = 179.0
+custom_fonts/font = SubResource( 1 )
+text = "! Cannot be loaded !"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeaveRequest" type="HTTPRequest" parent="."]
+
+[node name="PingRequest" type="HTTPRequest" parent="."]
+
+[connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/Play/PlayButton" to="." method="_on_PlayButton_pressed"]
+[connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/LeaderBoards/Button" to="." method="_on_LeaderboardsButton_pressed"]
+[connection signal="pressed" from="ContainerBox/ContainerBox/ContainerBox/Profile/Button" to="." method="_on_Profile_pressed"]
+[connection signal="pressed" from="ContainerBox/BottomBox/Buttons/Logout/LogoutButton" to="." method="_on_LogoutButton_pressed"]
+[connection signal="pressed" from="ContainerBox/BottomBox/Buttons/Friends/FriendsButton" to="." method="_on_FriendsButton_pressed"]
