@@ -329,6 +329,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
             instance.current_round += 1
             while instance.current_round % 4 in instance.skips:
                 instance.current_round += 1
+            instance.control += 1
             instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
