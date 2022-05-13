@@ -20,7 +20,7 @@ var tempsuit
 var newCard
 var pressedArray = Array()
 var playedArray = Array()
-
+var controlval = 0
 var is_ready = 0
 
 func _ready():
@@ -43,7 +43,7 @@ func _process(_delta):
 	t += 1
 	if t >= t_rate:
 		t = t - t_rate
-		_ping_server()	
+		_ping_server()
 
 func request_hand():
 	url = URLs.game_ping + GameDetails.game_id
@@ -89,6 +89,8 @@ func _on_PingRequest_request_completed(result, response_code, headers, body):
 		print("Ping errored")
 		return
 	json = JSON.parse(body.get_string_from_utf8())	
+	#for i in json.result:
+	#	print(i, " : ", json.result[i])
 	GameDetails.current_player = int(json.result["current_round"]) % 4
 	$Pile.updatePile(json.result["last_play"])
 	var inputDict = {}
@@ -100,16 +102,19 @@ func _on_PingRequest_request_completed(result, response_code, headers, body):
 	
 	if GameDetails.has_won:
 		return
+	
+	var control_max = 0
+	for player in inputDict:
+		if inputDict[player] == 0:
+			continue
+		control_max += 1
+	#print(inputDict, " ", int(json.result["control"]), " ", control_max)
+	updatestatus(int(json.result["control"]), control_max)
 		
 	if GameDetails.my_move_order == GameDetails.current_player:
 		if GameDetails.is_current_player:
 			return
 		GameDetails.is_current_player = 1
-		var control_max = 0
-		for player in inputDict:
-			if inputDict[player] == 0:
-				continue
-			control_max += 1
 		if int(json.result["control"]) >= control_max:
 			GameDetails.is_control = 1
 		else:
@@ -367,6 +372,7 @@ func winnermessage():
 	message.changeNoText("Watch")
 	message.disable_auto_Home()
 	message.get_node("A").get_node("B").get_node("C").get_node("D").get_node("YesButton").connect("pressed", self, "_go_home")
+	$CanvasLayer.add_child(message)
 	add_child(message)
 
 func _go_home():
@@ -380,3 +386,37 @@ func _on_LeaveRequest_request_completed(result, response_code, headers, body):
 		get_tree().change_scene("res://Home/Home.tscn")	
 		return
 	get_tree().change_scene("res://Home/Home.tscn")	
+
+func losemessage():
+	GameDetails.has_won = 1
+	var message = popup.instance()
+	message.changeText("LOSER")
+	message.changeYesText(":(")
+	message.changeNoText("):")
+	message.disable_auto_Home()
+	message.get_node("A").get_node("B").get_node("C").get_node("D").get_node("YesButton").connect("pressed", self, "_go_home")
+	$CanvasLayer.add_child(message)
+	
+func finishmessage():
+	var message = popup.instance()
+	message.changeText("Gamefinished")
+	message.changeYesText("tnx for")
+	message.changeNoText("playing")
+	message.disable_auto_Home()
+	message.get_node("A").get_node("B").get_node("C").get_node("D").get_node("YesButton").connect("pressed", self, "_go_home")
+	$CanvasLayer.add_child(message)
+
+func updatestatus(contwol, contwolmax):
+	if contwol >= contwolmax:
+		$status.text = "!Control!"
+		return
+	if contwol == 1:
+		$status.text = "1 player passed"
+		return
+	if contwol == 2:
+		$status.text = "2 players passed"
+		return
+	if contwol > 2:
+		$status.text = "lotsa passes!"
+		return
+	$status.text = ""

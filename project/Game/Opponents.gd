@@ -87,8 +87,8 @@ func _ready():
 	map_players[(GameDetails.my_move_order+3)%4] = 'A'
 	names[(GameDetails.my_move_order+3)%4] = GameDetails.gamers[(GameDetails.my_move_order+3)%4]
 	hand_counts[(GameDetails.my_move_order+3)%4] = 13
-	printdict(map_players)
-	printdict(names)
+	#printdict(map_players)
+	#printdict(names)
 	for key in map_players:
 		if map_players[key] == 'A':
 			$A/A_Label.text = names[key]
@@ -98,8 +98,8 @@ func _ready():
 			$C/C_Label.text = names[key]
 	
 func check_updates(inputDict, currentPlayer):
-	print('-',inputDict)
-	print('>',hand_counts)
+	#print('-',inputDict)
+	#print('>',hand_counts)
 	for key in hand_counts:
 		if hand_counts[key] > inputDict[key]:
 			update_opponents(key,hand_counts[key]-inputDict[key])
@@ -119,17 +119,17 @@ func check_updates(inputDict, currentPlayer):
 		
 	
 func update_opponents(move_order, numRemoved):
-	print("update: ", move_order, " ", numRemoved, " ", names[move_order])
+	#print("update: ", move_order, " ", numRemoved, " ", names[move_order])
 	if map_players[move_order] == 'A':
-		print("A before is ", playerA, " | len = ", len(playerA))
+		#print("A before is ", playerA, " | len = ", len(playerA))
 		A_updateHand(numRemoved)
 		return
 	if map_players[move_order] == 'B':
-		print("A before is ", playerB, " | len = ", len(playerB))
+		#print("A before is ", playerB, " | len = ", len(playerB))
 		B_updateHand(numRemoved)
 		return
 	if map_players[move_order] == 'C':
-		print("A before is ", playerC, " | len = ", len(playerC))
+		#print("A before is ", playerC, " | len = ", len(playerC))
 		C_updateHand(numRemoved)
 		return
 
@@ -141,13 +141,20 @@ func A_updateHand(numRemoved):
 		playerA.remove(0)
 		k.queue_free()
 		A_NUM_CARDS -= 1
-		
+	if (A_NUM_CARDS == 0):
+		$A/A_Sprite.hide()
+		$A/A_Label.text += " WINS!"
+		yield(get_tree().create_timer(1), "timeout")
+		$A/A_Label.text = ""
+		GameDetails.num_winners += 1
 	A_ANGLE =  - A_ANG_DIST * (A_NUM_CARDS - 1) / 2
 	for i in range(A_NUM_CARDS):
 		A_OVAL_VECT = Vector2(H_RAD * cos(A_ANGLE), -V_RAD * sin(A_ANGLE))
 		playerA[i].rect_position = A_CENTRE + A_OVAL_VECT - playerA[i].rect_size / 2
 		playerA[i].rect_rotation = 90 + ( - rad2deg(A_ANGLE)) / 4
 		A_ANGLE += A_ANG_DIST
+		
+	checklose()
 
 func B_updateHand(numRemoved):
 	for i in range(numRemoved):			
@@ -157,12 +164,21 @@ func B_updateHand(numRemoved):
 		k.queue_free()
 		B_NUM_CARDS -= 1
 		
+	if (B_NUM_CARDS == 0):
+		$B/B_Sprite.hide()
+		$B/B_Label.text += " WINS!"
+		yield(get_tree().create_timer(1), "timeout")
+		$B/B_Label.text = ""
+		GameDetails.num_winners += 1
+		
 	B_ANGLE = deg2rad(270) - B_ANG_DIST * (B_NUM_CARDS - 1) / 2
 	for i in range(B_NUM_CARDS):
 		B_OVAL_VECT = Vector2(V_RAD * cos(B_ANGLE), -H_RAD * sin(B_ANGLE))
 		playerB[i].rect_position = B_CENTRE + B_OVAL_VECT - playerB[i].rect_size / 2
 		playerB[i].rect_rotation = 180 + (270 - rad2deg(B_ANGLE)) / 4
 		B_ANGLE += B_ANG_DIST
+		
+	checklose()
 
 func C_updateHand(numRemoved):
 	for i in range(numRemoved):			
@@ -172,9 +188,26 @@ func C_updateHand(numRemoved):
 		k.queue_free()
 		C_NUM_CARDS -= 1
 		
+	if (C_NUM_CARDS == 0):
+		$C/C_Sprite.hide()
+		$C/C_Label.text += " WINS!"
+		yield(get_tree().create_timer(1), "timeout")
+		$C/C_Label.text = ""
+		GameDetails.num_winners += 1
+		
 	C_ANGLE =  deg2rad(180) - C_ANG_DIST * (C_NUM_CARDS - 1) / 2
 	for i in range(C_NUM_CARDS):
 		C_OVAL_VECT = Vector2(H_RAD * cos(C_ANGLE), -V_RAD * sin(C_ANGLE))
 		playerC[i].rect_position = C_CENTRE + C_OVAL_VECT - playerC[i].rect_size / 2
 		playerC[i].rect_rotation = 90 - (rad2deg(C_ANGLE)-180) / 4
 		C_ANGLE += C_ANG_DIST
+		
+	checklose()
+	
+func checklose():
+	if GameDetails.num_winners == 2 and GameDetails.has_won:
+		get_parent().finishmessage()
+		return
+	if GameDetails.num_winners != 3:
+		return
+	get_parent().losemessage()

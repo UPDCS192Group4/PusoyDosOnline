@@ -9,7 +9,7 @@ var is_current_player = 0
 var has_won = 0
 var is_control
 var needs_3_of_clubs = 0
-
+var num_winners = 0
 var last_pile = [0,0,0,0,0]
 
 func clear_data():
@@ -22,3 +22,5 @@ func clear_data():
 	has_won = 0
 	is_control = null
 	needs_3_of_clubs = 0
+	num_winners = 0
+	last_pile = [0,0,0,0,0]

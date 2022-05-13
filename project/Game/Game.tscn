@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Game/Game.gd" type="Script" id=1]
 [ext_resource path="res://assets/fonts/uglybyte.woff" type="DynamicFontData" id=2]
 [ext_resource path="res://assets/fonts/home_dynamicfont.tres" type="DynamicFont" id=3]
+[ext_resource path="res://assets/fonts/leaderboards.tres" type="DynamicFont" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 80
@@ -70,6 +71,18 @@ layer = 15
 [node name="PassRequest" type="HTTPRequest" parent="."]
 
 [node name="LeaveRequest" type="HTTPRequest" parent="."]
+
+[node name="status" type="Label" parent="."]
+margin_left = 382.0
+margin_top = 619.0
+margin_right = 643.0
+margin_bottom = 667.0
+custom_fonts/font = ExtResource( 4 )
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="pressed" from="PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="PassButton" to="." method="_on_PassButton_pressed"]
