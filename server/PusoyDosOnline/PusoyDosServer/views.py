@@ -417,7 +417,7 @@ class GameViewSet(mixins.RetrieveModelMixin,
             game.skips[game.winners] = player_hand.move_order
             game.winners += 1
             win = True
-            game.control = 0
+            game.control = 3 - game.winners
         for card in plays:
             player_hand.hand.remove(card)
         player_hand.card_count -= len(plays)
