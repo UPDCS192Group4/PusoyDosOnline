@@ -1,10 +1,13 @@
 extends Node
 
-var url = "http://localhost:8000" # modify upon deployment
+#var url = "http://localhost:8000" # modify upon deployment
 #var url = "http://642f-2001-4451-6b8-9500-38fd-82a4-400a-338b.ngrok.io"
 #var url = "http://1cc0-2001-4451-6b8-9500-38fd-82a4-400a-338b.ngrok.io"
 #var url = "http://07a7-136-158-0-18.ngrok.io"
 #var url = "http://65f4-136-158-0-18.ngrok.io"
+#var url = "http://2963-136-158-0-18.ngrok.io"
+#var url = "http://8a93-136-158-0-18.ngrok.io"
+var url = "http://159.65.129.248:8000"
 var register = url + "/api/register/"
 var login = url + "/api/token/"
 var profile = url + "/api/users/profile/"
