@@ -24,7 +24,7 @@ services:
     command: >
       sh -c "python /web/PusoyDosOnline/manage.py makemigrations PusoyDosServer &&
              python /web/PusoyDosOnline/manage.py migrate &&
-             python /web/PusoyDosOnline/manage.py collectstatic &&
+             python /web/PusoyDosOnline/manage.py collectstatic --noinput --clear &&
              python /web/PusoyDosOnline/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/web
