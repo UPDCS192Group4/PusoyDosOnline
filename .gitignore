@@ -10,3 +10,6 @@ server/PusoyDosOnline/PusoyDosServer/migrations/__init__.py
 server/PusoyDosOnline/PusoyDosServer/migrations/0001_initial.py
 server/PusoyDosOnline/PusoyDosServer/migrations/*
 server/PusoyDosOnline/PusoyDosServer/migrations/
+
+# Staticfiles
+server/PusoyDosOnline/staticfiles
